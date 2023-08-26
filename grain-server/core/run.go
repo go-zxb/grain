@@ -80,6 +80,8 @@ func (r *Grain) InitRouter() {
 		reply := response.Response{}
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
+	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
 	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters()
