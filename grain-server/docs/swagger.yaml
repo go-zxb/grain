@@ -1,0 +1,14 @@
+basePath: /api/v1
+host: 127.0.0.1:8080
+info:
+  contact: {}
+  description: Your Gin API.
+  title: Grain API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: G-Token
+    type: apiKey
+swagger: "2.0"
