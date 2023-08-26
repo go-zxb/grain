@@ -15,6 +15,7 @@
 package core
 
 import (
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/go-utils/response"
@@ -22,6 +23,7 @@ import (
 	"github.com/go-grain/grain/internal/repo/data"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	sysRouter "github.com/go-grain/grain/internal/router/system"
+	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
 	"gorm.io/gorm"
@@ -34,6 +36,7 @@ type Grain struct {
 	engine    *gin.Engine
 	conf      *config.Config
 	rdb       redis.IRedis
+	enforcer  *casbin.CachedEnforcer
 }
 
 func (r *Grain) InitConf() (err error) {
@@ -62,6 +65,8 @@ func (r *Grain) InitConf() (err error) {
 		return
 	}
 
+	r.enforcer = service.NewCasbin(r.db)
+
 	return
 }
 
@@ -75,8 +80,9 @@ func (r *Grain) InitRouter() {
 		reply := response.Response{}
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
+	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
-	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
+	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters()
 	sysRouter.InitRouterSwag(routerGroup)
 }
 
