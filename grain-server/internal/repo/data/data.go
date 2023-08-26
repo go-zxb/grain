@@ -68,7 +68,9 @@ func (db *DB) autoMigrate() error {
 		sysModel.SysRole{},
 		sysModel.SysUser{},
 		sysModel.SysApi{},
-		sysModel.SysMenu{})
+		sysModel.SysMenu{},
+		sysModel.Upload{},
+	)
 	if err != nil {
 		return err
 	}
