@@ -1,5 +1,5 @@
 <div align=center>
-<img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/logo.png"/>
+<img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/grain-logo.png"/>
 </div>
 <div align=center>
 <img src="https://img.shields.io/badge/golang-v1.20-blue"/>
