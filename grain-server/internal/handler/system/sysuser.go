@@ -20,6 +20,7 @@ import (
 	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/utils"
 	"github.com/go-grain/grain/utils/const"
 	"github.com/go-grain/grain/utils/upload"
 	"strconv"
@@ -123,12 +124,12 @@ func (r *SysUserHandle) CreateSysUser(ctx *gin.Context) {
 		return
 	}
 	s := model.SysUser{}
-	//err = copier.Copy(&s, &c)
-	//if err != nil {
-	//	reply.WithCode(pkg.InvalidParameter).WithMessage(err.Error()).Fail(ctx)
-	//	return
-	//}
-	//fmt.Println(string(xjson.Marshal(&s)))
+	err = utils.StructToStruct(&c, &s)
+	if err != nil {
+		reply.WithCode(consts.CreateUserFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+
 	err = r.sv.CreateSysUser(&s, ctx)
 	if err != nil {
 		reply.WithCode(consts.CreateUserFail).WithMessage(err.Error()).Fail(ctx)
@@ -169,7 +170,7 @@ func (r *SysUserHandle) GetSysUserById(ctx *gin.Context) {
 // @Param data body model.SysUserReq true "分页数据"
 // @Success 200  {object} model.SysUser "成功"
 // @Failure 500  {object} model.ErrorRes "失败"
-// @Router /sysUser/list [post]
+// @Router /sysUser/list [get]
 func (r *SysUserHandle) GetSysUserList(ctx *gin.Context) {
 	reply := r.res.New()
 	req := model.SysUserReq{}

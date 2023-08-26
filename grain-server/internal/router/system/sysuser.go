@@ -15,6 +15,7 @@
 package router
 
 import (
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
@@ -40,7 +41,7 @@ type SysUserRouter struct {
 	privateRoleAuth gin.IRoutes
 }
 
-func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *SysUserRouter {
+func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, enforcer *casbin.CachedEnforcer, logger *log.Logger) *SysUserRouter {
 	data := repo.NewSysUserRepo(rdb)
 	sv := service.NewSysUserService(data, rdb, conf, logger)
 	return &SysUserRouter{
@@ -52,6 +53,7 @@ func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redi
 			middleware.JwtAuth(rdb)),
 		privateRoleAuth: routerGroup.Group("sysUser").Use(
 			middleware.JwtAuth(rdb),
+			middleware.Casbin(enforcer),
 		),
 	}
 }
@@ -90,5 +92,5 @@ func (r *SysUserRouter) InitRouters() {
 	//根据用户Id删除用户
 	r.privateRoleAuth.DELETE("", r.api.DeleteSysUserById)
 	//根据Id批量删除用户
-	r.privateRoleAuth.DELETE("list", r.api.DeleteSysUserByIdList)
+	r.privateRoleAuth.DELETE("deleteSysUserByIdList", r.api.DeleteSysUserByIdList)
 }

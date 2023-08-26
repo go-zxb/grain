@@ -74,7 +74,7 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/update", V2: "PUT"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/list", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/deleteSysUserByIdList", V2: "DELETE"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/info", V2: "GET"},
 		{Ptype: "p", V0: defaultRole, V1: "/api/v1/sysUser/info", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/avatar", V2: "POST"},
@@ -85,7 +85,7 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "PUT"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/list", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/deleteRoleList", V2: "DELETE"},
 
 		// 系统API
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "POST"},
@@ -100,7 +100,7 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "POST"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "PUT"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "DELETE"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/list", V2: "DELETE"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/list", V2: "GET"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/userMenu", V2: "GET"},
 	}

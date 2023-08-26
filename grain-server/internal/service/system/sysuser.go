@@ -148,6 +148,7 @@ func (s *SysUserService) LogOut(ctx *gin.Context) error {
 func (s *SysUserService) CreateSysUser(sysUser *model.SysUser, ctx *gin.Context) error {
 	sysUser.UID = utils.UID()
 	sysUser.ID = 0
+	sysUser.Password = encrypt.EncryptPassword(sysUser.Password)
 	err := s.repo.CreateSysUser(sysUser)
 	if err != nil {
 		s.log.Sava(s.log.OperationLog(400, "创建系统用户", sysUser, ctx))
