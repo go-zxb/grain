@@ -1,0 +1,41 @@
+database:
+    driver: mysql
+    log_level: 4
+    mongo:
+        url: mongodb://localhost:27017
+    mysql:
+        source: grain:grain@tcp(127.0.0.1:3306)/grain?charset=utf8mb4&parseTime=true&loc=Asia%2fShanghai
+    pgsql:
+        source: host=127.0.0.1 port=5432 user=postgres dbname=grain password=admin sslmode=disable
+    redis:
+        addr: 127.0.0.1:6379
+        db: 0
+        password: ""
+        read_timeout: 1s
+        user_name: ""
+        write_timeout: 1s
+    tidb:
+        source: root:pass@tcp(127.0.0.1:4000)/grain
+email:
+    email_host: smtpdm.aliyun.com
+    email_password: yourEmailPassword
+    email_port: 25
+    email_username: yourEmailUsername
+gin:
+    host: :8080
+    model: debug
+jwt:
+    expiration_seconds: 86400
+    issuer: ZhangZhaZha
+    secret_key: yourSecretKey
+log:
+    level: -1
+    log_path: log
+    split_size: 1
+server:
+    file_domain: http://127.0.0.1:8080
+system:
+    captcha_length: 5
+    default_role: "2000"
+    default_admin_role: "2023"
+    site_name: Grain
