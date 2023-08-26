@@ -24,7 +24,6 @@ import (
 	"github.com/go-grain/grain/utils/const"
 	"github.com/go-grain/grain/utils/upload"
 	"strconv"
-	"time"
 )
 
 type SysUserHandle struct {
@@ -392,7 +391,7 @@ func (r *SysUserHandle) DeleteSysUserById(ctx *gin.Context) {
 	reply.WithMessage("删除用户成功").Success(ctx)
 }
 
-// DeleteSysUserByIdList 批量删除用户
+// DeleteSysUserByIds 批量删除用户
 // @Security ApiKeyAuth
 // @Summary 批量删除用户
 // @Description 批量删除用户
@@ -403,17 +402,17 @@ func (r *SysUserHandle) DeleteSysUserById(ctx *gin.Context) {
 // @Success 200  {object} model.ErrorRes "成功"
 // @Failure 500  {object} model.ErrorRes "失败"
 // @Router /sysUser/list [put]
-func (r *SysUserHandle) DeleteSysUserByIdList(ctx *gin.Context) {
+func (r *SysUserHandle) DeleteSysUserByIds(ctx *gin.Context) {
 	reply := r.res.New()
 	api := struct {
-		SysUserIds []uint `json:"sysUserIds"`
+		UserIds []uint `json:"ids"`
 	}{}
 	err := ctx.ShouldBindJSON(&api)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	err = r.sv.DeleteSysUserByIdList(api.SysUserIds, ctx)
+	err = r.sv.DeleteSysUserByIds(api.UserIds, ctx)
 	if err != nil {
 		reply.WithCode(consts.DeleteSysUserByIdsFail).WithMessage(err.Error()).Fail(ctx)
 		return
@@ -449,42 +448,6 @@ func (r *SysUserHandle) UploadAvatar(ctx *gin.Context) {
 		return
 	}
 	reply.WithMessage("上传文件成功").WithData(xjson.G{"fileUrl": file.FileUrl}).Success(ctx)
-}
-
-func (r *SysUserHandle) Certification(ctx *gin.Context) {
-	type Record struct {
-		CertificationType    string `json:"certificationType,omitempty"`
-		CertificationContent string `json:"certificationContent,omitempty"`
-		Status               string `json:"status,omitempty"`
-		Time                 string `json:"time,omitempty"`
-	}
-	type name struct {
-		AccountType          string    `json:"accountType,omitempty"`
-		Status               int       `json:"status,omitempty"`
-		Time                 time.Time `json:"time,omitempty"`
-		LegalPerson          string    `json:"legalPerson,omitempty"`
-		CertificateType      string    `json:"certificateType,omitempty"`
-		AuthenticationNumber string    `json:"authenticationNumber,omitempty"`
-		Record               []Record  `json:"record"`
-	}
-	res := name{
-		AccountType:          "开发者",
-		Status:               1,
-		Time:                 time.Now(),
-		LegalPerson:          "Grain",
-		CertificateType:      "身份证",
-		AuthenticationNumber: "5202211997239882",
-		Record: []Record{
-			{
-				CertificationType:    "ddd",
-				CertificationContent: "dd",
-				Status:               "dd",
-				Time:                 "dfd",
-			},
-		},
-	}
-	reply := r.res.New()
-	reply.WithCode(200).WithMessage("ok").WithData(gin.H{"enterpriseInfo": res}).Success(ctx)
 }
 
 // SwitchRole 切换角色

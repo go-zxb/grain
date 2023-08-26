@@ -92,5 +92,5 @@ func (r *SysUserRouter) InitRouters() {
 	//根据用户Id删除用户
 	r.privateRoleAuth.DELETE("", r.api.DeleteSysUserById)
 	//根据Id批量删除用户
-	r.privateRoleAuth.DELETE("deleteSysUserByIdList", r.api.DeleteSysUserByIdList)
+	r.privateRoleAuth.DELETE("deleteSysUserByIds", r.api.DeleteSysUserByIds)
 }

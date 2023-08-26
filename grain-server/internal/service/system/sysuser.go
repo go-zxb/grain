@@ -42,7 +42,7 @@ type ISysUserRepo interface {
 	EditSysUser(user *model.SysUser) error
 	SetDefaultRole(user *model.SysUser) error
 	DeleteSysUserById(userId uint) error
-	DeleteSysUserByIdList(userIds []uint) error
+	DeleteSysUserByIds(userIds []uint) error
 	UploadAvatar(avatar *model.Upload, uid string) error
 }
 
@@ -374,8 +374,8 @@ func (s *SysUserService) DeleteSysUserById(id uint, ctx *gin.Context) error {
 	return nil
 }
 
-func (s *SysUserService) DeleteSysUserByIdList(ids []uint, ctx *gin.Context) error {
-	err := s.repo.DeleteSysUserByIdList(ids)
+func (s *SysUserService) DeleteSysUserByIds(ids []uint, ctx *gin.Context) error {
+	err := s.repo.DeleteSysUserByIds(ids)
 	if err != nil {
 		s.log.Sava(s.log.OperationLog(400, "删除用户", xjson.G{"id": ids}, ctx))
 		return err

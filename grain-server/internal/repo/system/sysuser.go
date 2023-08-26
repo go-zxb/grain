@@ -116,7 +116,7 @@ func (r *SysUserRepo) DeleteSysUserById(sysUserId uint) error {
 	return nil
 }
 
-func (r *SysUserRepo) DeleteSysUserByIdList(sysUserIds []uint) error {
+func (r *SysUserRepo) DeleteSysUserByIds(sysUserIds []uint) error {
 	if _, err := r.query.SysUser.Where(r.query.SysUser.ID.In(sysUserIds...)).Delete(); err != nil {
 		return err
 	}
