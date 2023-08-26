@@ -88,7 +88,7 @@ func InitApi() error {
 		{Path: "/api/v1/sysMenu", Description: "删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
 		{Path: "/api/v1/sysMenu/list", Description: "获取菜单列表", ApiGroup: "系统菜单", Method: "GET"},
 		{Path: "/api/v1/sysMenu/deleteSysMenuByIds", Description: "批量删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
-		{Path: "/api/v1/sysUser/userMenu", Description: "用户获取动态菜单", ApiGroup: "系统菜单", Method: "GET"},
+		{Path: "/api/v1/sysMenu/userMenu", Description: "获取动态菜单", ApiGroup: "系统用户", Method: "GET"},
 	}
 	q := query.Q.SysApi
 
@@ -98,7 +98,7 @@ func InitApi() error {
 	}
 
 	// 数据相等则退出 否则就更新
-	if count == int64(len(apis)) {
+	if count != 0 {
 		return nil
 	}
 

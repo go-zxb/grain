@@ -27,6 +27,7 @@ func Gen() {
 		sysModel.Upload{},
 		sysModel.CasbinRule{},
 		sysModel.SysApi{},
+		sysModel.SysMenu{},
 	)
 }
 
