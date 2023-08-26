@@ -17,17 +17,15 @@ package data
 import (
 	"errors"
 	"github.com/go-grain/grain/config"
+	sysModel "github.com/go-grain/grain/model/system"
 	"gorm.io/gorm"
 )
 
 const (
 	// dbMySQL Gorm Drivers mysql || postgres || sqlite || sqlserver
-	dbMySQL      string = "mysql"
-	dbPostgres   string = "postgres"
-	dbTidb       string = "tidb"
-	dbSQLite     string = "sqlite"
-	dbSQLServer  string = "sqlserver"
-	dbClickHouse string = "clickhouse"
+	dbMySQL    string = "mysql"
+	dbPostgres string = "postgres"
+	dbTidb     string = "tidb"
 )
 
 var db *DB
@@ -66,7 +64,11 @@ func NewDB() *DB {
 }
 
 func (db *DB) autoMigrate() error {
-	err := db.DB.AutoMigrate()
+	err := db.DB.AutoMigrate(
+		sysModel.SysRole{},
+		sysModel.SysUser{},
+		sysModel.SysApi{},
+		sysModel.SysMenu{})
 	if err != nil {
 		return err
 	}
