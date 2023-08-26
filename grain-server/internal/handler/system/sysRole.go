@@ -125,7 +125,7 @@ func (r *RoleHandle) UpdateRole(ctx *gin.Context) {
 // @Param ID query int true "角色ID"
 // @Success 200  {object} model.ErrorRes "成功"
 // @Failure 500  {object} model.ErrorRes "失败"
-// @Router /sysRole [put]
+// @Router /sysRole [delete]
 func (r *RoleHandle) DeleteRoleById(ctx *gin.Context) {
 	reply := r.res.New()
 	role := utils.String2Int(ctx.Query("id"))
@@ -151,7 +151,7 @@ func (r *RoleHandle) DeleteRoleById(ctx *gin.Context) {
 // @Param data body []int true "系统角色ID列表"
 // @Success 200  {object} model.ErrorRes "成功"
 // @Failure 500  {object} model.ErrorRes "失败"
-// @Router /sysRole/list [put]
+// @Router /sysRole/list [delete]
 func (r *RoleHandle) DeleteRoleByIds(ctx *gin.Context) {
 	reply := r.res.New()
 	api := struct {

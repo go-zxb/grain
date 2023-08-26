@@ -38,19 +38,21 @@ func NewApiRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.C
 	return &ApiRouter{
 		api:    handler.NewApiHandle(sv),
 		public: routerGroup.Group("sysApi"),
-		private: routerGroup.Group("sysApi").Use(
-			middleware.JwtAuth(rdb),
-			middleware.Casbin(enforcer),
-		),
+		private: routerGroup.
+			Group("sysApi").
+			Use(
+				middleware.JwtAuth(rdb),
+				middleware.Casbin(enforcer),
+			),
 	}
 }
 
 func (r *ApiRouter) InitRouters() {
+	r.private.PUT("", r.api.UpdateApi)
 	r.private.POST("", r.api.CreateApi)
 	r.private.GET("list", r.api.GetApiList)
-	r.private.GET("apiAndPermissions", r.api.GetApiAndPermissions)
-	r.private.GET("apiGroups", r.api.GetApiGroup)
-	r.private.PUT("", r.api.UpdateApi)
 	r.private.DELETE("", r.api.DeleteApiById)
+	r.private.GET("apiGroups", r.api.GetApiGroup)
 	r.private.DELETE("deleteApiByIds", r.api.DeleteApiByIds)
+	r.private.GET("apiAndPermissions", r.api.GetApiAndPermissions)
 }
