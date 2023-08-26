@@ -15,7 +15,8 @@
 package consts
 
 const (
-	ReqFail = 5000
+	FormatOrTypeError = 4000
+	ReqFail           = 5000
 	//系统用户
 	CreateUserFail             = 1001
 	InvalidParameter           = 1002

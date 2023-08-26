@@ -27,12 +27,12 @@ func Casbin(enforcer *casbin.CachedEnforcer) gin.HandlerFunc {
 		// 权限验证
 		enforce, err := enforcer.Enforce(ctx.GetString("role"), ctx.Request.URL.Path, ctx.Request.Method)
 		if err != nil {
-			reply.WithCode(http.StatusBadGateway).WithMessage(err.Error()).Fail(ctx)
+			reply.WithCode(http.StatusInternalServerError).WithMessage(err.Error()).Fail(ctx)
 			ctx.Abort()
 			return
 		}
 		if !enforce {
-			reply.WithCode(http.StatusBadGateway).WithMessage("无权限").Fail(ctx)
+			reply.WithCode(http.StatusForbidden).WithMessage("无权限").Fail(ctx)
 			ctx.Abort()
 			return
 		}

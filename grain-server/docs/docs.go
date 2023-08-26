@@ -15,7 +15,2904 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {},
+    "paths": {
+        "/captcha/sendEmailCaptcha": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "向指定的邮箱地址发送验证码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "向指定的邮箱地址发送验证码",
+                "parameters": [
+                    {
+                        "description": "邮箱地址",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.Email"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/captcha/sendMobileCaptcha": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "向指定的手机号发送验证码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "向指定的手机号发送验证码",
+                "parameters": [
+                    {
+                        "description": "手机号",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.Mobile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/captcha/sendUserEmailCaptcha": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "发送用户邮箱验证码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "发送用户邮箱验证码",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/captcha/sendUserMobileCaptcha": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "发送用户手机验证码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "发送用户手机验证码",
+                "parameters": [
+                    {
+                        "description": "手机号",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.Mobile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/casbin": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "更新角色权限",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Casbin权限"
+                ],
+                "summary": "更新角色权限",
+                "parameters": [
+                    {
+                        "description": "分配角色权限",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.CasbinReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/casbin/authApiList": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取xx角色可访问的接口列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Casbin权限"
+                ],
+                "summary": "获取xx角色可访问的接口列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "根据Role获取xx角色可访问的接口列表",
+                        "name": "role",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.CasbinRule"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysApi": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "更新APi接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "更新APi接口",
+                "parameters": [
+                    {
+                        "description": "APi接口信息",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysApi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "创建一个API接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "创建一个API接口",
+                "parameters": [
+                    {
+                        "description": "API接口信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysApi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据API接口ID删除API接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "根据API接口ID删除API接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "API接口ID",
+                        "name": "ID",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysApi/apiAndPermissions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量获取所有API接口和已授权的api列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "批量获取所有API接口和已授权的api列表",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysApi/apiGroups": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量获取API接口分组",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "批量获取API接口分组",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysApi/deleteApiByIds": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据API接口ID删除API接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "根据API接口ID删除API接口",
+                "parameters": [
+                    {
+                        "description": "API接口Ids",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysApi/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量获取API接口列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API接口"
+                ],
+                "summary": "批量获取API接口列表",
+                "parameters": [
+                    {
+                        "description": "分页数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysApiReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysLog": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据系统日志ID删除系统日志",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统日志"
+                ],
+                "summary": "删除系统日志",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "根据系统日志ID删除系统日志 ",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysLog/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取系统日志分页数据",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统日志"
+                ],
+                "summary": "获取系统日志分页数据",
+                "parameters": [
+                    {
+                        "description": "分页列表请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysLogReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysLog"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "\"根据系统日志ID批量删除系统日志\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统日志"
+                ],
+                "summary": "删除系统日志",
+                "parameters": [
+                    {
+                        "description": "根据系统日志ID批量删除系统日志",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysMenu": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "更新菜单信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "更新菜单",
+                "parameters": [
+                    {
+                        "description": "更新菜单信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "创建菜单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "创建菜单",
+                "parameters": [
+                    {
+                        "description": "菜单信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据菜单ID删除菜单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "删除一条菜单数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "根据菜单ID删除菜单 ",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysMenu/deleteMenuByIds": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "\"根据菜单ID批量删除菜单\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "批量删除菜单",
+                "parameters": [
+                    {
+                        "description": "根据菜单ID批量删除菜单",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysMenu/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取菜单分页数据",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "获取菜单分页数据",
+                "parameters": [
+                    {
+                        "description": "分页列表请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenuReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenu"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysMenu/userMenu": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户获取动态菜单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "动态菜单"
+                ],
+                "summary": "用户获取动态菜单",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenu"
+                        }
+                    },
+                    "400": {
+                        "description": "格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "401": {
+                        "description": "未经授权",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "资源不存在",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysRole": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "管理员创建一个系统角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统角色"
+                ],
+                "summary": "创建一个系统角色",
+                "parameters": [
+                    {
+                        "description": "用户角色信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.CreateSysRole"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "删除系统角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统角色"
+                ],
+                "summary": "删除系统角色",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "角色ID",
+                        "name": "ID",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysRole/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量获取系统角色列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统角色"
+                ],
+                "summary": "批量获取系统角色列表",
+                "parameters": [
+                    {
+                        "description": "分页数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量删除系统角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统角色"
+                ],
+                "summary": "批量删除系统角色",
+                "parameters": [
+                    {
+                        "description": "系统角色ID列表",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysRole/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "更新用户角色信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统角色"
+                ],
+                "summary": "更新用户角色信息",
+                "parameters": [
+                    {
+                        "description": "用户角色信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.UpdateUserInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据 userID 获取系统用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "根据 userID 获取系统用户信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID ",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "400": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "404": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "删除用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "删除用户",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/confirmModifyEmail": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "确认修改邮箱",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "确认修改邮箱",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "key",
+                        "name": "key",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "管理员创建一个系统用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "创建一个系统用户",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.CreateSysUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/editSysUser": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "编辑用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "编辑用户信息",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取个人信息接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "获取个人信息",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量获取用户列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "批量获取用户列表",
+                "parameters": [
+                    {
+                        "description": "分页数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysUser"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量删除用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "批量删除用户",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "用户ID列表",
+                        "name": "list",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/login": {
+            "post": {
+                "description": "用户登录接口，使用用户名和密码进行登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "登录",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.LoginRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/logout": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "退出登录接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "退出登录",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/modifyAvatar": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "上传头像",
+                "consumes": [
+                    "application/json",
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "上传头像",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "头像",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/modifyEmail": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "提交修改邮箱信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "提交修改邮箱信息",
+                "parameters": [
+                    {
+                        "description": "邮箱信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ModifyEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/modifyMobile": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "修改手机号",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "修改手机号",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ModifyMobile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/modifyPassword": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户修改自己的密码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "修改密码",
+                "parameters": [
+                    {
+                        "description": "修改密码信息",
+                        "name": "sysUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ModifyPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/setDefaultRole": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "设置默认角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "设置默认角色",
+                "parameters": [
+                    {
+                        "description": "角色信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.DefaultRole"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/switchRole": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "切换角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "切换角色",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "角色",
+                        "name": "role",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.LoginRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户更新个人信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统用户"
+                ],
+                "summary": "更新个人信息",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.UpdateUserInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取文件列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "上传文件"
+                ],
+                "summary": "获取文件列表",
+                "parameters": [
+                    {
+                        "description": "分页数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.UploadReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "上传文件",
+                "consumes": [
+                    "application/json",
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "上传文件"
+                ],
+                "summary": "上传文件",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "删除文件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "上传文件"
+                ],
+                "summary": "删除文件",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "文件ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/list": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "批量删除文件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "上传文件"
+                ],
+                "summary": "批量删除文件",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "文件ID列表",
+                        "name": "list",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    },
+                    "500": {
+                        "description": "失败",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-grain_grain_model_system.ErrorRes"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_go-grain_grain_model_system.CasbinReq": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.CasbinRule": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "ptype": {
+                    "description": "类型 p 或 g",
+                    "type": "string"
+                },
+                "v0": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "v1": {
+                    "description": "资源",
+                    "type": "string"
+                },
+                "v2": {
+                    "description": "方法",
+                    "type": "string"
+                },
+                "v3": {
+                    "type": "string"
+                },
+                "v4": {
+                    "type": "string"
+                },
+                "v5": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.CreateSysRole": {
+            "type": "object",
+            "required": [
+                "role",
+                "roleName"
+            ],
+            "properties": {
+                "role": {
+                    "type": "string"
+                },
+                "roleName": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.CreateSysUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.DefaultRole": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.Email": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.ErrorRes": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "time": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.LoginReq": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "captcha": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.LoginRes": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "expire": {
+                            "type": "integer"
+                        },
+                        "token": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "time": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.Meta": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "description": "icon图标",
+                    "type": "string"
+                },
+                "locale": {
+                    "description": "Locale 用来存储该条菜单的国际化信息",
+                    "type": "string"
+                },
+                "order": {
+                    "description": "排序",
+                    "type": "integer"
+                },
+                "requiresAuth": {
+                    "description": "是否需要权限才能访问",
+                    "type": "boolean"
+                },
+                "roles": {
+                    "description": "那些角色可以访问",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.Mobile": {
+            "type": "object",
+            "properties": {
+                "mobile": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.ModifyEmail": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "captcha": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.ModifyMobile": {
+            "type": "object",
+            "required": [
+                "captcha",
+                "mobile"
+            ],
+            "properties": {
+                "captcha": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.ModifyPassword": {
+            "type": "object",
+            "required": [
+                "newPassword",
+                "oldPassword"
+            ],
+            "properties": {
+                "newPassword": {
+                    "type": "string"
+                },
+                "oldPassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.RoleStr": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysApi": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "description": "删除时间",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/gorm.DeletedAt"
+                        }
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增ID",
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysApiReq": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "keyword": {
+                    "description": "查询关键词",
+                    "type": "string"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "页大小",
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "total": {
+                    "description": "所查询的数据总量",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "查询类型",
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysLog": {
+            "type": "object",
+            "properties": {
+                "bodySize": {
+                    "description": "数据大小",
+                    "type": "integer"
+                },
+                "clientIP": {
+                    "description": "客户端请求IP",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/gorm.DeletedAt"
+                        }
+                    ]
+                },
+                "errorMessage": {
+                    "description": "错误信息",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "string"
+                },
+                "latency": {
+                    "description": "延时",
+                    "type": "integer"
+                },
+                "logType": {
+                    "description": "日志类型 目前主要区分登录日志",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "请求方法",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "nickname": {
+                    "description": "昵称",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "请求路径",
+                    "type": "string"
+                },
+                "reqData": {
+                    "description": "请求数据"
+                },
+                "requestAt": {
+                    "description": "请求时间",
+                    "type": "string"
+                },
+                "resCode": {
+                    "description": "响应code",
+                    "type": "integer"
+                },
+                "resData": {
+                    "description": "响应数据"
+                },
+                "responseAt": {
+                    "description": "响应时间",
+                    "type": "string"
+                },
+                "role": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "statusCode": {
+                    "description": "状态码",
+                    "type": "integer"
+                },
+                "uid": {
+                    "description": "用户UID",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名称",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysLogReq": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "description": "查询关键词",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "页大小",
+                    "type": "integer"
+                },
+                "queryTime": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "total": {
+                    "description": "所查询的数据总量",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "查询类型",
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysMenu": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_go-grain_grain_model_system.SysMenu"
+                    }
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "description": "删除时间",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/gorm.DeletedAt"
+                        }
+                    ]
+                },
+                "id": {
+                    "description": "自增ID",
+                    "type": "integer"
+                },
+                "meta": {
+                    "$ref": "#/definitions/github_com_go-grain_grain_model_system.Meta"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysMenuReq": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "description": "查询关键词",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "页大小",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "所查询的数据总量",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "查询类型",
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysUser": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "description": "头像",
+                    "type": "string"
+                },
+                "certification": {
+                    "description": "认证标志",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "description": "删除时间",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/gorm.DeletedAt"
+                        }
+                    ]
+                },
+                "email": {
+                    "description": "email",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增ID",
+                    "type": "integer"
+                },
+                "introduction": {
+                    "description": "个人介绍",
+                    "type": "string"
+                },
+                "mobile": {
+                    "description": "手机号",
+                    "type": "string"
+                },
+                "nickname": {
+                    "description": "昵称",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "用户密码",
+                    "type": "string"
+                },
+                "personalWebsite": {
+                    "description": "个人博客网站",
+                    "type": "string"
+                },
+                "role": {
+                    "description": "现有的默认角色",
+                    "type": "string"
+                },
+                "roleStr": {
+                    "description": "存放 角色ID,角色名称等角色信息,方便前端展示使用",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_go-grain_grain_model_system.RoleStr"
+                    }
+                },
+                "roles": {
+                    "description": "多角色字段",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "description": "账号状态,一般 yes 正常,no 异常封禁",
+                    "type": "string"
+                },
+                "uid": {
+                    "description": "用户uid",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.SysUserReq": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "keyword": {
+                    "description": "查询关键词",
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "页大小",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "所查询的数据总量",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "查询类型",
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.UpdateUserInfo": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "introduction": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "personalWebsite": {
+                    "type": "string"
+                },
+                "uid": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-grain_grain_model_system.UploadReq": {
+            "type": "object",
+            "properties": {
+                "fileName": {
+                    "type": "string"
+                },
+                "keyword": {
+                    "description": "查询关键词",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "页大小",
+                    "type": "integer"
+                },
+                "queryTime": {
+                    "type": "string"
+                },
+                "total": {
+                    "description": "所查询的数据总量",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "查询类型",
+                    "type": "integer"
+                }
+            }
+        },
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",

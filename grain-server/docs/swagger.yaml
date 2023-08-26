@@ -1,11 +1,1871 @@
 basePath: /api/v1
+definitions:
+  github_com_go-grain_grain_model_system.CasbinReq:
+    properties:
+      data:
+        items:
+          type: integer
+        type: array
+      role:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.CasbinRule:
+    properties:
+      id:
+        type: integer
+      ptype:
+        description: 类型 p 或 g
+        type: string
+      v0:
+        description: 角色
+        type: string
+      v1:
+        description: 资源
+        type: string
+      v2:
+        description: 方法
+        type: string
+      v3:
+        type: string
+      v4:
+        type: string
+      v5:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.CreateSysRole:
+    properties:
+      role:
+        type: string
+      roleName:
+        type: string
+    required:
+    - role
+    - roleName
+    type: object
+  github_com_go-grain_grain_model_system.CreateSysUser:
+    properties:
+      email:
+        type: string
+      mobile:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.DefaultRole:
+    properties:
+      id:
+        type: integer
+      role:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.Email:
+    properties:
+      email:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.ErrorRes:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+      time:
+        type: integer
+    type: object
+  github_com_go-grain_grain_model_system.LoginReq:
+    properties:
+      captcha:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  github_com_go-grain_grain_model_system.LoginRes:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          expire:
+            type: integer
+          token:
+            type: string
+        type: object
+      message:
+        type: string
+      success:
+        type: boolean
+      time:
+        type: integer
+    type: object
+  github_com_go-grain_grain_model_system.Meta:
+    properties:
+      icon:
+        description: icon图标
+        type: string
+      locale:
+        description: Locale 用来存储该条菜单的国际化信息
+        type: string
+      order:
+        description: 排序
+        type: integer
+      requiresAuth:
+        description: 是否需要权限才能访问
+        type: boolean
+      roles:
+        description: 那些角色可以访问
+        items:
+          type: string
+        type: array
+    type: object
+  github_com_go-grain_grain_model_system.Mobile:
+    properties:
+      mobile:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.ModifyEmail:
+    properties:
+      captcha:
+        type: string
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  github_com_go-grain_grain_model_system.ModifyMobile:
+    properties:
+      captcha:
+        type: string
+      mobile:
+        type: string
+    required:
+    - captcha
+    - mobile
+    type: object
+  github_com_go-grain_grain_model_system.ModifyPassword:
+    properties:
+      newPassword:
+        type: string
+      oldPassword:
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  github_com_go-grain_grain_model_system.RoleStr:
+    properties:
+      label:
+        type: string
+      value:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysApi:
+    properties:
+      createdAt:
+        description: 创建时间
+        type: string
+      deletedAt:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 删除时间
+      description:
+        type: string
+      group:
+        type: string
+      id:
+        description: 自增ID
+        type: integer
+      method:
+        type: string
+      path:
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysApiReq:
+    properties:
+      description:
+        type: string
+      group:
+        type: string
+      keyword:
+        description: 查询关键词
+        type: string
+      method:
+        type: string
+      page:
+        description: 页
+        type: integer
+      pageSize:
+        description: 页大小
+        type: integer
+      path:
+        type: string
+      total:
+        description: 所查询的数据总量
+        type: integer
+      type:
+        description: 查询类型
+        type: integer
+    type: object
+  github_com_go-grain_grain_model_system.SysLog:
+    properties:
+      bodySize:
+        description: 数据大小
+        type: integer
+      clientIP:
+        description: 客户端请求IP
+        type: string
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 删除时间
+      errorMessage:
+        description: 错误信息
+        type: string
+      id:
+        description: ID
+        type: string
+      latency:
+        description: 延时
+        type: integer
+      logType:
+        description: 日志类型 目前主要区分登录日志
+        type: string
+      method:
+        description: 请求方法
+        type: string
+      name:
+        description: 名称
+        type: string
+      nickname:
+        description: 昵称
+        type: string
+      path:
+        description: 请求路径
+        type: string
+      reqData:
+        description: 请求数据
+      requestAt:
+        description: 请求时间
+        type: string
+      resCode:
+        description: 响应code
+        type: integer
+      resData:
+        description: 响应数据
+      responseAt:
+        description: 响应时间
+        type: string
+      role:
+        description: 角色
+        type: string
+      statusCode:
+        description: 状态码
+        type: integer
+      uid:
+        description: 用户UID
+        type: string
+      updated_at:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名称
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysLogReq:
+    properties:
+      keyword:
+        description: 查询关键词
+        type: string
+      name:
+        type: string
+      page:
+        description: 页
+        type: integer
+      pageSize:
+        description: 页大小
+        type: integer
+      queryTime:
+        type: string
+      role:
+        type: string
+      total:
+        description: 所查询的数据总量
+        type: integer
+      type:
+        description: 查询类型
+        type: integer
+      username:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysMenu:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenu'
+        type: array
+      createdAt:
+        description: 创建时间
+        type: string
+      deletedAt:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 删除时间
+      id:
+        description: 自增ID
+        type: integer
+      meta:
+        $ref: '#/definitions/github_com_go-grain_grain_model_system.Meta'
+      name:
+        type: string
+      parentId:
+        type: integer
+      path:
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysMenuReq:
+    properties:
+      keyword:
+        description: 查询关键词
+        type: string
+      page:
+        description: 页
+        type: integer
+      pageSize:
+        description: 页大小
+        type: integer
+      total:
+        description: 所查询的数据总量
+        type: integer
+      type:
+        description: 查询类型
+        type: integer
+    type: object
+  github_com_go-grain_grain_model_system.SysUser:
+    properties:
+      avatar:
+        description: 头像
+        type: string
+      certification:
+        description: 认证标志
+        type: integer
+      createdAt:
+        description: 创建时间
+        type: string
+      deletedAt:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 删除时间
+      email:
+        description: email
+        type: string
+      id:
+        description: 自增ID
+        type: integer
+      introduction:
+        description: 个人介绍
+        type: string
+      mobile:
+        description: 手机号
+        type: string
+      nickname:
+        description: 昵称
+        type: string
+      password:
+        description: 用户密码
+        type: string
+      personalWebsite:
+        description: 个人博客网站
+        type: string
+      role:
+        description: 现有的默认角色
+        type: string
+      roleStr:
+        description: 存放 角色ID,角色名称等角色信息,方便前端展示使用
+        items:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.RoleStr'
+        type: array
+      roles:
+        description: 多角色字段
+        items:
+          type: string
+        type: array
+      status:
+        description: 账号状态,一般 yes 正常,no 异常封禁
+        type: string
+      uid:
+        description: 用户uid
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.SysUserReq:
+    properties:
+      email:
+        type: string
+      keyword:
+        description: 查询关键词
+        type: string
+      mobile:
+        type: string
+      page:
+        description: 页
+        type: integer
+      pageSize:
+        description: 页大小
+        type: integer
+      total:
+        description: 所查询的数据总量
+        type: integer
+      type:
+        description: 查询类型
+        type: integer
+      username:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.UpdateUserInfo:
+    properties:
+      avatar:
+        type: string
+      introduction:
+        type: string
+      nickname:
+        type: string
+      personalWebsite:
+        type: string
+      uid:
+        type: string
+    type: object
+  github_com_go-grain_grain_model_system.UploadReq:
+    properties:
+      fileName:
+        type: string
+      keyword:
+        description: 查询关键词
+        type: string
+      page:
+        description: 页
+        type: integer
+      pageSize:
+        description: 页大小
+        type: integer
+      queryTime:
+        type: string
+      total:
+        description: 所查询的数据总量
+        type: integer
+      type:
+        description: 查询类型
+        type: integer
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
 host: 127.0.0.1:8080
 info:
   contact: {}
   description: Your Gin API.
   title: Grain API
   version: "1.0"
-paths: {}
+paths:
+  /captcha/sendEmailCaptcha:
+    post:
+      consumes:
+      - application/json
+      description: 向指定的邮箱地址发送验证码
+      parameters:
+      - description: 邮箱地址
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.Email'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 向指定的邮箱地址发送验证码
+      tags:
+      - 验证码
+  /captcha/sendMobileCaptcha:
+    post:
+      consumes:
+      - application/json
+      description: 向指定的手机号发送验证码
+      parameters:
+      - description: 手机号
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.Mobile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 向指定的手机号发送验证码
+      tags:
+      - 验证码
+  /captcha/sendUserEmailCaptcha:
+    post:
+      consumes:
+      - application/json
+      description: 发送用户邮箱验证码
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 发送用户邮箱验证码
+      tags:
+      - 验证码
+  /captcha/sendUserMobileCaptcha:
+    post:
+      consumes:
+      - application/json
+      description: 发送用户手机验证码
+      parameters:
+      - description: 手机号
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.Mobile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 发送用户手机验证码
+      tags:
+      - 验证码
+  /casbin:
+    put:
+      consumes:
+      - application/json
+      description: 更新角色权限
+      parameters:
+      - description: 分配角色权限
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.CasbinReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新角色权限
+      tags:
+      - Casbin权限
+  /casbin/authApiList:
+    get:
+      consumes:
+      - application/json
+      description: 获取xx角色可访问的接口列表
+      parameters:
+      - description: 根据Role获取xx角色可访问的接口列表
+        in: path
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.CasbinRule'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取xx角色可访问的接口列表
+      tags:
+      - Casbin权限
+  /sysApi:
+    delete:
+      consumes:
+      - application/json
+      description: 根据API接口ID删除API接口
+      parameters:
+      - description: API接口ID
+        in: query
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据API接口ID删除API接口
+      tags:
+      - API接口
+    post:
+      consumes:
+      - application/json
+      description: 创建一个API接口
+      parameters:
+      - description: API接口信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysApi'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建一个API接口
+      tags:
+      - API接口
+    put:
+      consumes:
+      - application/json
+      description: 更新APi接口
+      parameters:
+      - description: APi接口信息
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysApi'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新APi接口
+      tags:
+      - API接口
+  /sysApi/apiAndPermissions:
+    get:
+      consumes:
+      - application/json
+      description: 批量获取所有API接口和已授权的api列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量获取所有API接口和已授权的api列表
+      tags:
+      - API接口
+  /sysApi/apiGroups:
+    get:
+      consumes:
+      - application/json
+      description: 批量获取API接口分组
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量获取API接口分组
+      tags:
+      - API接口
+  /sysApi/deleteApiByIds:
+    delete:
+      consumes:
+      - application/json
+      description: 根据API接口ID删除API接口
+      parameters:
+      - description: API接口Ids
+        in: body
+        name: data
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据API接口ID删除API接口
+      tags:
+      - API接口
+  /sysApi/list:
+    get:
+      consumes:
+      - application/json
+      description: 批量获取API接口列表
+      parameters:
+      - description: 分页数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysApiReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量获取API接口列表
+      tags:
+      - API接口
+  /sysLog:
+    delete:
+      consumes:
+      - application/json
+      description: 根据系统日志ID删除系统日志
+      parameters:
+      - description: '根据系统日志ID删除系统日志 '
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除系统日志
+      tags:
+      - 系统日志
+  /sysLog/list:
+    delete:
+      consumes:
+      - application/json
+      description: '"根据系统日志ID批量删除系统日志"'
+      parameters:
+      - description: 根据系统日志ID批量删除系统日志
+        in: body
+        name: data
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除系统日志
+      tags:
+      - 系统日志
+    get:
+      consumes:
+      - application/json
+      description: 获取系统日志分页数据
+      parameters:
+      - description: 分页列表请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysLogReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysLog'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取系统日志分页数据
+      tags:
+      - 系统日志
+  /sysMenu:
+    delete:
+      consumes:
+      - application/json
+      description: 根据菜单ID删除菜单
+      parameters:
+      - description: '根据菜单ID删除菜单 '
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除一条菜单数据
+      tags:
+      - 动态菜单
+    post:
+      consumes:
+      - application/json
+      description: 创建菜单
+      parameters:
+      - description: 菜单信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenu'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建菜单
+      tags:
+      - 动态菜单
+    put:
+      consumes:
+      - application/json
+      description: 更新菜单信息
+      parameters:
+      - description: 更新菜单信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenu'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新菜单
+      tags:
+      - 动态菜单
+  /sysMenu/deleteMenuByIds:
+    delete:
+      consumes:
+      - application/json
+      description: '"根据菜单ID批量删除菜单"'
+      parameters:
+      - description: 根据菜单ID批量删除菜单
+        in: body
+        name: data
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除菜单
+      tags:
+      - 动态菜单
+  /sysMenu/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取菜单分页数据
+      parameters:
+      - description: 分页列表请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenu'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取菜单分页数据
+      tags:
+      - 动态菜单
+  /sysMenu/userMenu:
+    get:
+      consumes:
+      - application/json
+      description: 用户获取动态菜单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysMenu'
+        "400":
+          description: 格式错误
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "401":
+          description: 未经授权
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 资源不存在
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户获取动态菜单
+      tags:
+      - 动态菜单
+  /sysRole:
+    delete:
+      consumes:
+      - application/json
+      description: 删除系统角色
+      parameters:
+      - description: 角色ID
+        in: query
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除系统角色
+      tags:
+      - 系统角色
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建一个系统角色
+      parameters:
+      - description: 用户角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.CreateSysRole'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建一个系统角色
+      tags:
+      - 系统角色
+  /sysRole/list:
+    delete:
+      consumes:
+      - application/json
+      description: 批量删除系统角色
+      parameters:
+      - description: 系统角色ID列表
+        in: body
+        name: data
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除系统角色
+      tags:
+      - 系统角色
+    post:
+      consumes:
+      - application/json
+      description: 批量获取系统角色列表
+      parameters:
+      - description: 分页数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量获取系统角色列表
+      tags:
+      - 系统角色
+  /sysRole/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新用户角色信息
+      parameters:
+      - description: 用户角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.UpdateUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户角色信息
+      tags:
+      - 系统角色
+  /sysUser:
+    get:
+      consumes:
+      - application/json
+      description: 根据 userID 获取系统用户信息
+      parameters:
+      - description: '用户ID '
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "400":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "404":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据 userID 获取系统用户信息
+      tags:
+      - 系统用户
+    put:
+      consumes:
+      - application/json
+      description: 删除用户
+      parameters:
+      - description: 用户ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除用户
+      tags:
+      - 系统用户
+  /sysUser/confirmModifyEmail:
+    get:
+      consumes:
+      - application/json
+      description: 确认修改邮箱
+      parameters:
+      - description: key
+        in: query
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 确认修改邮箱
+      tags:
+      - 系统用户
+  /sysUser/create:
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建一个系统用户
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.CreateSysUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建一个系统用户
+      tags:
+      - 系统用户
+  /sysUser/editSysUser:
+    put:
+      consumes:
+      - application/json
+      description: 编辑用户信息
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 编辑用户信息
+      tags:
+      - 系统用户
+  /sysUser/info:
+    get:
+      consumes:
+      - application/json
+      description: 获取个人信息接口
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取个人信息
+      tags:
+      - 系统用户
+  /sysUser/list:
+    get:
+      consumes:
+      - application/json
+      description: 批量获取用户列表
+      parameters:
+      - description: 分页数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.SysUser'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量获取用户列表
+      tags:
+      - 系统用户
+    put:
+      consumes:
+      - application/json
+      description: 批量删除用户
+      parameters:
+      - collectionFormat: csv
+        description: 用户ID列表
+        in: path
+        items:
+          type: integer
+        name: list
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除用户
+      tags:
+      - 系统用户
+  /sysUser/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录接口，使用用户名和密码进行登录
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.LoginRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      summary: 登录
+      tags:
+      - 系统用户
+  /sysUser/logout:
+    post:
+      consumes:
+      - application/json
+      description: 退出登录接口
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 退出登录
+      tags:
+      - 系统用户
+  /sysUser/modifyAvatar:
+    post:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: 上传头像
+      parameters:
+      - description: 头像
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 上传头像
+      tags:
+      - 系统用户
+  /sysUser/modifyEmail:
+    put:
+      consumes:
+      - application/json
+      description: 提交修改邮箱信息
+      parameters:
+      - description: 邮箱信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.ModifyEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 提交修改邮箱信息
+      tags:
+      - 系统用户
+  /sysUser/modifyMobile:
+    put:
+      consumes:
+      - application/json
+      description: 修改手机号
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.ModifyMobile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改手机号
+      tags:
+      - 系统用户
+  /sysUser/modifyPassword:
+    put:
+      consumes:
+      - application/json
+      description: 用户修改自己的密码
+      parameters:
+      - description: 修改密码信息
+        in: body
+        name: sysUser
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.ModifyPassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改密码
+      tags:
+      - 系统用户
+  /sysUser/setDefaultRole:
+    put:
+      consumes:
+      - application/json
+      description: 设置默认角色
+      parameters:
+      - description: 角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.DefaultRole'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 设置默认角色
+      tags:
+      - 系统用户
+  /sysUser/switchRole:
+    post:
+      consumes:
+      - application/json
+      description: 切换角色
+      parameters:
+      - description: 角色
+        in: query
+        name: role
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.LoginRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 切换角色
+      tags:
+      - 系统用户
+  /sysUser/update:
+    post:
+      consumes:
+      - application/json
+      description: 用户更新个人信息
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.UpdateUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新个人信息
+      tags:
+      - 系统用户
+  /upload:
+    delete:
+      consumes:
+      - application/json
+      description: 删除文件
+      parameters:
+      - description: 文件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除文件
+      tags:
+      - 上传文件
+    get:
+      consumes:
+      - application/json
+      description: 获取文件列表
+      parameters:
+      - description: 分页数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_go-grain_grain_model_system.UploadReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取文件列表
+      tags:
+      - 上传文件
+    post:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: 上传文件
+      parameters:
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 上传文件
+      tags:
+      - 上传文件
+  /upload/list:
+    delete:
+      consumes:
+      - application/json
+      description: 批量删除文件
+      parameters:
+      - collectionFormat: csv
+        description: 文件ID列表
+        in: path
+        items:
+          type: integer
+        name: list
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/github_com_go-grain_grain_model_system.ErrorRes'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除文件
+      tags:
+      - 上传文件
 securityDefinitions:
   ApiKeyAuth:
     in: header

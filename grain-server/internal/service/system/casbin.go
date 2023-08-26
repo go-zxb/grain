@@ -112,8 +112,8 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		return err
 	}
 
-	// 数据相等则退出 否则就更新
-	if count == int64(len(casbinRule)) {
+	// 有数据则退出,没有则添加默认数据
+	if count != 0 {
 		return nil
 	}
 
