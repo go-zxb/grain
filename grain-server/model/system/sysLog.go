@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-type OperationLog struct {
+type SysLog struct {
 	// ID
 	ID primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	// 用户UID
@@ -68,19 +68,19 @@ type OperationLog struct {
 }
 
 // BeforeSave 钩子函数：在保存文档之前执行
-func (m *OperationLog) BeforeSave() {
+func (m *SysLog) BeforeSave() {
 	currentTime := time.Now()
 	m.CreatedAt = currentTime
 }
 
 // BeforeUpdate 钩子函数：在更新文档之前执行
-func (m *OperationLog) BeforeUpdate() {
+func (m *SysLog) BeforeUpdate() {
 	currentTime := time.Now()
 	m.UpdatedAt = currentTime
 }
 
-// OperationLogReq 一般用来查询操作日志的数据
-type OperationLogReq struct {
+// SysLogReq 一般用来查询操作日志的数据
+type SysLogReq struct {
 	PageReq
 	Name      string `form:"name" json:"name" xml:"name" gorm:"comment:名称"`
 	Role      string `form:"role" json:"role" xml:"role" gorm:"comment:角色"`

@@ -48,7 +48,7 @@ func (r *Grain) InitConf() (err error) {
 	mongo := data.MongoDB{}
 	if err = mongo.NewMongoDBRepo(r.conf.DataBase.Mongo.URL,
 		"grain",
-		"sysUserLog"); err != nil {
+		"sysLog"); err != nil {
 		return
 	}
 
@@ -80,6 +80,8 @@ func (r *Grain) InitRouter() {
 		reply := response.Response{}
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
+	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
@@ -98,6 +100,25 @@ func (r *Grain) InitGenQuery() {
 	query.SetDefault(r.db)
 }
 
+func (r *Grain) InitWithAPiANDRoleANDMenu() {
+	err := service.InitSysUser(r.conf)
+	if err != nil {
+		return
+	}
+	err = service.InitApi()
+	if err != nil {
+		return
+	}
+	err = service.InitMenu(r.db)
+	if err != nil {
+		return
+	}
+	err = service.InitCasbinRoleRule(r.conf)
+	if err != nil {
+		return
+	}
+}
+
 func Run() {
 	grain := Grain{}
 
@@ -108,6 +129,8 @@ func Run() {
 	grain.InitGenQuery()
 
 	grain.InitRouter()
+
+	grain.InitWithAPiANDRoleANDMenu()
 
 	grain.RunGin()
 }
