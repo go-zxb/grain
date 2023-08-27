@@ -12,37 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package gen
-
-import (
-	sysModel "github.com/go-grain/grain/model/system"
-	"gorm.io/gen"
-)
-
-func Gen() {
-	xGen(
-		"internal/repo/system/query",
-		sysModel.SysRole{},
-		sysModel.SysUser{},
-		sysModel.Upload{},
-		sysModel.CasbinRule{},
-		sysModel.SysApi{},
-		sysModel.SysMenu{},
-		sysModel.Upload{},
-		sysModel.Project{},
-		sysModel.Models{},
-		sysModel.Fields{},
-	)
-}
-
-func xGen(outPath string, model ...interface{}) {
-	g := gen.NewGenerator(gen.Config{
-		OutPath: outPath,
-		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
-	})
-
-	g.ApplyBasic(
-		model...,
-	)
-	g.Execute()
-}
+package repo

@@ -70,6 +70,9 @@ func (db *DB) autoMigrate() error {
 		sysModel.SysApi{},
 		sysModel.SysMenu{},
 		sysModel.Upload{},
+		sysModel.Project{},
+		sysModel.Models{},
+		sysModel.Fields{},
 	)
 	if err != nil {
 		return err
