@@ -28,7 +28,7 @@ type ErrorRes struct {
 	Time    int64  `json:"time"`
 }
 
-type MySqlModel struct {
+type Model struct {
 	// 自增ID
 	ID uint `json:"id" xml:"id" gorm:"primarykey"`
 	// 创建时间
@@ -50,7 +50,7 @@ type MongoModel struct {
 }
 
 // BeforeCreate 钩子函数： 创建前Gorm会调用
-func (m *MySqlModel) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *Model) BeforeCreate(tx *gorm.DB) (err error) {
 	now := time.Now()
 	m.CreatedAt = now
 	m.UpdatedAt = now
@@ -58,7 +58,7 @@ func (m *MySqlModel) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 // BeforeSave 钩子函数： 保存前Gorm会调用
-func (m *MySqlModel) BeforeSave(tx *gorm.DB) (err error) {
+func (m *Model) BeforeSave(tx *gorm.DB) (err error) {
 	now := time.Now()
 	m.CreatedAt = now
 	m.UpdatedAt = now
@@ -66,7 +66,7 @@ func (m *MySqlModel) BeforeSave(tx *gorm.DB) (err error) {
 }
 
 // BeforeUpdate 钩子函数： 更新前Gorm会调用
-func (m *MySqlModel) BeforeUpdate(tx *gorm.DB) (err error) {
+func (m *Model) BeforeUpdate(tx *gorm.DB) (err error) {
 	now := time.Now()
 	m.CreatedAt = now
 	m.UpdatedAt = now

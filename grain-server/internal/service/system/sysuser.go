@@ -198,8 +198,8 @@ func (s *SysUserService) ModifyPassword(sysUser *model.ModifyPassword, ctx *gin.
 	}
 
 	newUserInfo := model.SysUser{
-		MySqlModel: model.MySqlModel{ID: user.ID},
-		Password:   encrypt.EncryptPassword(sysUser.NewPassword),
+		Model:    model.Model{ID: user.ID},
+		Password: encrypt.EncryptPassword(sysUser.NewPassword),
 	}
 	err = s.repo.EditSysUser(&newUserInfo)
 	if err != nil {
@@ -256,8 +256,8 @@ func (s *SysUserService) ModifyEmail(email *model.ModifyEmail, ctx *gin.Context)
 	}
 
 	newUserInfo := model.SysUser{
-		MySqlModel: model.MySqlModel{ID: userInfo.ID},
-		Email:      email.Email,
+		Model: model.Model{ID: userInfo.ID},
+		Email: email.Email,
 	}
 
 	err = s.rdb.SetObject(fmt.Sprintf("%s:%s", "confirmEmail", uid), &newUserInfo, 86400)
@@ -311,8 +311,8 @@ func (s *SysUserService) ModifyMobile(mobile *model.ModifyMobile, ctx *gin.Conte
 		return err
 	}
 	newUserInfo := model.SysUser{
-		MySqlModel: model.MySqlModel{ID: userInfo.ID},
-		Mobile:     mobile.Mobile,
+		Model:  model.Model{ID: userInfo.ID},
+		Mobile: mobile.Mobile,
 	}
 	err = s.repo.EditSysUser(&newUserInfo)
 	if err != nil {

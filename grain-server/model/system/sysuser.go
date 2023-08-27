@@ -29,7 +29,7 @@ type Roles []string
 // SysUser 用户结构体
 type SysUser struct {
 	//基础字段
-	MySqlModel
+	Model
 	//用户uid
 	UID string `form:"uid" json:"uid" xml:"uid"  gorm:"unique;not null;comment:用户唯一标识符"`
 	// 用户名

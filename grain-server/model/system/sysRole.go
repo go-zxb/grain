@@ -16,7 +16,7 @@ package model
 
 // SysRole 角色结构体
 type SysRole struct {
-	MySqlModel
+	Model
 	Role     string `form:"role" json:"role" xml:"role" gorm:"unique;not null;comment:角色ID" binding:"required"`
 	RoleName string `form:"roleName" json:"roleName" xml:"roleName" gorm:"unique;not null;comment:角色名称" binding:"required"`
 }

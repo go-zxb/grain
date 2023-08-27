@@ -36,7 +36,7 @@ type Meta struct {
 
 // SysMenu 用来管理动态菜单的结构体
 type SysMenu struct {
-	MySqlModel
+	Model
 	ParentId uint       ` form:"parentId" json:"parentId" xml:"parentId"  gorm:"comment:父ID"`
 	Path     string     `form:"path" json:"path" xml:"path" gorm:"comment:路径"`
 	Name     string     `form:"name" json:"name" xml:"name" gorm:"comment:名称"`

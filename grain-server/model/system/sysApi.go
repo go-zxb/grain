@@ -15,7 +15,7 @@
 package model
 
 type SysApi struct {
-	MySqlModel
+	Model
 	Path        string `json:"path" gorm:"uniqueIndex:api_path_method_idx;index:idx_path;comment:路径"`
 	Method      string `json:"method" gorm:"uniqueIndex:api_path_method_idx;index:idx_method;comment:方法"`
 	Description string `json:"description"  gorm:"comment:描述"`

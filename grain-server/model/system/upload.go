@@ -16,7 +16,7 @@ package model
 
 // Upload 文件附件结构体
 type Upload struct {
-	MySqlModel
+	Model
 	// 所属用户
 	UID string `json:"uid" xml:"uid" gorm:"comment:用户唯一标识符"`
 	// 文件的名称
@@ -45,7 +45,7 @@ type UploadReq struct {
 // 这是为了 在某些情况下 我想知道这条数据的所属者是谁,
 // 那么就可以把所属者的信息放在这里就ok了
 type UploadRes struct {
-	MySqlModel
+	Model
 	Nickname string `json:"nickname;omitempty" xml:"nickname" gorm:"-"`
 	Username string `json:"username;omitempty" xml:"username" gorm:"-"`
 	FileName string `json:"fileName" xml:"fileName" gorm:"comment:"`
