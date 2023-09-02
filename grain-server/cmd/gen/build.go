@@ -14,10 +14,11 @@
 
 package main
 
-import "github.com/go-grain/grain/cmd/gen/gen"
+import (
+	"github.com/go-grain/grain/cmd/gen/sys"
+)
 
 // 第一次拉取项目,请先运行该文件,否则 repo层有依赖找不到
-// 运行生成 CRUD 操作代码
 func main() {
-	gen.Gen()
+	sys.Gen()
 }
