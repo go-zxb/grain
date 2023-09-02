@@ -57,14 +57,18 @@ func NewApiService(repo IApiRepo, rdb redis.IRedis, conf *config.Config, logger 
 
 func InitApi() error {
 	apis := []*model.SysApi{
+
+		// 系统角色
 		{Path: "/api/v1/sysRole", Description: "编辑角色", ApiGroup: "系统角色", Method: "PUT"},
 		{Path: "/api/v1/sysRole", Description: "创建角色", ApiGroup: "系统角色", Method: "POST"},
 		{Path: "/api/v1/sysRole/list", Description: "获取角色列表", ApiGroup: "系统角色", Method: "GET"},
 		{Path: "/api/v1/sysRole/deleteSysRoleByIds", Description: "批量删除角色", ApiGroup: "系统角色", Method: "DELETE"},
 
+		// casbin
 		{Path: "/api/v1/casbin", Description: "更新角色权限", ApiGroup: "系统权限", Method: "PUT"},
 		{Path: "/api/v1/casbin/list", Description: "获取已授权的Api列表", ApiGroup: "系统权限", Method: "GET"},
 
+		// 系统Api
 		{Path: "/api/v1/sysApi", Description: "创建Api", ApiGroup: "系统Api", Method: "POST"},
 		{Path: "/api/v1/sysApi", Description: "编辑Api", ApiGroup: "系统Api", Method: "PUT"},
 		{Path: "/api/v1/sysApi", Description: "删除Api", ApiGroup: "系统Api", Method: "DELETE"},
@@ -73,9 +77,10 @@ func InitApi() error {
 		{Path: "/api/v1/sysApi/apiGroups", Description: "获取Api分组列表", ApiGroup: "系统Api", Method: "GET"},
 		{Path: "/api/v1/sysApi/apiAndPermissions", Description: "获取已授权的Api列表", ApiGroup: "系统Api", Method: "GET"},
 
+		// 系统用户
 		{Path: "/api/v1/sysUser", Description: "删除系统用户", ApiGroup: "系统用户", Method: "DELETE"},
 		{Path: "/api/v1/sysUser/info", Description: "获取用户信息", ApiGroup: "系统用户", Method: "GET"},
-		{Path: "/api/v1/editUserInfo", Description: "编辑系统用户", ApiGroup: "系统用户", Method: "PUT"},
+		{Path: "/api/v1/sysUser/editUserInfo", Description: "编辑系统用户", ApiGroup: "系统用户", Method: "PUT"},
 		{Path: "/api/v1/sysUser/update", Description: "更新个人信息", ApiGroup: "系统用户", Method: "PUT"},
 		{Path: "/api/v1/sysUser/create", Description: "创建系统用户", ApiGroup: "系统用户", Method: "POST"},
 		{Path: "/api/v1/sysUser/list", Description: "获取系统用户列表", ApiGroup: "系统用户", Method: "GET"},
@@ -83,12 +88,29 @@ func InitApi() error {
 		{Path: "/api/v1/sysUser/avatar", Description: "更新系统用户头像", ApiGroup: "系统用户", Method: "POST"},
 		{Path: "/api/v1/sysUser/setDefaultRole", Description: "设置默认角色", ApiGroup: "系统用户", Method: "PUT"},
 
+		//系统菜单
 		{Path: "/api/v1/sysMenu", Description: "编辑菜单", ApiGroup: "系统菜单", Method: "PUT"},
 		{Path: "/api/v1/sysMenu", Description: "创建菜单", ApiGroup: "系统菜单", Method: "POST"},
 		{Path: "/api/v1/sysMenu", Description: "删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
 		{Path: "/api/v1/sysMenu/list", Description: "获取菜单列表", ApiGroup: "系统菜单", Method: "GET"},
 		{Path: "/api/v1/sysMenu/deleteSysMenuByIds", Description: "批量删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
 		{Path: "/api/v1/sysMenu/userMenu", Description: "获取动态菜单", ApiGroup: "系统用户", Method: "GET"},
+
+		// 代码助手
+		{Path: "/api/v1/codeAssistant/projects", Description: "添加或更新项目信息", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/models", Description: "添加或更新模型信息", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/fields", Description: "添加或更新字段信息", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/projects", Description: "删除项目", ApiGroup: "代码助手", Method: "DELETE"},
+		{Path: "/api/v1/codeAssistant/models", Description: "删除模型", ApiGroup: "代码助手", Method: "DELETE"},
+		{Path: "/api/v1/codeAssistant/fields", Description: "删除字段", ApiGroup: "代码助手", Method: "DELETE"},
+		{Path: "/api/v1/codeAssistant/projects/list", Description: "获取项目列表", ApiGroup: "代码助手", Method: "GET"},
+		{Path: "/api/v1/codeAssistant/models/list", Description: "获取模型列表", ApiGroup: "代码助手", Method: "GET"},
+		{Path: "/api/v1/codeAssistant/fields/list", Description: "获取字段列表", ApiGroup: "代码助手", Method: "GET"},
+		{Path: "/api/v1/codeAssistant/viewCode", Description: "预览代码", ApiGroup: "代码助手", Method: "GET"},
+
+		// 系统日志
+		{Path: "/api/v1/sysLog/list", Description: "获取系统操作日志列表", ApiGroup: "系统菜单", Method: "GET"},
+		{Path: "/api/v1/sysLog", Description: "删除系统操作日志", ApiGroup: "系统菜单", Method: "DELETE"},
 	}
 	q := query.Q.SysApi
 

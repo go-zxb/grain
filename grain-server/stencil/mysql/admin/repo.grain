@@ -1,0 +1,136 @@
+package repo
+
+import (
+    "fmt"
+	  "{{.ProjectName}}/model/{{.Name}}"
+  	"{{.ProjectName}}/repo/data"
+  	service "{{.ProjectName}}/admin/service/{{.Name}}"
+  	"github.com/go-grain/go-utils/redis"
+  	"{{.ProjectName}}/repo/{{.Name}}/query"
+    {{if eq .QueryTime "yes"}}
+  	"{{.ProjectName}}/utils"
+  	"strings"{{end}}
+  	"gorm.io/gorm"
+)
+
+
+type {{.StructName}}Repo struct {
+	db  *data.DB
+	rdb redis.IRedis
+	query *query.Query
+}
+
+func New{{.StructName}}Repo(db *gorm.DB, rdb redis.IRedis) service.I{{.StructName}}Repo {
+	return &{{.StructName}}Repo{
+		db:  &data.DB{DB: db},
+		rdb: rdb,
+		query: query.Q,
+	}
+}
+
+func (r *{{.StructName}}Repo) AdminGet{{.StructName}}ById({{.Name}}Id uint) ({{.Name}} *model.{{.StructName}}Res,err error) {
+  err = r.db.DB.Model(&model.{{.StructName}}{}).Where("id = ?", {{.Name}}Id).First({{.Name}}).Error
+  return {{.Name}}, err
+}
+
+func (r *{{.StructName}}Repo) AdminGet{{.StructName}}List(req *model.{{.StructName}}Req) (list []*model.{{.StructName}},err error) {
+	if req.Page <= 0 {
+  		req.Page = 1
+  	}
+
+  	if req.PageSize <= 0 || req.PageSize >= 100 {
+  		req.PageSize = 20
+  	}
+
+  	q := r.query.{{.StructName}}.Where()
+   {{if eq .QueryTime "yes"}}
+   if len(req.QueryTime) == 1 {
+   		t := strings.Split(req.QueryTime, ",")
+      if len(t) == 2 {
+        s := utils.StringToDate(t[0], utils.YMD)
+        e := utils.StringToDate(t[1], utils.YMD)
+   			q = q.Where(r.query.{{.StructName}}.CreatedAt.Between(s, e))
+   		}
+}{{end}}
+
+  {{range .Fields}}{{if .QueryCriteria}}
+
+  {{if eq .QueryCriteria "eq" }}
+  if req.{{.Name}} != "" {
+     		q = q.Where(r.query.{{s-model}}.{{.Name}}.Eq(req.{{.Name}}))
+    }
+  {{end}}
+  {{if eq .QueryCriteria "gt" }}
+    if req.{{.Name}} != "" {
+       		q = q.Where(r.query.{{s-model}}.{{.Name}}.Gt(req.{{.Name}}))
+      }
+    {{end}}
+
+    {{if eq .QueryCriteria "lt" }}
+        if req.{{.Name}} != "" {
+           		q = q.Where(r.query.{{s-model}}.{{.Name}}.Lt(req.{{.Name}}))
+          }
+        {{end}}
+        {{if eq .QueryCriteria "lte" }}
+            if req.{{.Name}} != "" {
+               		q = q.Where(r.query.{{s-model}}.{{.Name}}.Lte(req.{{.Name}}))
+              }
+            {{end}}
+
+        {{if eq .QueryCriteria "gte" }}
+            if req.{{.Name}} != "" {
+               		q = q.Where(r.query.{{s-model}}.{{.Name}}.Gte(req.{{.Name}}))
+              }
+            {{end}}
+{{if eq .QueryCriteria "ne" }}
+    if req.{{.Name}} != "" {
+       		q = q.Where(r.query.{{s-model}}.{{.Name}}.Ne(req.{{.Name}}))
+      }
+    {{end}}
+
+    {{if eq .QueryCriteria "like" }}
+        if req.{{.Name}} != "" {
+           		q = q.Where(r.query.{{s-model}}.{{.Name}}.Like(fmt.Sprintf("%s%s%s", "%", req.{{.Name}}, "%")))
+          }
+        {{end}}
+
+  {{end}}{{end}}
+
+  count, err := r.query.{{.StructName}}.Count()
+  		if err != nil {
+  			return nil, err
+  		}
+  		req.Total = count
+q = q.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize)
+list, err = q.Order(r.query.{{.StructName}}.CreatedAt).Find()
+		if err != nil {
+			return nil, err
+		}
+		return list, nil
+}
+
+func (r *{{.StructName}}Repo) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
+	if _, err := r.query.{{.StructName}}.Updates({{.Name}}); err != nil {
+		return err
+	}
+	New{{.Name}}, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq({{.Name}}.ID)).First()
+	if err != nil {
+		return err
+	}
+	_ = r.rdb.SetObject(fmt.Sprintf("%s:%d", {{.Name}}.TableName(), {{.Name}}.ID), New{{.Name}}, 180)
+	return nil
+}
+
+func (r *{{.StructName}}Repo) AdminDelete{{.StructName}}ById(id uint) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq(id)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
+}
+
+func (r *{{.StructName}}Repo) AdminDelete{{.StructName}}ByIds(ids []uint) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.In(ids...)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
+}

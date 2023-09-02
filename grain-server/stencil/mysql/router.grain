@@ -1,0 +1,56 @@
+package router
+
+import (
+	 adminHandle "{{.ProjectName}}/admin/handler/{{.Name}}"
+	 adminRope "{{.ProjectName}}/admin/repo/{{.Name}}"
+	 adminService "{{.ProjectName}}/admin/service/{{.Name}}"
+	"{{.ProjectName}}/config"
+	"{{.ProjectName}}/handler/{{.Name}}"
+	"{{.ProjectName}}/log"
+	"{{.ProjectName}}/middleware"
+	"{{.ProjectName}}/repo/{{.Name}}"
+	"github.com/go-grain/go-utils/redis"
+	"{{.ProjectName}}/service/{{.Name}}"
+	"github.com/casbin/casbin/v2"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
+
+type {{.StructName}}Router struct {
+	public          gin.IRoutes
+	private         gin.IRoutes
+	privateRoleAuth gin.IRoutes
+	api             *handler.{{.StructName}}Handle
+	adminApi        *adminHandle.{{.StructName}}Handle
+}
+
+func New{{.StructName}}Router(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *{{.StructName}}Router {
+	data := repo.New{{.StructName}}Repo(db, rdb)
+	adminData := adminRope.New{{.StructName}}Repo(db, rdb)
+	sv := service.New{{.StructName}}Service(data, rdb, conf, logger)
+	adminSv := adminService.New{{.StructName}}Service(adminData, rdb, conf, logger)
+	return &{{.StructName}}Router{
+		public:   routerGroup.Group("{{.Name}}"),
+		api:      handler.New{{.StructName}}Handle(sv),
+		adminApi: adminHandle.New{{.StructName}}Handle(adminSv),
+		private: routerGroup.Group("{{.Name}}").Use(middleware.JwtAuth(rdb)),
+		privateRoleAuth: routerGroup.Group("admin/{{.Name}}").Use(middleware.JwtAuth(rdb),middleware.Casbin(enforcer)),
+	}
+}
+
+func (r *{{.StructName}}Router) InitRouters() {
+	r.private.PUT("", r.api.Update{{.StructName}})
+	r.private.POST("", r.api.Create{{.StructName}})
+	r.private.GET("list", r.api.Get{{.StructName}}List)
+	r.private.GET(":{{.Name}}Id", r.api.Get{{.StructName}}ById)
+	r.private.DELETE("{{.Name}}ById", r.api.Delete{{.StructName}}ById)
+	r.private.DELETE("{{.Name}}ByIds", r.api.Delete{{.StructName}}ByIds)
+
+
+	r.privateRoleAuth.PUT("", r.adminApi.AdminUpdate{{.StructName}})
+	r.privateRoleAuth.GET("list", r.adminApi.AdminGet{{.StructName}}List)
+	r.privateRoleAuth.GET("{{.Name}}ById", r.adminApi.AdminGet{{.StructName}}ById)
+	r.privateRoleAuth.DELETE("{{.Name}}ById", r.adminApi.AdminDelete{{.StructName}}ById)
+	r.privateRoleAuth.DELETE("{{.Name}}ByIds", r.adminApi.AdminDelete{{.StructName}}ByIds)
+
+}

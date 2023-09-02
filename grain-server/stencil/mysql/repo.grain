@@ -1,0 +1,154 @@
+package repo
+
+import (
+    "fmt"
+    utils "github.com/go-grain/go-utils"
+	  "{{.ProjectName}}/model/{{.Name}}"
+  	"{{.ProjectName}}/repo/data"
+  	service "{{.ProjectName}}/service/{{.Name}}"
+  	"github.com/go-grain/go-utils/redis"
+  	"{{.ProjectName}}/repo/{{.Name}}/query"
+  	"gorm.io/gorm"
+  	{{if eq .QueryTime "yes"}}
+  	"strings"{{end}}
+
+)
+
+
+type {{.StructName}}Repo struct {
+	db  *data.DB
+	rdb redis.IRedis
+	query *query.Query
+}
+
+func New{{.StructName}}Repo(db *gorm.DB, rdb redis.IRedis) service.I{{.StructName}}Repo {
+	//为了偷懒自动生成代码后直接在这里AutoMigrate,你可以放到data里面去统一管理
+	_ = db.AutoMigrate(model.{{.StructName}}{})
+	//SetDefault 你也可以放到core>start文件里面去统一初始化
+	query.SetDefault(db)
+	return &{{.StructName}}Repo{
+		db:  &data.DB{DB: db},
+		rdb: rdb,
+		query: query.Q,
+	}
+}
+
+func (r *{{.StructName}}Repo) Create{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
+	return r.query.{{.StructName}}.Create({{.Name}})
+}
+
+func (r *{{.StructName}}Repo) Update{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq({{.Name}}.UID)).Updates({{.Name}}); err != nil {
+		return err
+	}
+	New{{.Name}}, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq({{.Name}}.ID)).First()
+	if err != nil {
+		return err
+	}
+	_ = r.rdb.SetObject(fmt.Sprintf("%s:%d", {{.Name}}.TableName(), {{.Name}}.ID), New{{.Name}}, 180)
+	return nil
+}
+
+func (r *{{.StructName}}Repo) Delete{{.StructName}}ById(id uint,uid string) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.Eq(id)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
+}
+
+func (r *{{.StructName}}Repo) Delete{{.StructName}}ByIds(ids []uint,uid string) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.In(ids...)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
+}
+
+func (r *{{.StructName}}Repo) Get{{.StructName}}ById(id uint,uid string) ({{.Name}} *model.{{.StructName}},err error) {
+  err = r.rdb.GetObject("", {{.Name}})
+  	if err != nil || {{.Name}}.ID == 0{
+  		{{.Name}}, err = r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq(id)).First()
+        	if err != nil {
+        		return nil, err
+        	}
+  	r.rdb.SetObject(utils.ToString(id),{{.Name}},180)
+  	}
+
+  	return
+}
+
+func (r *{{.StructName}}Repo) Get{{.StructName}}List(req *model.{{.StructName}}Req) (list []*model.{{.StructName}},err error) {
+	if req.Page <= 0 {
+  		req.Page = 1
+  	}
+
+  	if req.PageSize <= 0 || req.PageSize >= 100 {
+  		req.PageSize = 20
+  	}
+
+  	q := r.query.{{.StructName}}.Where()
+   {{if eq .QueryTime "yes"}}
+   if req.QueryTime != "" {
+   			t := strings.Split(req.QueryTime, ",")
+   			if len(t) == 2 {
+   				s := utils.StringToDate(t[0], utils.YMD)
+   				e := utils.StringToDate(t[1], utils.YMD)
+   				q = q.Where(r.query.{{.StructName}}.CreatedAt.Between(s, e))
+   			}
+}{{end}}
+
+  {{range .Fields}}
+  {{if .QueryCriteria}}
+
+  {{if eq .QueryCriteria "eq" }}
+  if req.{{.Name}} != "" {
+     		q = q.Where(r.query.{{s-model}}.{{.Name}}.Eq(req.{{.Name}}))
+    }
+  {{end}}
+  {{if eq .QueryCriteria "gt" }}
+    if req.{{.Name}} != "" {
+       		q = q.Where(r.query.{{s-model}}.{{.Name}}.Gt(req.{{.Name}}))
+      }
+    {{end}}
+
+    {{if eq .QueryCriteria "lt" }}
+        if req.{{.Name}} != "" {
+           		q = q.Where(r.query.{{s-model}}.{{.Name}}.Lt(req.{{.Name}}))
+          }
+        {{end}}
+        {{if eq .QueryCriteria "lte" }}
+            if req.{{.Name}} != "" {
+               		q = q.Where(r.query.{{s-model}}.{{.Name}}.Lte(req.{{.Name}}))
+              }
+            {{end}}
+
+        {{if eq .QueryCriteria "gte" }}
+            if req.{{.Name}} != "" {
+               		q = q.Where(r.query.{{s-model}}.{{.Name}}.Gte(req.{{.Name}}))
+              }
+            {{end}}
+{{if eq .QueryCriteria "ne" }}
+    if req.{{.Name}} != "" {
+       		q = q.Where(r.query.{{s-model}}.{{.Name}}.Ne(req.{{.Name}}))
+      }
+    {{end}}
+
+    {{if eq .QueryCriteria "like" }}
+        if req.{{.Name}} != "" {
+           		q = q.Where(r.query.{{s-model}}.{{.Name}}.Like(fmt.Sprintf("%s%s%s", "%", req.{{.Name}}, "%")))
+          }
+        {{end}}
+
+  {{end}}{{end}}
+
+  count, err := q.Count()
+  		if err != nil {
+  			return nil, err
+  		}
+  		req.Total = count
+q = q.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize)
+list, err = q.Order(r.query.{{.StructName}}.CreatedAt).Find()
+		if err != nil {
+			return nil, err
+		}
+		return list, nil
+}

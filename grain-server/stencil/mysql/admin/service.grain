@@ -1,0 +1,80 @@
+package service
+
+import (
+	"errors"
+	"{{.ProjectName}}/log"
+	"{{.ProjectName}}/config"
+	"{{.ProjectName}}/model/{{.Name}}"
+	"github.com/go-grain/go-utils/redis"
+	"github.com/gin-gonic/gin"
+
+)
+
+type I{{.StructName}}Repo interface {
+  AdminDelete{{.StructName}}ById({{.Name}}Id uint) error
+  AdminDelete{{.StructName}}ByIds({{.Name}}Ids []uint) error
+  AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error
+  AdminGet{{.StructName}}ById(id uint) (u *model.{{.StructName}}Res, err error)
+  AdminGet{{.StructName}}List(req *model.{{.StructName}}Req) ([]*model.{{.StructName}}, error)
+}
+
+type {{.StructName}}Service struct {
+	repo I{{.StructName}}Repo
+	rdb  redis.IRedis
+	conf *config.Config
+	log  *log.Logger
+}
+
+func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger *log.Logger) *{{.StructName}}Service {
+	return &{{.StructName}}Service{
+		repo: repo,
+		rdb:  rdb,
+		conf: conf,
+		log:  logger,
+	}
+}
+
+func (s *{{.StructName}}Service) AdminGet{{.StructName}}ById({{.Name}}Id uint,ctx *gin.Context) (*model.{{.StructName}}Res, error) {
+	return s.repo.AdminGet{{.StructName}}ById({{.Name}}Id)
+}
+
+func (s *{{.StructName}}Service) AdminGet{{.StructName}}List(req *model.{{.StructName}}Req,ctx *gin.Context) ([]*model.{{.StructName}}, error ) {
+	list, err := s.repo.AdminGet{{.StructName}}List(req)
+	if err != nil {
+  		return nil, err
+  	}
+  	if len(list) == 0 {
+  		return nil, errors.New("暂无更多数据")
+  	}
+    return list, err
+}
+
+func (s *{{.StructName}}Service) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}},ctx *gin.Context) error {
+	err := s.repo.AdminUpdate{{.StructName}}({{.Name}})
+	if err != nil {
+      		s.log.Sava(s.log.OperationLog(400, "更新{{.Description}}", {{.Name}}, ctx))
+      		return err
+      	}
+      	s.log.Sava(s.log.OperationLog(200, "更新{{.Description}}", {{.Name}}, ctx))
+    return nil
+}
+
+func (s *{{.StructName}}Service) AdminDelete{{.StructName}}ById({{.Name}}Id uint,ctx *gin.Context) error {
+	err := s.repo.AdminDelete{{.StructName}}ById({{.Name}}Id)
+	if err != nil {
+        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Id, ctx))
+        		return err
+        	}
+        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Id, ctx))
+    return nil
+}
+
+func (s *{{.StructName}}Service) AdminDelete{{.StructName}}ByIds({{.Name}}Ids []uint,ctx *gin.Context) error {
+	err :=  s.repo.AdminDelete{{.StructName}}ByIds({{.Name}}Ids)
+	if err != nil {
+        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Ids, ctx))
+        		return err
+        	}
+        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Ids, ctx))
+    return nil
+}

@@ -1,0 +1,157 @@
+package handler
+
+import (
+	  "github.com/go-grain/grain/utils/const"
+	  "github.com/go-grain/go-utils/response"
+  	"{{.ProjectName}}/admin/service/{{.Name}}"
+  	"{{.ProjectName}}/model/{{.Name}}"
+  	"github.com/gin-gonic/gin"
+  	"strconv"
+)
+
+type {{.StructName}}Handle struct {
+	res response.Response
+	sv  *service.{{.StructName}}Service
+}
+
+func New{{.StructName}}Handle(sv *service.{{.StructName}}Service) *{{.StructName}}Handle {
+	return &{{.StructName}}Handle{
+		sv: sv,
+	}
+}
+
+// AdminGet{{.StructName}}ById
+// @Summary 获取{{.Description}}信息
+// @Description 根据{{.Description}}ID获取信息
+// @Tags {{.Description}}管理接口
+// @Accept json
+// @Produce json
+// @Param id query  int true "{{.Description}}ID "
+// @Success 200 {object} model.{{.StructName}} "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /admin/{{.Name}} [get]
+func (r *{{.StructName}}Handle) AdminGet{{.StructName}}ById(ctx *gin.Context) {
+	reply := r.res.New()
+	{{.Name}}Id, _ := strconv.Atoi(ctx.Query("{{.Name}}Id"))
+	{{.Name}}Info, err := r.sv.AdminGet{{.StructName}}ById(uint({{.Name}}Id),ctx)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage("获取{{.Description}}失败").Fail(ctx)
+		return
+	}
+	reply.WithMessage("成功").WithData({{.Name}}Info).Success(ctx)
+}
+
+// AdminGet{{.StructName}}List
+// @Security ApiKeyAuth
+// @Summary 获取{{.Description}}分页数据
+// @Description 获取{{.Description}}分页数据
+// @Tags {{.Description}}管理接口
+// @Accept json
+// @Produce json
+// @Param data body model.{{.StructName}}Req true "分页列表请求参数"
+// @Success 200 {object} model.{{.StructName}} "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /admin/{{.Name}}/list [get]
+func (r *{{.StructName}}Handle) AdminGet{{.StructName}}List(ctx *gin.Context) {
+	reply := r.res.New()
+	req := model.{{.StructName}}Req{}
+	err := ctx.ShouldBindQuery(&req)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage("参数解析失败").Fail(ctx)
+		return
+	}
+	list, err := r.sv.AdminGet{{.StructName}}List(&req,ctx)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	reply.WithMessage("成功").WithData(list).Success(ctx)
+}
+
+// AdminUpdate{{.StructName}}
+// @Security ApiKeyAuth
+// @Summary 更新{{.Description}}
+// @Description 更新{{.Description}}信息
+// @Tags {{.Description}}管理接口
+// @Accept json
+// @Produce json
+// @Param data body  model.Update{{.StructName}} true "更新{{.Description}}信息"
+// @Success 200 {object} model.ErrorRes "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /admin/{{.Name}} [put]
+func (r *{{.StructName}}Handle) AdminUpdate{{.StructName}}(ctx *gin.Context) {
+	reply := r.res.New()
+	{{.Name}} := model.{{.StructName}}{}
+	err := ctx.ShouldBindJSON(&{{.Name}})
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage("解析{{.Description}}参数失败").Fail(ctx)
+		return
+	}
+	err = r.sv.AdminUpdate{{.StructName}}(&{{.Name}},ctx)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	reply.WithMessage("更新{{.Description}}成功").Success(ctx)
+}
+
+// AdminDelete{{.StructName}}ById
+// @Security ApiKeyAuth
+// @Summary 删除{{.Description}}
+// @Description 根据{{.Description}}ID删除{{.Description}}
+// @Tags {{.Description}}管理接口
+// @Accept json
+// @Produce json
+// @Param id query  int true "{{.Description}}ID "
+// @Success 200 {object} model.{{.StructName}} "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /admin/{{.Name}} [delete]
+func (r *{{.StructName}}Handle) AdminDelete{{.StructName}}ById(ctx *gin.Context) {
+	reply := r.res.New()
+	{{.Name}}Id, _ := strconv.Atoi(ctx.Query("id"))
+	err := r.sv.AdminDelete{{.StructName}}ById(uint({{.Name}}Id), ctx)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	reply.WithMessage("删除{{.Description}}成功").Success(ctx)
+}
+
+// AdminDelete{{.StructName}}ByIdList
+// @Security ApiKeyAuth
+// @Summary 删除{{.Description}}
+// @Description 根据{{.Description}}ID删除{{.Description}}
+// @Tags {{.Description}}管理接口
+// @Accept json
+// @Produce json
+// @Param id query  int true "根据{{.Description}}ID删除{{.Description}} "
+// @Success 200 {object} model.ErrorRes "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /admin/{{.Name}}/{{.Name}}ByIds [delete]
+func (r *{{.StructName}}Handle) AdminDelete{{.StructName}}ByIds(ctx *gin.Context) {
+	reply := r.res.New()
+  	api := struct {
+  		{{.StructName}}Ids []uint `json:"ids"`
+  	}{}
+  	err := ctx.ShouldBindJSON(&api)
+  	if err != nil {
+  		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+  		return
+  	}
+  	err = r.sv.AdminDelete{{.StructName}}ByIds(api.{{.StructName}}Ids, ctx)
+  	if err != nil {
+  		reply.WithCode(consts.ReqFail).WithMessage("删除{{.Description}}失败").Fail(ctx)
+  		return
+  	}
+  	reply.WithMessage("删除{{.Description}}成功").Success(ctx)
+}

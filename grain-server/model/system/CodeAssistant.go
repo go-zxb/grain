@@ -30,6 +30,13 @@ func (Project) TableName() string {
 	return "project"
 }
 
+type CreateProject struct {
+	ProjectName    string `json:"projectName" gorm:"comment:项目名称"`
+	ProjectPath    string `json:"projectPath"  gorm:"comment:项目路径"`
+	WebProjectPath string `json:"webProjectPath" gorm:"comment:Web项目路径"`
+	Description    string `json:"description" gorm:"description:描述"`
+}
+
 type ProjectReq struct {
 	PageReq
 }
@@ -43,25 +50,32 @@ type UpdateProject struct {
 
 type Models struct {
 	Model
-	ParentId        uint      `json:"parentId" gorm:"comment:父ID"`
-	ProjectName     string    `json:"projectName" gorm:"-"`
-	ProjectPath     string    `json:"projectPath"  gorm:"-"`
-	WebProjectPath  string    `json:"webProjectPath" gorm:"-"`
-	StructName      string    `json:"structName"  gorm:"comment:结构体名称"`
-	ToLowerName     string    `json:"toLowerName"  gorm:"-"`
-	Description     string    `json:"description" gorm:"description:描述"`
-	QueryTime       string    `json:"queryTime"  gorm:"comment:时间范围查询"`
-	IsInit          string    `json:"isInit" gorm:"default:no;comment:是否已初始化"`
-	SqlName         string    `json:"sqlName"  gorm:"comment:用什么数据库 MySQL MongoDB?"`
-	Type            string    `gorm:"-"`
-	FirstLetter     string    `gorm:"-"`
-	GenOutPath      string    `gorm:"-"`
-	IsQueryCriteria bool      `gorm:"-"`
-	Fields          []*Fields `json:"fields"  gorm:"-"`
+	ParentId          uint      `json:"parentId" gorm:"comment:父ID"`
+	ProjectName       string    `json:"projectName" gorm:"-"`
+	ProjectPath       string    `json:"projectPath"  gorm:"-"`
+	WebProjectPath    string    `json:"webProjectPath" gorm:"-"`
+	StructName        string    `json:"structName"  gorm:"comment:结构体名称"`
+	ToLowerStructName string    `json:"toLowerStructName"  gorm:"-"`
+	Description       string    `json:"description" gorm:"description:描述"`
+	QueryTime         string    `json:"queryTime"  gorm:"comment:时间范围查询"`
+	IsInit            string    `json:"isInit" gorm:"default:no;comment:是否已初始化"`
+	DatabaseName      string    `json:"databaseName"  gorm:"comment:用什么数据库 MySQL MongoDB?"`
+	Name              string    `json:"name" gorm:"-"`
+	Type              string    `gorm:"-"`
+	FirstLetter       string    `gorm:"-"`
+	IsQueryCriteria   bool      `gorm:"-"`
+	Fields            []*Fields `json:"fields"  gorm:"-"`
 }
 
 func (Models) TableName() string {
 	return "models"
+}
+
+type CreateModels struct {
+	StructName   string `json:"structName"  gorm:"comment:结构体名称"`
+	DatabaseName string `json:"databaseName"  gorm:"comment:用什么数据库 MySQL MongoDB?"`
+	Description  string `json:"description" gorm:"description:描述"`
+	QueryTime    string `json:"queryTime"  gorm:"comment:时间范围查询"`
 }
 
 type Fields struct {
@@ -100,35 +114,41 @@ type WebStruct struct {
 
 func (m *Models) GoFieldTo() {
 	//处理字段
-	m.ToLowerName = utils.ToLower(m.ToLowerName)
+	m.Name = utils.ToLower(m.StructName)
+	m.ToLowerStructName = utils.ToLower(m.StructName)
 	m.StructName = utils.ToTitle(m.StructName)
 	for _, f := range m.Fields {
-		f.NameLower = utils.ToLower(f.Name)
+
 		if f.Type == "" {
 			f.Type = "string"
 		}
-		if f.Type == "time" {
-			f.Type = "time.Time"
-		}
-		f.Type = utils.ToLower(f.Type)
+
 		if f.JsonTag == "" {
 			f.JsonTag = f.Name
 		}
-		f.JsonTag = utils.ToLower(f.JsonTag)
+
+		f.Type = utils.ToLower(f.Type)
 		f.Name = utils.ToTitle(f.Name)
+		f.NameLower = utils.ToLower(f.Name)
+		f.JsonTag = utils.ToLower(f.JsonTag)
+
 	}
 }
 
 func (m *Models) WebFieldToLower() {
 	for _, f := range m.Fields {
-		f.NameLower = utils.ToLower(f.Name)
-		f.Name = utils.ToLower(f.Name)
+
 		if f.QueryCriteria != "" {
 			m.IsQueryCriteria = true
 		}
+
 		if f.Type == "" {
 			f.Type = "string"
 		}
+
+		f.NameLower = utils.ToLower(f.Name)
+		f.Name = utils.ToLower(f.Name)
 		f.Type = utils.ToLower(f.Type)
+
 	}
 }

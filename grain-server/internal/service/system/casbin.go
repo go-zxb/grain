@@ -103,6 +103,25 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/list", V2: "GET"},
 		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/userMenu", V2: "GET"},
+
+		//代码助手
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields", V2: "POST"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models", V2: "POST"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects", V2: "POST"},
+
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models/list", V2: "GET"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields/list", V2: "GET"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects/list", V2: "GET"},
+
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models", V2: "DELETE"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields", V2: "DELETE"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects", V2: "DELETE"},
+
+		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/viewCode", V2: "GET"},
+
+		// 系统日志
+		{Ptype: "p", V0: "2023", V1: "/api/v1/sysLog/list", V2: "GET"},
+		{Ptype: "p", V0: "2023", V1: "/api/v1/sysLog", V2: "DELETE"},
 	}
 
 	q := query.Q.CasbinRule

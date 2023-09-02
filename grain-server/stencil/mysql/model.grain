@@ -1,0 +1,97 @@
+package model
+
+import (
+	sysModel "{{.ProjectName}}/model/system"
+)
+
+  type {{.StructName}} struct {
+    sysModel.Model
+  UID       string         `json:"uid" xml:"uid" gorm:"comment:用户唯一标识符"`
+    {{range .Fields}}
+    {{if eq .Required "yes"}}
+         {{if .MysqlField}}
+              {{if .RequiredValue}}
+                  {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required,{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}};comment:{{.Description}}"`
+              {{else}}
+                  {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}};comment:{{.Description}}"`
+              {{end}}
+        {{else}}
+          {{if .RequiredValue}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required,{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+          {{else}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+            {{end}}
+        {{end}}
+   {{else}}
+         {{if .MysqlField}}
+            {{if .RequiredValue}}
+                {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}};comment:{{.Description}}"`
+            {{else}}
+                {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}};comment:{{.Description}}"`
+            {{end}}
+        {{else}}
+          {{if .RequiredValue}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+          {{else}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+            {{end}}{{end}}
+   {{end}}{{end}}
+  }
+
+func ({{.StructName}}) TableName()string  {
+	return "{{.Name}}"
+}
+
+  type Create{{.StructName}} struct {
+  UID       string         `json:"uid" xml:"uid" gorm:"comment:用户唯一标识符"`
+    {{range .Fields}}
+    {{if eq .Required "yes"}}
+         {{if .MysqlField}}
+              {{if .RequiredValue}}
+                  {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required,{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`
+              {{else}}
+                  {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`
+              {{end}}
+        {{else}}
+          {{if .RequiredValue}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required,{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+          {{else}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"required" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+            {{end}}
+        {{end}}
+   {{else}}
+         {{if .MysqlField}}
+            {{if .RequiredValue}}
+                {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`
+            {{else}}
+                {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`
+            {{end}}
+        {{else}}
+          {{if .RequiredValue}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" binding:"{{.RequiredValue}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+          {{else}}
+              {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+            {{end}}{{end}}
+   {{end}}{{end}}
+  }
+
+type Update{{.StructName}} struct {
+  UID       string         `json:"uid" xml:"uid" gorm:"comment:用户唯一标识符"`
+    {{range .Fields}} {{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}"`
+    {{end}}
+  }
+
+type {{.StructName}}Req struct {
+  sysModel.PageReq
+  {{range .Fields}}{{if .QueryCriteria}}{{if .MysqlField}}{{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`{{else}}{{.Name}} {{.Type}} `form:"{{.JsonTag}}" json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`{{end}}
+  {{end}}{{end}}{{if eq .QueryTime "yes"}}QueryTime string ` form:"queryTime" json:"queryTime"`{{end}}
+}
+
+type {{.StructName}}Res struct {
+  sysModel.Model
+  Nickname string `json:"nickname;omitempty" xml:"nickname" gorm:"-"`
+  Username string `json:"username;omitempty" xml:"username" gorm:"-"`
+  {{range .Fields}}{{if .MysqlField}}{{.Name}} {{.Type}} `json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"column:{{.MysqlField}}"`
+  {{else if eq .Required "yes"}}{{.Name}} {{.Type}} `json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+  {{else}}{{.Name}} {{.Type}} `json:"{{.JsonTag}}" xml:"{{.JsonTag}}" gorm:"comment:{{.Description}}"`
+  {{end}}{{end}}}

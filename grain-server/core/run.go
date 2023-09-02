@@ -15,6 +15,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/redis"
@@ -27,6 +28,7 @@ import (
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Grain struct {
@@ -80,6 +82,8 @@ func (r *Grain) InitRouter() {
 		reply := response.Response{}
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
+
+	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
@@ -118,6 +122,7 @@ func (r *Grain) InitWithAPiANDRoleANDMenu() {
 	if err != nil {
 		return
 	}
+	_ = r.enforcer.LoadPolicy()
 }
 
 func Run() {
@@ -132,6 +137,11 @@ func Run() {
 	grain.InitRouter()
 
 	grain.InitWithAPiANDRoleANDMenu()
+
+	go func() {
+		time.Sleep(time.Second * 1)
+		fmt.Println("swag文档地址:http://127.0.0.1:8080/api/v1/swagger/index.html")
+	}()
 
 	grain.RunGin()
 }
