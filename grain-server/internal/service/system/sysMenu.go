@@ -276,10 +276,7 @@ func (s *MenuService) GetUserMenu(role string, ctx *gin.Context) (menu []*model.
 
 	}
 
-	xlog.Info(nodeMap)
 	for _, m := range nodeMap {
-		xlog.Info(m.Meta.Locale)
-
 		menu = append(menu, m)
 	}
 	return menu, err
