@@ -23,7 +23,6 @@ import (
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
-	"github.com/go-pay/gopay/pkg/xlog"
 	"gorm.io/gorm"
 )
 
@@ -73,7 +72,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "manage",
 		Name:     "manage",
 		Meta: &model.Meta{
-			Locale:       "menu.admin",
+			I18n:         "menu.admin",
 			RequiresAuth: false,
 			Icon:         "icon-command",
 			Order:        2,
@@ -86,7 +85,7 @@ func InitMenu(db *gorm.DB) error {
 			Path:     "operationLog",
 			Name:     "operationLog",
 			Meta: &model.Meta{
-				Locale:       "menu.operationLog",
+				I18n:         "menu.operationLog",
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        5,
@@ -98,7 +97,7 @@ func InitMenu(db *gorm.DB) error {
 			Path:     "sysMenu",
 			Name:     "sysMenu",
 			Meta: &model.Meta{
-				Locale:       "menu.sysMenu",
+				I18n:         "menu.sysMenu",
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        4,
@@ -110,7 +109,7 @@ func InitMenu(db *gorm.DB) error {
 			Path:     "sysUser",
 			Name:     "sysUser",
 			Meta: &model.Meta{
-				Locale:       "menu.sysUser",
+				I18n:         "menu.sysUser",
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        3,
@@ -122,7 +121,7 @@ func InitMenu(db *gorm.DB) error {
 			Path:     "sysApi",
 			Name:     "sysApi",
 			Meta: &model.Meta{
-				Locale:       "menu.sysApi",
+				I18n:         "menu.sysApi",
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        2,
@@ -134,7 +133,7 @@ func InitMenu(db *gorm.DB) error {
 			Path:     "sysRole",
 			Name:     "sysRole",
 			Meta: &model.Meta{
-				Locale:       "menu.sysRole",
+				I18n:         "menu.sysRole",
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        1,
@@ -149,7 +148,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "dashboard",
 		Name:     "dashboard",
 		Meta: &model.Meta{
-			Locale:       "menu.dashboard",
+			I18n:         "menu.dashboard",
 			RequiresAuth: false,
 			Icon:         "icon-dashboard",
 			Order:        0,
@@ -161,7 +160,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "workplace",
 		Name:     "Workplace",
 		Meta: &model.Meta{
-			Locale:       "menu.dashboard.workplace",
+			I18n:         "menu.dashboard.workplace",
 			RequiresAuth: false,
 			Order:        0,
 			Roles:        []string{"2023"},
@@ -174,7 +173,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "codeFactory",
 		Name:     "codeFactory",
 		Meta: &model.Meta{
-			Locale:       "menu.codeFactory",
+			I18n:         "menu.codeFactory",
 			RequiresAuth: false,
 			Icon:         "icon-code",
 			Order:        1,
@@ -186,7 +185,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "generateCode",
 		Name:     "generateCode",
 		Meta: &model.Meta{
-			Locale:       "menu.codeFactory.codeFactory",
+			I18n:         "menu.codeFactory.codeFactory",
 			RequiresAuth: true,
 			Order:        0,
 			Roles:        []string{"2023"},
@@ -199,7 +198,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "uploads",
 		Name:     "uploads",
 		Meta: &model.Meta{
-			Locale:       "menu.upload",
+			I18n:         "menu.upload",
 			RequiresAuth: false,
 			Icon:         "icon-upload",
 			Order:        3,
@@ -211,7 +210,7 @@ func InitMenu(db *gorm.DB) error {
 		Path:     "upload",
 		Name:     "upload",
 		Meta: &model.Meta{
-			Locale:       "menu.upload",
+			I18n:         "menu.upload",
 			RequiresAuth: true,
 			Order:        0,
 			Roles:        []string{"2023"},
@@ -236,47 +235,35 @@ func (s *MenuService) GetUserMenu(role string, ctx *gin.Context) (menu []*model.
 	if err != nil {
 		return nil, err
 	}
-	nodeMapAll := make(map[uint]*model.SysMenu)
-	nodeMap := make(map[uint]*model.SysMenu)
-	childNodeMap := make(map[uint]*model.SysMenu)
+	ParentAll := make(map[uint]*model.SysMenu)
+	authNode := make(map[uint]*model.SysMenu)
+	childNode := make(map[uint]*model.SysMenu)
 	for i, m := range menuAll {
-		nodeMapAll[m.ID] = menuAll[i]
 		if m.ParentId == 0 {
-
-			for _, s2 := range m.Meta.Roles {
-				if s2 == role {
-					xlog.Info("父节点")
-					m.Meta.RequiresAuth = true
-					m.Meta.Roles = []string{role}
-					nodeMap[m.ID] = m
-				}
-			}
+			ParentAll[m.ID] = menuAll[i]
 		} else {
 			for _, s2 := range m.Meta.Roles {
 				if s2 == role {
 					m.Meta.RequiresAuth = true
 					m.Meta.Roles = []string{role}
-					childNodeMap[m.ID] = m
+					childNode[m.ID] = m
 				}
 			}
 		}
 	}
 
-	for key, val := range childNodeMap {
-		_, ok := nodeMap[val.ParentId]
+	for key, val := range childNode {
+		_, ok := authNode[val.ParentId]
 		if ok {
-			nodeMap[val.ParentId].Children = append(nodeMap[val.ParentId].Children, childNodeMap[key])
+			authNode[val.ParentId].Children = append(authNode[val.ParentId].Children, childNode[key])
 		} else {
-			val, ok = nodeMapAll[val.ParentId]
-			if ok {
-				nodeMap[val.ParentId] = val
-				nodeMap[val.ParentId].Children = append(nodeMap[val.ParentId].Children, childNodeMap[key])
-			}
+			authNode[val.ParentId] = ParentAll[val.ParentId]
+			authNode[val.ParentId].Children = append(authNode[val.ParentId].Children, childNode[key])
 		}
 
 	}
 
-	for _, m := range nodeMap {
+	for _, m := range authNode {
 		menu = append(menu, m)
 	}
 	return menu, err

@@ -22,8 +22,8 @@ import (
 
 // Meta 菜单数据
 type Meta struct {
-	// Locale 用来存储该条菜单的国际化信息
-	Locale string `form:"locale" json:"locale" xml:"locale" gorm:"comment:国际化"`
+	// I18n 用来存储该条菜单的国际化信息
+	I18n string `form:"i18n" json:"i18n" xml:"i18n" gorm:"comment:国际化"`
 	// 是否需要权限才能访问
 	RequiresAuth bool `form:"requiresAuth" json:"requiresAuth" xml:"requiresAuth" gorm:"default:true;comment:是否需要授权访问"`
 	// icon图标
@@ -31,7 +31,7 @@ type Meta struct {
 	// 排序
 	Order uint `form:"order" json:"order" xml:"order" gorm:"comment:排序"`
 	// 那些角色可以访问
-	Roles []string `json:"roles"`
+	Roles []string `json:"roles,omitempty"`
 }
 
 // SysMenu 用来管理动态菜单的结构体

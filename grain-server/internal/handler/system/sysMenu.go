@@ -158,7 +158,7 @@ func (r *MenuHandle) UpdateMenu(ctx *gin.Context) {
 // @Router /sysMenu [delete]
 func (r *MenuHandle) DeleteMenuById(ctx *gin.Context) {
 	res := r.res.New()
-	menuId, _ := strconv.Atoi(ctx.Param("menuId"))
+	menuId, _ := strconv.Atoi(ctx.Query("id"))
 	err := r.sv.DeleteMenuById(uint(menuId), ctx)
 	if err != nil {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
