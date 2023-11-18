@@ -83,6 +83,7 @@ func (r *Grain) InitRouter() {
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
 
+	sysRouter.NewOrganizeRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()

@@ -32,6 +32,7 @@ func Gen() {
 		sysModel.Project{},
 		sysModel.Models{},
 		sysModel.Fields{},
+		sysModel.Organize{},
 	)
 }
 

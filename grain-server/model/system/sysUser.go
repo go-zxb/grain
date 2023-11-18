@@ -58,19 +58,28 @@ type SysUser struct {
 	Status string `form:"status" json:"status" xml:"status" gorm:"comment:账号状态;default:no"`
 	// 存放 角色ID,角色名称等角色信息,方便前端展示使用
 	RoleStr []RoleStr `json:"roleStr,omitempty" gorm:"-"`
+	//组织
+	Organize string `form:"organize" json:"organize"`
+	//部门
+	Department string `form:"department" json:"department"`
+	//职位
+	Position string `form:"position" json:"position"`
 }
 
 // CreateSysUser 创建用户时使用这个结构体接收前端提交的数据,
 // 使用 CreateSysUser 而不使用 SysUser 结构体是为了避免前端传入了,不该传入的参数
 type CreateSysUser struct {
-	Username string `form:"username" json:"username" xml:"username" gorm:"unique;not null;comment:用户名称"`
-	Password string `json:"password,omitempty" xml:"password"  gorm:"comment:密码"`
-	Nickname string `form:"nickname" json:"nickname" xml:"nickname" gorm:"comment:用户昵称"`
-	Email    string `form:"email" json:"email" xml:"email" gorm:"comment:邮箱"`
-	Mobile   string `form:"mobile" json:"mobile" xml:"mobile" gorm:"comment:手机号"`
-	Roles    *Roles `form:"roles" json:"roles" xml:"roles" gorm:"comment:多角色"`
-	Role     string `form:"role" json:"role" xml:"role"  gorm:"comment:用户角色"`
-	Status   string `form:"status" json:"status" xml:"status" gorm:"comment:账号状态;default:no"`
+	Username   string `form:"username" json:"username" xml:"username" gorm:"unique;not null;comment:用户名称"`
+	Password   string `json:"password,omitempty" xml:"password"  gorm:"comment:密码"`
+	Nickname   string `form:"nickname" json:"nickname" xml:"nickname" gorm:"comment:用户昵称"`
+	Email      string `form:"email" json:"email" xml:"email" gorm:"comment:邮箱"`
+	Mobile     string `form:"mobile" json:"mobile" xml:"mobile" gorm:"comment:手机号"`
+	Roles      *Roles `form:"roles" json:"roles" xml:"roles" gorm:"comment:多角色"`
+	Role       string `form:"role" json:"role" xml:"role"  gorm:"comment:用户角色"`
+	Organize   string `form:"organize" json:"organize"`
+	Department string `form:"department" json:"department"`
+	Position   string `form:"position" json:"position"`
+	Status     string `form:"status" json:"status" xml:"status" gorm:"comment:账号状态;default:no"`
 }
 
 type DefaultRole struct {
