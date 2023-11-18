@@ -84,6 +84,7 @@ type SysLogReq struct {
 	PageReq
 	Name      string `form:"name" json:"name" xml:"name" gorm:"comment:名称"`
 	Role      string `form:"role" json:"role" xml:"role" gorm:"comment:角色"`
+	Method    string `form:"method" json:"method"`
 	Username  string `form:"username" json:"username" xml:"username" gorm:"column:username;comment:用户名"`
 	QueryTime string ` form:"queryTime" json:"queryTime"`
 }

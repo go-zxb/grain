@@ -72,6 +72,10 @@ func (r *MongoDBRepo) GetSysLogList(req *model.SysLogReq) ([]*model.SysLog, erro
 		filter["username"] = req.Username
 	}
 
+	if req.Method != "" {
+		filter["method"] = req.Method
+	}
+
 	if req.QueryTime != "" {
 		t := strings.Split(req.QueryTime, ",")
 		if len(t) == 2 {

@@ -58,9 +58,9 @@ func (l *Logger) Sava(data any) {
 func (l *Logger) OperationLog(code int, name string, data any, ctx *gin.Context, resData ...any) *model.SysLog {
 	return &model.SysLog{
 		Name:       name,
+		LogType:    name,
 		UID:        ctx.GetString("uid"),
 		Role:       ctx.GetString("role"),
-		LogType:    ctx.GetString("LogType"),
 		Username:   ctx.GetString("username"),
 		Nickname:   ctx.GetString("nickname"),
 		Method:     ctx.Request.Method,
