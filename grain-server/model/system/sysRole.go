@@ -32,4 +32,6 @@ type CreateSysRole struct {
 
 type SysRoleQueryPage struct {
 	PageReq
+	Role     string `json:"role" form:"role"`
+	RoleName string `json:"RoleName" form:"RoleName"`
 }
