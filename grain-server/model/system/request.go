@@ -23,7 +23,7 @@ type PageReq struct {
 	// 页
 	Page int `json:"page,omitempty"  form:"page"`
 	// 页大小
-	PageSize int `json:"pageSize,omitempty"  form:"page_size"`
+	PageSize int `json:"pageSize,omitempty"  form:"pageSize"`
 	// 查询关键词
 	Keyword string `json:"keyword"  form:"keyword"`
 	// 查询类型
