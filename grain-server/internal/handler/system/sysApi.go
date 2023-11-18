@@ -69,7 +69,7 @@ func (r *ApiHandle) CreateApi(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body model.SysApiReq true "分页数据"
-// @Success 200  {object} model.ErrorRes "成功"
+// @Success 200  {object} []model.SysApi "成功"
 // @Failure 500  {object} model.ErrorRes "失败"
 // @Router /sysApi/list [get]
 func (r *ApiHandle) GetApiList(ctx *gin.Context) {
@@ -105,7 +105,7 @@ func (r *ApiHandle) GetApiList(ctx *gin.Context) {
 // @Router /sysApi/apiAndPermissions [get]
 func (r *ApiHandle) GetApiAndPermissions(ctx *gin.Context) {
 	res := r.res.New()
-	role := ctx.GetString("role")
+	role := ctx.Query("role")
 	list, err := r.sv.GetApiAndPermissions(role)
 	if err != nil {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)

@@ -247,15 +247,17 @@ func (s *ApiService) GetApiAndPermissions(role string) (any, error) {
 		return nil, err
 	}
 
+	var authID []uint
 	for _, i2 := range list {
-		for i3, rule := range authApi {
+		for _, rule := range authApi {
+			// 查找已授权的Api ID
 			if i2.Path == rule.V1 && i2.Method == rule.V2 {
-				authApi[i3].ID = i2.ID //直接把 apiId 给casbin的id赋值 返回给前端 这就是已授权的api 标记已被选中
+				authID = append(authID, i2.ID)
 			}
 		}
 	}
 
-	res := gin.H{"apiList": apiSlice, "authApi": authApi}
+	res := gin.H{"apiList": apiSlice, "authApi": authID}
 	return res, nil
 }
 
