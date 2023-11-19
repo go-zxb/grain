@@ -58,18 +58,23 @@ func (r *{{.StructName}}Handle) AdminGet{{.StructName}}ById(ctx *gin.Context) {
 // @Router /admin/{{.Name}}/list [get]
 func (r *{{.StructName}}Handle) AdminGet{{.StructName}}List(ctx *gin.Context) {
 	reply := r.res.New()
-	req := model.{{.StructName}}Req{}
-	err := ctx.ShouldBindQuery(&req)
+	query := model.{{.StructName}}Query{}
+	err := ctx.ShouldBindQuery(&query)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage("参数解析失败").Fail(ctx)
 		return
 	}
-	list, err := r.sv.AdminGet{{.StructName}}List(&req,ctx)
+	list, err := r.sv.AdminGet{{.StructName}}List(&query,ctx)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	reply.WithMessage("成功").WithData(list).Success(ctx)
+	reply.WithMessage("成功").
+		WithData(list).
+		WithTotal(query.Total).
+		WithPage(query.Page).
+		WithPageSize(query.PageSize).
+		Success(ctx)
 }
 
 // AdminUpdate{{.StructName}}
@@ -125,7 +130,7 @@ func (r *{{.StructName}}Handle) AdminDelete{{.StructName}}ById(ctx *gin.Context)
 	reply.WithMessage("删除{{.Description}}成功").Success(ctx)
 }
 
-// AdminDelete{{.StructName}}ByIdList
+// AdminDelete{{.StructName}}ByIds
 // @Security ApiKeyAuth
 // @Summary 删除{{.Description}}
 // @Description 根据{{.Description}}ID删除{{.Description}}

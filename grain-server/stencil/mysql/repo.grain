@@ -76,7 +76,7 @@ func (r *{{.StructName}}Repo) Get{{.StructName}}ById(id uint,uid string) ({{.Nam
   	return
 }
 
-func (r *{{.StructName}}Repo) Get{{.StructName}}List(req *model.{{.StructName}}Req) (list []*model.{{.StructName}},err error) {
+func (r *{{.StructName}}Repo) Get{{.StructName}}List(req *model.{{.StructName}}Query) (list []*model.{{.StructName}},err error) {
 	if req.Page <= 0 {
   		req.Page = 1
   	}

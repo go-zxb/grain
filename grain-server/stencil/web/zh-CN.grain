@@ -1,0 +1,27 @@
+export default {
+  'menu.{{.Name}}': '{{.StructName}}',
+
+  // columns
+  {{range .Fields}}'{{ModelNameB}}Table.columns.{{.Name}}': '{{.Description}}',
+  {{end}}
+  'add{{.StructName}}Button.Title': '添加{{.StructName}}',
+  '{{.Name}}Table.columns.index': '序号',
+  '{{.Name}}Table.columns.operations': '操作',
+  '{{.Name}}Table.columns.operations.edit': '编辑',
+  '{{.Name}}Table.columns.operations.delete': '删除',
+  '{{.Name}}Table.columns.operations.delete.prompt': '确认删除这个{{.Description}}吗?',
+
+  // 查询
+  {{if eq .QueryTime "yes"}}'{{ModelNameB}}Query.form.queryTime': '时间',{{end}}
+  '{{ModelNameB}}Query.form.search': '搜索',
+  '{{ModelNameB}}Query.form.reset': '重置',
+  {{range .Fields}}{{if .QueryCriteria}}'{{ModelNameB}}Query.form.{{.Name}}': '{{.Description}}',
+  '{{ModelNameB}}Query.form.{{.Name}}.prompt': '{{.Description}}',
+  {{end}}{{end}}
+  // dialog
+ {{range .Fields}}'{{ModelNameB}}DialogForm.{{.Name}}': '{{.Description}}',
+  '{{ModelNameB}}DialogForm.{{.Name}}.prompt': '{{.Description}}',
+  {{end}}
+  {{range .Fields}}{{if eq .Required "yes"}}'{{ModelNameB}}DialogForm.error.{{.Name}}': '{{.Description}}不可为空',{{end}}
+  {{end}}
+};

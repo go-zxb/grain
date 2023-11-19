@@ -13,10 +13,10 @@ import (
 type I{{.StructName}}Repo interface {
   Create{{.StructName}}({{.Name}} *model.{{.StructName}}) error
 	Get{{.StructName}}ById(id uint,uid string) (u *model.{{.StructName}}, err error)
-	Get{{.StructName}}List(req *model.{{.StructName}}Req) ([]*model.{{.StructName}}, error)
+	Get{{.StructName}}List(req *model.{{.StructName}}Query) ([]*model.{{.StructName}}, error)
 	Update{{.StructName}}({{.Name}} *model.{{.StructName}}) error
 	Delete{{.StructName}}ById({{.Name}}Id uint,uid string) error
-	Delete{{.StructName}}ByIdList({{.Name}}Ids []uint,uid string) error
+	Delete{{.StructName}}ByIds({{.Name}}Ids []uint,uid string) error
 }
 
 type {{.StructName}}Service struct {
@@ -51,7 +51,7 @@ func (s *{{.StructName}}Service) Get{{.StructName}}ById({{.Name}}Id uint,ctx *gi
 	return s.repo.Get{{.StructName}}ById({{.Name}}Id,uid)
 }
 
-func (s *{{.StructName}}Service) Get{{.StructName}}List(req *model.{{.StructName}}Req,ctx *gin.Context) ([]*model.{{.StructName}}, error ) {
+func (s *{{.StructName}}Service) Get{{.StructName}}List(req *model.{{.StructName}}Query,ctx *gin.Context) ([]*model.{{.StructName}}, error ) {
 	list, err := s.repo.Get{{.StructName}}List(req)
 	if err != nil {
   		return nil, err

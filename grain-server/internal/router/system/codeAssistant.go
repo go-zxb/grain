@@ -48,16 +48,19 @@ func NewCodeAssistantRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis
 
 func (r *CodeFactoryRouter) InitRouters() {
 	r.private.POST("projects", r.api.CreateProject)
+	r.private.PUT("projects", r.api.UpdateProject)
 	r.private.GET("projects/list", r.api.GetProjectList)
 	r.private.DELETE("projects", r.api.DeleteProjectById)
 
 	r.private.POST("fields", r.api.CreateField)
+	r.private.PUT("fields", r.api.UpdateField)
 	r.private.DELETE("fields", r.api.DeleteFieldById)
-	r.private.GET("fields/list", r.api.GetProjectList)
+	r.private.GET("fields/list", r.api.GetFieldList)
 
 	r.private.POST("models", r.api.CreateModel)
+	r.private.PUT("models", r.api.UpdateModel)
 	r.private.DELETE("models", r.api.DeleteModelById)
-	r.private.GET("models/list", r.api.GetProjectList)
+	r.private.GET("models/list", r.api.GetModelList)
 
 	r.private.GET("viewCode", r.api.ViewCode)
 	r.private.POST("generateCode", r.api.GenerateCode)

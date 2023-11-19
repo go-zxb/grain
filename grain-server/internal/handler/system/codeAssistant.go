@@ -63,6 +63,34 @@ func (r *CodeAssistantHandle) CreateProject(ctx *gin.Context) {
 	res.WithMessage("操作成功").Success(ctx)
 }
 
+// UpdateProject
+// @Security ApiKeyAuth
+// @Summary 更新项目
+// @Description 更新项目
+// @Tags 代码助手
+// @Accept json
+// @Produce json
+// @Param data body  model.CreateProject true "项目信息"
+// @Success 200 {object} model.ErrorRes "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Router /project [put]
+func (r *CodeAssistantHandle) UpdateProject(ctx *gin.Context) {
+	res := r.res.New()
+	codeFactory := model.Project{}
+	err := ctx.ShouldBindJSON(&codeFactory)
+	if err != nil {
+		res.WithCode(consts.InvalidParameter).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	err = r.sv.UpdateProject(&codeFactory, ctx)
+	if err != nil {
+		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	res.WithMessage("操作成功").Success(ctx)
+}
+
 // CreateModel
 // @Security ApiKeyAuth
 // @Summary 创建模型
@@ -91,6 +119,34 @@ func (r *CodeAssistantHandle) CreateModel(ctx *gin.Context) {
 	res.WithMessage("操作成功").Success(ctx)
 }
 
+// UpdateModel
+// @Security ApiKeyAuth
+// @Summary 更新模型
+// @Description 更新模型
+// @Tags 代码助手
+// @Accept json
+// @Produce json
+// @Param data body  model.CreateModels true "模型信息"
+// @Success 200 {object} model.ErrorRes "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Router /models [put]
+func (r *CodeAssistantHandle) UpdateModel(ctx *gin.Context) {
+	res := r.res.New()
+	codeFactory := model.Models{}
+	err := ctx.ShouldBindJSON(&codeFactory)
+	if err != nil {
+		res.WithCode(consts.InvalidParameter).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	err = r.sv.UpdateModel(&codeFactory, ctx)
+	if err != nil {
+		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	res.WithMessage("操作成功").Success(ctx)
+}
+
 // CreateField
 // @Security ApiKeyAuth
 // @Summary 创建字段
@@ -112,6 +168,34 @@ func (r *CodeAssistantHandle) CreateField(ctx *gin.Context) {
 		return
 	}
 	err = r.sv.CreateField(&codeFactory, ctx)
+	if err != nil {
+		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	res.WithMessage("操作成功").Success(ctx)
+}
+
+// UpdateField
+// @Security ApiKeyAuth
+// @Summary 更新字段
+// @Description 更新字段
+// @Tags 代码助手
+// @Accept json
+// @Produce json
+// @Param data body  model.Fields true "字段信息"
+// @Success 200 {object} model.ErrorRes "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Router /field [put]
+func (r *CodeAssistantHandle) UpdateField(ctx *gin.Context) {
+	res := r.res.New()
+	codeFactory := model.Fields{}
+	err := ctx.ShouldBindJSON(&codeFactory)
+	if err != nil {
+		res.WithCode(consts.InvalidParameter).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	err = r.sv.UpdateField(&codeFactory, ctx)
 	if err != nil {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
@@ -182,13 +266,17 @@ func (r *CodeAssistantHandle) GenerateCode(ctx *gin.Context) {
 // @Failure 404 {object} model.ErrorRes "资源不存在"
 // @Router /project/list [get]
 func (r *CodeAssistantHandle) GetProjectList(ctx *gin.Context) {
-	res := r.res.New()
+	reply := r.res.New()
 	list, err := r.sv.GetProjectList(ctx)
 	if err != nil {
-		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	res.WithMessage("成功").WithData(list).Success(ctx)
+	reply.WithMessage("成功").
+		WithData(list).
+		WithPage(1).
+		WithPageSize(1).
+		Success(ctx)
 }
 
 // GetModelList
@@ -212,7 +300,7 @@ func (r *CodeAssistantHandle) GetModelList(ctx *gin.Context) {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	res.WithMessage("成功").WithData(list).Success(ctx)
+	res.WithMessage("成功").WithData(list).WithPage(1).Success(ctx)
 }
 
 // GetFieldList

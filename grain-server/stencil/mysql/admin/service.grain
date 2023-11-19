@@ -15,7 +15,7 @@ type I{{.StructName}}Repo interface {
   AdminDelete{{.StructName}}ByIds({{.Name}}Ids []uint) error
   AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error
   AdminGet{{.StructName}}ById(id uint) (u *model.{{.StructName}}Res, err error)
-  AdminGet{{.StructName}}List(req *model.{{.StructName}}Req) ([]*model.{{.StructName}}, error)
+  AdminGet{{.StructName}}List(req *model.{{.StructName}}Query) ([]*model.{{.StructName}}, error)
 }
 
 type {{.StructName}}Service struct {

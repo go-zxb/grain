@@ -51,15 +51,16 @@ type UpdateProject struct {
 type Models struct {
 	Model
 	ParentId          uint      `json:"parentId" gorm:"comment:父ID"`
-	ProjectName       string    `json:"projectName" gorm:"-"`
-	ProjectPath       string    `json:"projectPath"  gorm:"-"`
-	WebProjectPath    string    `json:"webProjectPath" gorm:"-"`
 	StructName        string    `json:"structName"  gorm:"comment:结构体名称"`
-	ToLowerStructName string    `json:"toLowerStructName"  gorm:"-"`
 	Description       string    `json:"description" gorm:"description:描述"`
+	Nickname          string    `form:"nickname" json:"nickname"`
 	QueryTime         string    `json:"queryTime"  gorm:"comment:时间范围查询"`
 	IsInit            string    `json:"isInit" gorm:"default:no;comment:是否已初始化"`
 	DatabaseName      string    `json:"databaseName"  gorm:"comment:用什么数据库 MySQL MongoDB?"`
+	ToLowerStructName string    `json:"toLowerStructName"  gorm:"-"`
+	ProjectName       string    `json:"projectName" gorm:"-"`
+	ProjectPath       string    `json:"projectPath"  gorm:"-"`
+	WebProjectPath    string    `json:"webProjectPath" gorm:"-"`
 	Name              string    `json:"name" gorm:"-"`
 	Type              string    `gorm:"-"`
 	FirstLetter       string    `gorm:"-"`
@@ -80,16 +81,16 @@ type CreateModels struct {
 
 type Fields struct {
 	Model
-	ParentId      uint   `json:"parentId"  gorm:"comment:父ID"`
-	Name          string `json:"name" gorm:"comment:字段名"`
-	NameLower     string `json:"name_lower" gorm:"-"`
-	Type          string `json:"type" gorm:"comment:字段类型"`
-	JsonTag       string `json:"jsonTag" gorm:"comment:Json标签tag"`
-	Description   string `json:"description" gorm:"description:描述"`
-	QueryCriteria string `json:"queryCriteria"  gorm:"comment:查询条件"`
-	MysqlField    string `json:"mysqlField" gorm:"column:sql_field;comment:Mysql字段名"`
-	RequiredValue string `json:"requiredValue" gorm:"comment:校验规则"`
-	Required      string `json:"required" gorm:"comment:是否必传参数"`
+	ParentId        uint   `json:"parentId"  gorm:"comment:父ID"`
+	Name            string `json:"name" gorm:"comment:字段名"`
+	NameLower       string `json:"name_lower" gorm:"-"`
+	Type            string `json:"type" gorm:"comment:字段类型"`
+	JsonTag         string `json:"jsonTag" gorm:"comment:Json标签tag"`
+	Description     string `json:"description" gorm:"description:描述"`
+	QueryCriteria   string `json:"queryCriteria"  gorm:"comment:查询条件"`
+	MysqlField      string `json:"mysqlField" gorm:"column:sql_field;comment:Mysql字段名"`
+	ValidationRules string `json:"validationRules" gorm:"comment:校验规则"`
+	Required        string `json:"required" gorm:"comment:是否必传参数"`
 }
 
 func (Fields) TableName() string {

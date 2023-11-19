@@ -92,7 +92,7 @@ func (r *{{.StructName}}Handle) Update{{.StructName}}(ctx *gin.Context) {
 // @Router /{{.Name}} [get]
 func (r *{{.StructName}}Handle) Get{{.StructName}}ById(ctx *gin.Context) {
 	reply := r.res.New()
-	{{.Name}}Id, _ := strconv.Atoi(ctx.Query("{{.Name}}Id"))
+	{{.Name}}Id, _ := strconv.Atoi(ctx.Query("id"))
 	{{.Name}}Info, err := r.sv.Get{{.StructName}}ById(uint({{.Name}}Id),ctx)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
@@ -108,7 +108,7 @@ func (r *{{.StructName}}Handle) Get{{.StructName}}ById(ctx *gin.Context) {
 // @Tags {{.Description}}
 // @Accept json
 // @Produce json
-// @Param data body model.{{.StructName}}Req true "分页列表请求参数"
+// @Param data body model.{{.StructName}}Query true "分页列表请求参数"
 // @Success 200 {object} model.{{.StructName}} "成功"
 // @Failure 400 {object} model.ErrorRes "格式错误"
 // @Failure 401 {object} model.ErrorRes "未经授权"
@@ -116,18 +116,24 @@ func (r *{{.StructName}}Handle) Get{{.StructName}}ById(ctx *gin.Context) {
 // @Router /{{.Name}}/list [get]
 func (r *{{.StructName}}Handle) Get{{.StructName}}List(ctx *gin.Context) {
 	reply := r.res.New()
-	req := model.{{.StructName}}Req{}
-	err := ctx.ShouldBindQuery(&req)
+	query := model.{{.StructName}}Query{}
+	err := ctx.ShouldBindQuery(&query)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage("参数解析失败").Fail(ctx)
 		return
 	}
-	list, err := r.sv.Get{{.StructName}}List(&req,ctx)
+	list, err := r.sv.Get{{.StructName}}List(&query,ctx)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	reply.WithMessage("成功").WithData(list).Success(ctx)
+
+	reply.WithMessage("成功").
+		WithData(list).
+		WithTotal(query.Total).
+		WithPage(query.Page).
+		WithPageSize(query.PageSize).
+		Success(ctx)
 }
 
 
@@ -155,7 +161,7 @@ func (r *{{.StructName}}Handle) Delete{{.StructName}}ById(ctx *gin.Context) {
 	reply.WithMessage("删除{{.Description}}成功").Success(ctx)
 }
 
-// Delete{{.StructName}}ByIdList
+// Delete{{.StructName}}ByIds
 // @Security ApiKeyAuth
 // @Summary 删除{{.Description}}
 // @Description "根据{{.Description}}ID批量删除{{.Description}}"

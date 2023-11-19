@@ -44,10 +44,13 @@ const (
 
 type ICodeAssistantRepo interface {
 	CreateProject(p *model.Project) error
+	UpdateProject(p *model.Project) error
 	DeleteProjectById(pid uint) error
 	CreateModel(m *model.Models) error
+	UpdateModel(m *model.Models) error
 	DeleteModelById(mid uint) error
 	CreateField(f *model.Fields) error
+	UpdateField(f *model.Fields) error
 	DeleteFieldById(fid uint) error
 	GetProjectList() ([]*model.Project, error)
 	GetProject(pid uint) (*model.Project, error)
@@ -83,8 +86,17 @@ func (s *CodeAssistantService) CreateProject(p *model.Project, ctx *gin.Context)
 	return nil
 }
 
+func (s *CodeAssistantService) UpdateProject(p *model.Project, ctx *gin.Context) error {
+	err := s.repo.UpdateProject(p)
+	if err != nil {
+		s.log.Sava(s.log.OperationLog(400, "更新项目", p, ctx))
+		return err
+	}
+	s.log.Sava(s.log.OperationLog(200, "更新项目", p, ctx))
+	return nil
+}
+
 func (s *CodeAssistantService) CreateModel(m *model.Models, ctx *gin.Context) error {
-	m.Model = model.Model{}
 	err := s.repo.CreateModel(m)
 	if err != nil {
 		s.log.Sava(s.log.OperationLog(400, "创建模块", m, ctx))
@@ -94,14 +106,33 @@ func (s *CodeAssistantService) CreateModel(m *model.Models, ctx *gin.Context) er
 	return nil
 }
 
+func (s *CodeAssistantService) UpdateModel(m *model.Models, ctx *gin.Context) error {
+	err := s.repo.UpdateModel(m)
+	if err != nil {
+		s.log.Sava(s.log.OperationLog(400, "更新模块", m, ctx))
+		return err
+	}
+	s.log.Sava(s.log.OperationLog(200, "更新模块", m, ctx))
+	return nil
+}
+
 func (s *CodeAssistantService) CreateField(f *model.Fields, ctx *gin.Context) error {
-	f.Model = model.Model{}
 	err := s.repo.CreateField(f)
 	if err != nil {
 		s.log.Sava(s.log.OperationLog(400, "创建字段", f, ctx))
 		return err
 	}
 	s.log.Sava(s.log.OperationLog(200, "创建字段", f, ctx))
+	return nil
+}
+
+func (s *CodeAssistantService) UpdateField(f *model.Fields, ctx *gin.Context) error {
+	err := s.repo.UpdateField(f)
+	if err != nil {
+		s.log.Sava(s.log.OperationLog(400, "更新字段", f, ctx))
+		return err
+	}
+	s.log.Sava(s.log.OperationLog(200, "更新字段", f, ctx))
 	return nil
 }
 
@@ -606,7 +637,7 @@ func (s *CodeAssistantService) WebGenerate(m model.Models) []string {
 	name := utils.ToLower(m.StructName)
 	mm["web_index.vue"] = &model.CodePath{
 		FS:           &stencil.WebTemplateFS,
-		TemplatePath: "web/view.grain",
+		TemplatePath: "web/vue.grain",
 		FilePath:     fmt.Sprintf("%s/src/views/business/%s", m.WebProjectPath, name),
 		Filename:     fmt.Sprintf("%s/src/views/business/%s/index.vue", m.WebProjectPath, name),
 	}
@@ -695,8 +726,8 @@ func (s *CodeAssistantService) WebGeneratedCode(m model.Models, web *model.CodeP
 	rt := string(b)
 
 	//一些不知道怎么处理的 直接使用简单粗暴的方式替换处理
-	rt = strings.ReplaceAll(rt, "{{ $t('{{.Name}}", fmt.Sprintf("{{ $t('%s", m.Name))
-	rt = strings.ReplaceAll(rt, "{{.a-modal}}", m.Name)
+	rt = strings.ReplaceAll(rt, "{{ModelNameA}}", m.StructName)
+	rt = strings.ReplaceAll(rt, "{{ModelNameB}}", m.Name)
 
 	temp, err := template.New(utils.ToLower(m.Type)).Parse(rt)
 	if err != nil {

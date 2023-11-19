@@ -40,15 +40,39 @@ func NewCodeAssistantRepo(db *gorm.DB, rdb redis.IRedis) service.ICodeAssistantR
 }
 
 func (r *CodeAssistantRepo) CreateProject(p *model.Project) error {
-	return r.query.Project.Save(p)
+	return r.query.Project.Create(p)
+}
+
+func (r *CodeAssistantRepo) UpdateProject(p *model.Project) error {
+	_, err := r.query.Project.Where(r.query.Project.ID.Eq(p.ID)).Updates(p)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *CodeAssistantRepo) CreateModel(m *model.Models) error {
 	return r.query.Models.Save(m)
 }
 
+func (r *CodeAssistantRepo) UpdateModel(m *model.Models) error {
+	_, err := r.query.Models.Where(r.query.Models.ID.Eq(m.ID)).Updates(m)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *CodeAssistantRepo) CreateField(f *model.Fields) error {
 	return r.query.Fields.Save(f)
+}
+
+func (r *CodeAssistantRepo) UpdateField(f *model.Fields) error {
+	_, err := r.query.Fields.Where(r.query.Fields.ID.Eq(f.ID)).Updates(f)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *CodeAssistantRepo) DeleteProjectById(pid uint) error {
