@@ -19,15 +19,21 @@ export interface PolicyListRes extends Partial<Base> {
 }
 
 export function Get{{.StructName}}List(data: any) {
-  const uri = Object.entries(data)
-    .map(
-      ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
-    )
-    .join('&');
-  return axios.get<PolicyListRes>(`/api/v1/{{.Name}}/list?${uri}`).then((res) => {
-    return res.data;
-  });
+  const filteredData = Object.fromEntries(
+      Object.entries(data).filter(
+        ([, value]) =>
+          value !== undefined && value !== null && value !== '' && value !== 0
+      )
+    );
+    const uri = Object.entries(filteredData)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+      )
+      .join('&');
+    return axios.get<PolicyListRes>(`/api/v1/{{.Name}}/list?${uri}`).then((res) => {
+        return res.data;
+      });
 }
 
 export function Get{{.StructName}}ById(id: number) {
