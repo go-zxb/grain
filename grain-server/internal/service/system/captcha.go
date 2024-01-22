@@ -51,7 +51,7 @@ func (s *CaptchaService) SendMobileCaptcha(mobile *model.Mobile, ctx *gin.Contex
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomString(config.GetConfig().System.CaptchaLength)
+	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.ClientIP(), captcha), captcha, 300)
 	if err != nil {
@@ -77,7 +77,7 @@ func (s *CaptchaService) SendUserEmailCaptcha(ctx *gin.Context) error {
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomString(config.GetConfig().System.CaptchaLength)
+	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.GetString("uid"), captcha), captcha, 300)
 	if err != nil {
@@ -105,7 +105,7 @@ func (s *CaptchaService) SendUserMobileCaptcha(ctx *gin.Context) error {
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomString(config.GetConfig().System.CaptchaLength)
+	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.GetString("uid"), captcha), captcha, 300)
 	if err != nil {
@@ -129,7 +129,7 @@ func (s *CaptchaService) SendEmailCaptcha(req *model.Email, ctx *gin.Context) er
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomString(config.GetConfig().System.CaptchaLength)
+	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.ClientIP(), captcha), captcha, 300)
 	if err != nil {

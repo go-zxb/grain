@@ -83,17 +83,17 @@ func (r *Grain) InitRouter() {
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
 
-	sysRouter.NewOrganizeRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.InitRouterSwag(routerGroup)
+	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
+	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
+	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewOrganizeRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters()
-	sysRouter.InitRouterSwag(routerGroup)
+	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 }
 
 func (r *Grain) RunGin() {
@@ -107,20 +107,20 @@ func (r *Grain) InitGenQuery() {
 }
 
 func (r *Grain) InitWithAPiANDRoleANDMenu() {
-	err := service.InitSysUser(r.conf)
-	if err != nil {
+
+	if err := service.InitSysUser(r.conf); err != nil {
 		return
 	}
-	err = service.InitApi()
-	if err != nil {
+
+	if err := service.InitApi(); err != nil {
 		return
 	}
-	err = service.InitMenu(r.db)
-	if err != nil {
+
+	if err := service.InitMenu(r.db); err != nil {
 		return
 	}
-	err = service.InitCasbinRoleRule(r.conf)
-	if err != nil {
+
+	if err := service.InitCasbinRoleRule(r.conf); err != nil {
 		return
 	}
 	_ = r.enforcer.LoadPolicy()

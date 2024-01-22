@@ -91,6 +91,10 @@ func UploadFile(ctx *gin.Context, classify string) (*model.Upload, error) {
 		fileType = "音视频"
 	case ".go":
 		fileType = "Go文件"
+	case ".c":
+		fileType = "C文件"
+	case ".py":
+		fileType = "python文件"
 	default:
 		fileType = "NA"
 	}

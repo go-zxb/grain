@@ -221,7 +221,7 @@
     isEdit.value = true;
   };
   const onPageChange = (current: number) => {
-    get{{.StructName}}s({ ...basePagination, page: current });
+    get{{.StructName}}s({ ...basePagination, ...queryForm.value, page: current });
   };
 
   const create{{.StructName}}ButtonClick = () => {

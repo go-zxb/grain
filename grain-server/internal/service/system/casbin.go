@@ -97,31 +97,31 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/list", V2: "DELETE"},
 
 		//系统菜单
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "POST"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "PUT"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu", V2: "DELETE"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/list", V2: "GET"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysMenu/userMenu", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/userMenu", V2: "GET"},
 
 		//代码助手
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields", V2: "POST"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models", V2: "POST"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/models", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects", V2: "POST"},
 
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models/list", V2: "GET"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields/list", V2: "GET"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/models/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects/list", V2: "GET"},
 
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/models", V2: "DELETE"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/fields", V2: "DELETE"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/projects", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/models", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects", V2: "DELETE"},
 
-		{Ptype: "p", V0: "2023", V1: "/api/v1/codeAssistant/viewCode", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/viewCode", V2: "GET"},
 
 		// 系统日志
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysLog/list", V2: "GET"},
-		{Ptype: "p", V0: "2023", V1: "/api/v1/sysLog", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysLog/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysLog", V2: "DELETE"},
 	}
 
 	q := query.Q.CasbinRule
@@ -215,9 +215,13 @@ func (s *CasbinService) Update(roles *model.CasbinReq, ctx *gin.Context) error {
 	}
 
 	if err := s.repo.Update(c); err != nil {
-		_ = s.repo.Update(oldList)
+		err = s.repo.Update(oldList)
+		if err != nil {
+			s.log.Sava(s.log.OperationLog(400, "更新角色权限失败", roles, ctx, oldList))
+			return errors.New("更新失败,完犊子了,我一点补救的办法都没有 我能怎么办 你说我能怎么办 ^*^*^")
+		}
 		s.log.Sava(s.log.OperationLog(400, "更新角色权限", roles, ctx))
-		return errors.New("完犊子了,我能怎么办 我一点补救的办法都没有 我能怎么办 你说我能怎么办 ^*^*^")
+
 	}
 
 	if err := s.ReLoadPolicy(); err != nil {
