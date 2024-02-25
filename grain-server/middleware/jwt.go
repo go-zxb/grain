@@ -103,7 +103,7 @@ func SwitchRole(rdb redis.IRedis) gin.HandlerFunc {
 			if s == role {
 				jwt := utils.Jwt{}
 				token, _ := jwt.GenerateToken(ctx.GetString("uid"), role, conf.JWT.SecretKey, conf.JWT.ExpirationSeconds)
-				reply.WithCode(200).WithMessage("切换角色成功").WithData(gin.H{"token": token}).Success(ctx)
+				reply.WithMessage("切换角色成功").WithData(gin.H{"token": token}).Success(ctx)
 				ctx.Abort()
 				break
 			}

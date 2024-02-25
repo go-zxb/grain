@@ -132,7 +132,11 @@ func (s *SysUserService) GetLoginUserInfo(ctx *gin.Context) (*model.SysUser, err
 	}
 	info.Password = ""
 	info.Role = ctx.GetString("role")
-	info.Avatar = s.conf.Server.FileDomain + "/" + info.Avatar
+	if info.Avatar == "" {
+		info.Avatar = ""
+	} else {
+		info.Avatar = s.conf.Server.FileDomain + "/" + info.Avatar
+	}
 	return info, err
 }
 

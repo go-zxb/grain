@@ -73,7 +73,15 @@ func (r *SysUserRepo) GetSysUserList(req *model.SysUserReq) (list []*model.SysUs
 	if req.Username != "" {
 		q.Where(r.query.SysUser.Username.Eq(req.Username))
 	}
-
+	if req.Organize != "" {
+		q.Where(r.query.SysUser.Organize.Eq(req.Organize))
+	}
+	if req.Department != "" {
+		q.Where(r.query.SysUser.Department.Eq(req.Department))
+	}
+	if req.Position != "" {
+		q.Where(r.query.SysUser.Position.Eq(req.Position))
+	}
 	count, err := r.query.SysUser.Count()
 	if err != nil {
 		return nil, err

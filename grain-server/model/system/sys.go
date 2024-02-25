@@ -57,18 +57,9 @@ func (m *Model) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
-// BeforeSave 钩子函数： 保存前Gorm会调用
-func (m *Model) BeforeSave(tx *gorm.DB) (err error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return nil
-}
-
 // BeforeUpdate 钩子函数： 更新前Gorm会调用
 func (m *Model) BeforeUpdate(tx *gorm.DB) (err error) {
 	now := time.Now()
-	m.CreatedAt = now
 	m.UpdatedAt = now
 	return nil
 }

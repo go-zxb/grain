@@ -24,6 +24,7 @@ import (
 	"github.com/go-grain/grain/utils/const"
 	"github.com/go-grain/grain/utils/upload"
 	"strconv"
+	"strings"
 )
 
 type SysUserHandle struct {
@@ -80,7 +81,7 @@ func (r *SysUserHandle) LogOut(ctx *gin.Context) {
 		reply.WithCode(500).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	reply.WithCode(200).WithMessage("退出登录成功").Success(ctx)
+	reply.WithMessage("退出登录成功").Success(ctx)
 }
 
 // GetLoginUserInfo 获取个人信息
@@ -177,6 +178,11 @@ func (r *SysUserHandle) GetSysUserList(ctx *gin.Context) {
 	if err != nil {
 		reply.WithCode(consts.InvalidParameter).WithMessage("参数解析失败").Fail(ctx)
 		return
+	}
+	o := strings.Split(req.Organize, ",")
+	if len(o) == 2 {
+		req.Organize = o[0]
+		req.Position = o[1]
 	}
 	list, err := r.sv.GetSysUserList(&req, ctx)
 	if err != nil {

@@ -101,8 +101,8 @@ type LoginRes struct {
 	} `json:"data"`
 }
 
-// UpdateUserInfo 使用 UpdateUserInfo 结构体也是为了避免前端传入了,
-// 不该传入的参数,对可以随便修改无关紧要的字段 使用这个就行;
+// UpdateUserInfo 使用 UpdateUserInfo 结构体也是为了避免前端传入了,不该传入的参数,
+// 对可以随便修改无关紧要的字段 使用这个就行;
 // 敏感数据或隐私数据,需要通过相应验证后才能修改,一般会独立写接口单独更新
 type UpdateUserInfo struct {
 	UID             string `form:"uid" json:"uid" xml:"uid"  gorm:"unique;not null;comment:用户唯一标识符"`
@@ -135,9 +135,13 @@ type ModifyMobile struct {
 
 type SysUserReq struct {
 	PageReq
-	Username string `json:"username" xml:"username" form:"username"`
-	Email    string `json:"email" xml:"email" form:"email" `
-	Mobile   string `form:"mobile" json:"mobile"  form:"mobile"`
+	Username   string `json:"username" xml:"username" form:"username"`
+	Email      string `json:"email" xml:"email" form:"email" `
+	Mobile     string `form:"mobile" json:"mobile"  form:"mobile"`
+	Organize   string `form:"organize" json:"organize"`
+	Department string `form:"department" json:"department"`
+	Position   string `form:"position" json:"position"`
+	Status     string `form:"status" json:"status"`
 }
 
 func (SysUser) TableName() string {

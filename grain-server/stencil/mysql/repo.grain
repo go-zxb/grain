@@ -49,20 +49,6 @@ func (r *{{.StructName}}Repo) Update{{.StructName}}({{.Name}} *model.{{.StructNa
 	return nil
 }
 
-func (r *{{.StructName}}Repo) Delete{{.StructName}}ById(id uint,uid string) error {
-	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.Eq(id)).Delete(); err != nil {
-  		return err
-  	}
-  	return nil
-}
-
-func (r *{{.StructName}}Repo) Delete{{.StructName}}ByIds(ids []uint,uid string) error {
-	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.In(ids...)).Delete(); err != nil {
-  		return err
-  	}
-  	return nil
-}
-
 func (r *{{.StructName}}Repo) Get{{.StructName}}ById(id uint,uid string) ({{.Name}} *model.{{.StructName}},err error) {
   err = r.rdb.GetObject("", {{.Name}})
   	if err != nil || {{.Name}}.ID == 0{
@@ -151,4 +137,18 @@ list, err = q.Order(r.query.{{.StructName}}.CreatedAt).Find()
 			return nil, err
 		}
 		return list, nil
+}
+
+func (r *{{.StructName}}Repo) Delete{{.StructName}}ById(id uint,uid string) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.Eq(id)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
+}
+
+func (r *{{.StructName}}Repo) Delete{{.StructName}}ByIds(ids []uint,uid string) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.UID.Eq(uid)).Where(r.query.{{.StructName}}.ID.In(ids...)).Delete(); err != nil {
+  		return err
+  	}
+  	return nil
 }

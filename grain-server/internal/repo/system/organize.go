@@ -45,20 +45,6 @@ func (r *OrganizeRepo) UpdateOrganize(organize *model.Organize) error {
 	return nil
 }
 
-func (r *OrganizeRepo) DeleteOrganizeById(id uint) error {
-	if _, err := r.query.Organize.Where(r.query.Organize.ID.Eq(id)).Delete(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *OrganizeRepo) DeleteOrganizeByIds(ids []uint) error {
-	if _, err := r.query.Organize.Where(r.query.Organize.ID.In(ids...)).Delete(); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (r *OrganizeRepo) GetOrganizeById(id uint) (organize *model.Organize, err error) {
 	err = r.rdb.GetObject("", organize)
 	if err != nil || organize.ID == 0 {
@@ -110,4 +96,18 @@ func (r *OrganizeRepo) GetOrganizeList(req *model.OrganizeQuery) (list []*model.
 		return nil, err
 	}
 	return list, nil
+}
+
+func (r *OrganizeRepo) DeleteOrganizeById(id uint) error {
+	if _, err := r.query.Organize.Where(r.query.Organize.ID.Eq(id)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *OrganizeRepo) DeleteOrganizeByIds(ids []uint) error {
+	if _, err := r.query.Organize.Where(r.query.Organize.ID.In(ids...)).Delete(); err != nil {
+		return err
+	}
+	return nil
 }

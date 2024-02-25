@@ -18,6 +18,8 @@ package model
 type PageReq struct {
 	// 这个字段对前端隐藏,只服务于后端
 	UID string ` form:"-" json:"-"`
+	// 前端传过来用于查询数据的ID
+	ID string ` form:"id" json:"id"`
 	// 所查询的数据总量
 	Total int64 `json:"total,omitempty"  form:"total"`
 	// 页
