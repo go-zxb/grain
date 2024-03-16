@@ -1,8 +1,8 @@
 package handler
 
 import (
-  	"{{.ProjectName}}/model/{{.Name}}"
-  	"{{.ProjectName}}/service/{{.Name}}"
+  	"{{.ProjectName}}/internal/model/{{.Name}}"
+  	"{{.ProjectName}}/internal/service/{{.Name}}"
   	"github.com/go-grain/go-utils/response"
   	"github.com/go-grain/grain/utils/const"
   	"github.com/gin-gonic/gin"

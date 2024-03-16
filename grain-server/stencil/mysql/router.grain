@@ -1,16 +1,16 @@
 package router
 
 import (
-	 adminHandle "{{.ProjectName}}/admin/handler/{{.Name}}"
-	 adminRope "{{.ProjectName}}/admin/repo/{{.Name}}"
-	 adminService "{{.ProjectName}}/admin/service/{{.Name}}"
+	 adminHandle "{{.ProjectName}}/internal/admin/handler/{{.Name}}"
+	 adminRope "{{.ProjectName}}/internal/admin/repo/{{.Name}}"
+	 adminService "{{.ProjectName}}/internal/admin/service/{{.Name}}"
 	"{{.ProjectName}}/config"
-	"{{.ProjectName}}/handler/{{.Name}}"
+	"{{.ProjectName}}/internal/handler/{{.Name}}"
 	"{{.ProjectName}}/log"
 	"{{.ProjectName}}/middleware"
-	"{{.ProjectName}}/repo/{{.Name}}"
+	"{{.ProjectName}}/internal/repo/{{.Name}}"
 	"github.com/go-grain/go-utils/redis"
-	"{{.ProjectName}}/service/{{.Name}}"
+	"{{.ProjectName}}/internal/service/{{.Name}}"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

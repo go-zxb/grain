@@ -20,6 +20,7 @@ import (
 	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
+	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
 	"github.com/go-grain/grain/utils/const"
@@ -48,6 +49,32 @@ func NewRoleService(repo IRoleRepo, rdb redis.IRedis, conf *config.Config, logge
 		conf: conf,
 		log:  logger,
 	}
+}
+
+func (s *RoleService) InitRole() error {
+	roles := []*model.SysRole{
+		{
+			Model:    model.Model{},
+			Role:     "2023",
+			RoleName: "超级管理员",
+		}, {
+			Model:    model.Model{},
+			Role:     "2024",
+			RoleName: "普通成员",
+		},
+	}
+	q := query.Q.SysRole
+	count, err := q.Count()
+	if err != nil {
+		return err
+	}
+
+	// 有数据则退出 否则就添加
+	if count != 0 {
+		return nil
+	}
+
+	return q.Create(roles...)
 }
 
 func (s *RoleService) CreateRole(role *model.CreateSysRole, ctx *gin.Context) error {

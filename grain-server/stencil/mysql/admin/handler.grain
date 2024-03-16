@@ -3,8 +3,8 @@ package handler
 import (
 	  "github.com/go-grain/grain/utils/const"
 	  "github.com/go-grain/go-utils/response"
-  	"{{.ProjectName}}/admin/service/{{.Name}}"
-  	"{{.ProjectName}}/model/{{.Name}}"
+  	"{{.ProjectName}}/internal/admin/service/{{.Name}}"
+  	"{{.ProjectName}}/internal/model/{{.Name}}"
   	"github.com/gin-gonic/gin"
   	"strconv"
 )

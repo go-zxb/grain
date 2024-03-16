@@ -34,6 +34,10 @@ func NewMenuHandle(sv *service.MenuService) *MenuHandle {
 	}
 }
 
+func (r *MenuHandle) InitMenu() error {
+	return r.sv.InitMenu()
+}
+
 // CreateMenu
 // @Security ApiKeyAuth
 // @Summary 创建菜单

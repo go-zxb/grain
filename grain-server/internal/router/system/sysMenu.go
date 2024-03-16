@@ -45,11 +45,17 @@ func NewMenuRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.
 	}
 }
 
-func (r *MenuRouter) InitRouters() {
+func (r *MenuRouter) InitRouters() *MenuRouter {
 	r.private.PUT("sysMenu", r.api.UpdateMenu)
 	r.private.POST("sysMenu", r.api.CreateMenu)
 	r.private.GET("sysMenu/list", r.api.GetMenuList)
 	r.private.GET("sysMenu/userMenu", r.api.GetUserMenu)
 	r.private.DELETE("sysMenu", r.api.DeleteMenuById)
 	r.private.DELETE("sysMenu/deleteMenuByIds", r.api.DeleteMenuByIds)
+	return r
+}
+
+func (r *MenuRouter) InitMenu() *MenuRouter {
+	_ = r.api.InitMenu()
+	return r
 }

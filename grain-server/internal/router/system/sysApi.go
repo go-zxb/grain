@@ -47,7 +47,7 @@ func NewApiRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.C
 	}
 }
 
-func (r *ApiRouter) InitRouters() {
+func (r *ApiRouter) InitRouters() *ApiRouter {
 	r.private.PUT("", r.api.UpdateApi)
 	r.private.POST("", r.api.CreateApi)
 	r.private.GET("list", r.api.GetApiList)
@@ -55,4 +55,10 @@ func (r *ApiRouter) InitRouters() {
 	r.private.GET("apiGroups", r.api.GetApiGroup)
 	r.private.DELETE("deleteApiByIds", r.api.DeleteApiByIds)
 	r.private.GET("apiAndPermissions", r.api.GetApiAndPermissions)
+	return r
+}
+
+func (r *ApiRouter) InitApi() *ApiRouter {
+	_ = r.api.InitApi()
+	return r
 }

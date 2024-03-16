@@ -572,51 +572,51 @@ func tmplateData(m model.Models) (map[string]*model.CodePath, error) {
 		maps["model"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/model.grain",
-			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "model", name),
-			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "model", name, name),
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "model", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "model", name, name),
 		}
 		maps["router"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/router.grain",
-			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "router", name),
-			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "router", name, name),
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "router", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "router", name, name),
 		}
 		maps["handler"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/handler.grain",
-			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "handler", name),
-			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "handler", name, name),
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "handler", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "handler", name, name),
 		}
 		maps["service"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/service.grain",
-			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "service", name),
-			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "service", name, name),
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "service", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "service", name, name),
 		}
 		maps["repo"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/repo.grain",
-			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "repo", name),
-			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "repo", name, name),
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "repo", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "repo", name, name),
 		}
 
 		maps["admin_handler"] = &model.CodePath{
 			FS:           &stencil.MysqlAdminTemplateFS,
 			TemplatePath: "mysql/admin/handler.grain",
-			FilePath:     fmt.Sprintf("%s/admin/handler/%s", m.ProjectPath, name),
-			Filename:     fmt.Sprintf("%s/admin/handler/%s/%s.go", m.ProjectPath, name, name),
+			FilePath:     fmt.Sprintf("%s/internal/admin/handler/%s", m.ProjectPath, name),
+			Filename:     fmt.Sprintf("%s/internal/admin/handler/%s/%s.go", m.ProjectPath, name, name),
 		}
 		maps["admin_service"] = &model.CodePath{
 			FS:           &stencil.MysqlAdminTemplateFS,
 			TemplatePath: "mysql/admin/service.grain",
-			FilePath:     fmt.Sprintf("%s/admin/service/%s", m.ProjectPath, name),
-			Filename:     fmt.Sprintf("%s/admin/service/%s/%s.go", m.ProjectPath, name, name),
+			FilePath:     fmt.Sprintf("%s/internal/admin/service/%s", m.ProjectPath, name),
+			Filename:     fmt.Sprintf("%s/internal/admin/service/%s/%s.go", m.ProjectPath, name, name),
 		}
 		maps["admin_repo"] = &model.CodePath{
 			FS:           &stencil.MysqlAdminTemplateFS,
 			TemplatePath: "mysql/admin/repo.grain",
-			FilePath:     fmt.Sprintf("%s/admin/repo/%s", m.ProjectPath, name),
-			Filename:     fmt.Sprintf("%s/admin/repo/%s/%s.go", m.ProjectPath, name, name),
+			FilePath:     fmt.Sprintf("%s/internal/admin/repo/%s", m.ProjectPath, name),
+			Filename:     fmt.Sprintf("%s/internal/admin/repo/%s/%s.go", m.ProjectPath, name, name),
 		}
 	} else if m.DatabaseName == "MongoDB" {
 		return nil, errors.New("暂不支持MongoDB")

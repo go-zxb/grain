@@ -34,6 +34,10 @@ func NewApiHandle(sv *service.ApiService) *ApiHandle {
 	}
 }
 
+func (r *ApiHandle) InitApi() error {
+	return r.sv.InitApi()
+}
+
 // CreateApi 创建一个API接口
 // @Security ApiKeyAuth
 // @Summary 创建一个API接口

@@ -64,15 +64,15 @@ func NewSysUserService(repo ISysUserRepo, rdb redis.IRedis, conf *config.Config,
 	}
 }
 
-func InitSysUser(conf *config.Config) error {
-	defaultAdminRole := conf.System.DefaultAdminRole
-	defaultRole := conf.System.DefaultRole
+func (s *SysUserService) InitSysUser() error {
+	defaultAdminRole := s.conf.System.DefaultAdminRole
+	defaultRole := s.conf.System.DefaultRole
 	sysUser := []*model.SysUser{
 		{UID: utils.UID(), Nickname: "张漳", Username: "admin", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultAdminRole, defaultRole}, Role: defaultAdminRole, Status: "yes"},
 		{UID: utils.UID(), Nickname: "张漳", Username: "grain", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultRole}, Role: defaultRole, Status: "yes"},
 	}
-
-	count, err := query.Q.SysUser.Count()
+	q := query.Q.SysUser
+	count, err := q.Count()
 	if err != nil {
 		return err
 	}
@@ -80,11 +80,8 @@ func InitSysUser(conf *config.Config) error {
 	if count > 0 {
 		return nil
 	}
-	err = query.Q.SysUser.Create(sysUser...)
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return q.Create(sysUser...)
 }
 
 func (s *SysUserService) Login(login *model.LoginReq, ctx *gin.Context) (string, error) {

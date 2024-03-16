@@ -18,6 +18,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/redis"
+	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
@@ -31,9 +32,9 @@ type CasbinRouter struct {
 	private gin.IRoutes
 }
 
-func NewCasbinRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, logger *log.Logger, enforcer *casbin.CachedEnforcer) *CasbinRouter {
+func NewCasbinRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *CasbinRouter {
 	data := repo.NewCasbinRepo()
-	sv := service.NewCasbinService(data, logger, enforcer)
+	sv := service.NewCasbinService(data, conf, logger, enforcer)
 	return &CasbinRouter{
 		api:    handler.NewCasbinHandle(sv),
 		public: routerGroup.Group(""),
@@ -44,8 +45,14 @@ func NewCasbinRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, logger *log
 	}
 }
 
-func (r *CasbinRouter) InitRouters() {
+func (r *CasbinRouter) InitRouters() *CasbinRouter {
 	r.private.PUT("casbin", r.api.Update)
 	// 获取某角色可访问的api接口列表
 	r.private.GET("casbin/authApiList", r.api.AuthApiList)
+	return r
+}
+
+func (r *CasbinRouter) InitCasbin() *CasbinRouter {
+	_ = r.api.InitCasbinHandle()
+	return r
 }

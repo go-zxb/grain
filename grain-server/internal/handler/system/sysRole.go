@@ -34,6 +34,10 @@ func NewRoleHandle(sv *service.RoleService) *RoleHandle {
 	}
 }
 
+func (r *RoleHandle) InitRole() error {
+	return r.sv.InitRole()
+}
+
 // CreateRole 创建一个系统角色
 // @Security ApiKeyAuth
 // @Summary 创建一个系统角色

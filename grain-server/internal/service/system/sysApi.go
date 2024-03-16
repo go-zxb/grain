@@ -55,7 +55,7 @@ func NewApiService(repo IApiRepo, rdb redis.IRedis, conf *config.Config, logger 
 	}
 }
 
-func InitApi() error {
+func (s *ApiService) InitApi() error {
 	apis := []*model.SysApi{
 
 		// 系统角色
@@ -111,6 +111,14 @@ func InitApi() error {
 		// 系统日志
 		{Path: "/api/v1/sysLog/list", Description: "获取系统操作日志列表", ApiGroup: "系统菜单", Method: "GET"},
 		{Path: "/api/v1/sysLog", Description: "删除系统操作日志", ApiGroup: "系统菜单", Method: "DELETE"},
+
+		//系统组织
+		{Path: "/api/v1/organize", Description: "编辑组织", ApiGroup: "系统组织", Method: "PUT"},
+		{Path: "/api/v1/organize", Description: "创建组织", ApiGroup: "系统组织", Method: "POST"},
+		{Path: "/api/v1/organize/list", Description: "获取组织列表", ApiGroup: "系统组织", Method: "GET"},
+		{Path: "/api/v1/organize/listGroup", Description: "根据条件获取组织分组列表", ApiGroup: "系统组织", Method: "GET"},
+		{Path: "/api/v1/organize/organizeById", Description: "删除组织列表", ApiGroup: "系统组织", Method: "DELETE"},
+		{Path: "/api/v1/organize/organizeByIds", Description: "批量删除组织列表", ApiGroup: "系统组织", Method: "DELETE"},
 	}
 	q := query.Q.SysApi
 

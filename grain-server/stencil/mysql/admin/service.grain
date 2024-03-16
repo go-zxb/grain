@@ -4,7 +4,7 @@ import (
 	"errors"
 	"{{.ProjectName}}/log"
 	"{{.ProjectName}}/config"
-	"{{.ProjectName}}/model/{{.Name}}"
+	"{{.ProjectName}}/internal/model/{{.Name}}"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/gin-gonic/gin"
 

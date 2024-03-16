@@ -23,7 +23,6 @@ import (
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
-	"gorm.io/gorm"
 )
 
 type IMenuRepo interface {
@@ -53,7 +52,7 @@ func NewMenuService(repo IMenuRepo, rdb redis.IRedis, conf *config.Config, logge
 }
 
 // InitMenu 默认菜单
-func InitMenu(db *gorm.DB) error {
+func (s *MenuService) InitMenu() error {
 
 	q := query.Q.SysMenu
 
@@ -78,7 +77,10 @@ func InitMenu(db *gorm.DB) error {
 			Order:        2,
 		},
 	}
-	db.Create(menu)
+
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 	Children := []*model.SysMenu{
 		{
 			ParentId: menu.ID,
@@ -141,7 +143,10 @@ func InitMenu(db *gorm.DB) error {
 			},
 		},
 	}
-	db.Create(&Children)
+
+	if err = q.Create(Children...); err != nil {
+		return err
+	}
 
 	menu = &model.SysMenu{
 		ParentId: 0,
@@ -154,7 +159,10 @@ func InitMenu(db *gorm.DB) error {
 			Order:        0,
 		},
 	}
-	db.Create(menu)
+
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 	menu = &model.SysMenu{
 		ParentId: menu.ID,
 		Path:     "workplace",
@@ -166,7 +174,9 @@ func InitMenu(db *gorm.DB) error {
 			Roles:        []string{"2023"},
 		},
 	}
-	db.Create(menu)
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 
 	menu = &model.SysMenu{
 		ParentId: 0,
@@ -179,7 +189,9 @@ func InitMenu(db *gorm.DB) error {
 			Order:        1,
 		},
 	}
-	db.Create(menu)
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 	menu = &model.SysMenu{
 		ParentId: menu.ID,
 		Path:     "generateCode",
@@ -191,7 +203,9 @@ func InitMenu(db *gorm.DB) error {
 			Roles:        []string{"2023"},
 		},
 	}
-	db.Create(menu)
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 
 	menu = &model.SysMenu{
 		ParentId: 0,
@@ -204,7 +218,9 @@ func InitMenu(db *gorm.DB) error {
 			Order:        3,
 		},
 	}
-	db.Create(menu)
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 	menu = &model.SysMenu{
 		ParentId: menu.ID,
 		Path:     "upload",
@@ -216,7 +232,9 @@ func InitMenu(db *gorm.DB) error {
 			Roles:        []string{"2023"},
 		},
 	}
-	db.Create(menu)
+	if err = q.Create(menu); err != nil {
+		return err
+	}
 	return nil
 }
 

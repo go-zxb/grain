@@ -38,6 +38,10 @@ func NewSysUserHandle(sv *service.SysUserService) *SysUserHandle {
 	}
 }
 
+func (r *SysUserHandle) InitUser() error {
+	return r.sv.InitSysUser()
+}
+
 // Login 登录
 // @Summary 登录
 // @Description 用户登录接口，使用用户名和密码进行登录

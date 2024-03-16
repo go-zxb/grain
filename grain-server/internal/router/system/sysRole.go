@@ -45,10 +45,16 @@ func NewRoleRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.
 	}
 }
 
-func (r *RoleRouter) InitRouters() {
+func (r *RoleRouter) InitRouters() *RoleRouter {
 	r.private.POST("", r.api.CreateRole)
 	r.private.PUT("", r.api.UpdateRole)
 	r.private.GET("list", r.api.GetRoleList)
 	r.private.DELETE("", r.api.DeleteRoleById)
 	r.private.DELETE("deleteRoleByIds", r.api.DeleteRoleByIds)
+	return r
+}
+
+func (r *RoleRouter) InitRole() *RoleRouter {
+	_ = r.api.InitRole()
+	return r
 }

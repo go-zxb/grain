@@ -85,15 +85,15 @@ func (r *Grain) InitRouter() {
 
 	sysRouter.InitRouterSwag(routerGroup)
 	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
-	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
 	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitApi()
 	sysRouter.NewOrganizeRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitMenu()
+	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitRole()
 	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters()
+	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitCasbin()
 	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
+	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters().InitUser()
 }
 
 func (r *Grain) RunGin() {
@@ -106,24 +106,10 @@ func (r *Grain) InitGenQuery() {
 	query.SetDefault(r.db)
 }
 
-func (r *Grain) InitWithAPiANDRoleANDMenu() {
-
-	if err := service.InitSysUser(r.conf); err != nil {
-		return
+func (r *Grain) LoadPolicy() {
+	if err := r.enforcer.LoadPolicy(); err != nil {
+		panic(err)
 	}
-
-	if err := service.InitApi(); err != nil {
-		return
-	}
-
-	if err := service.InitMenu(r.db); err != nil {
-		return
-	}
-
-	if err := service.InitCasbinRoleRule(r.conf); err != nil {
-		return
-	}
-	_ = r.enforcer.LoadPolicy()
 }
 
 func Run() {
@@ -137,7 +123,7 @@ func Run() {
 
 	grain.InitRouter()
 
-	grain.InitWithAPiANDRoleANDMenu()
+	grain.LoadPolicy()
 
 	go func() {
 		time.Sleep(time.Second * 1)

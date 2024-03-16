@@ -58,7 +58,7 @@ func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redi
 	}
 }
 
-func (r *SysUserRouter) InitRouters() {
+func (r *SysUserRouter) InitRouters() *SysUserRouter {
 	//登录接口
 	r.public.POST("login", r.api.Login)
 	//退出接口
@@ -93,4 +93,10 @@ func (r *SysUserRouter) InitRouters() {
 	r.privateRoleAuth.DELETE("", r.api.DeleteSysUserById)
 	//根据Id批量删除用户
 	r.privateRoleAuth.DELETE("deleteSysUserByIds", r.api.DeleteSysUserByIds)
+	return r
+}
+
+func (r *SysUserRouter) InitUser() *SysUserRouter {
+	_ = r.api.InitUser()
+	return r
 }

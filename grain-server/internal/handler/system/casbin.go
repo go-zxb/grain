@@ -31,6 +31,10 @@ func NewCasbinHandle(sv *service.CasbinService) *CasbinHandle {
 	return &CasbinHandle{sv: sv}
 }
 
+func (r *CasbinHandle) InitCasbinHandle() error {
+	return r.sv.InitCasbinRoleRule()
+}
+
 // Update 更新角色权限
 // @Security ApiKeyAuth
 // @Summary 更新角色权限

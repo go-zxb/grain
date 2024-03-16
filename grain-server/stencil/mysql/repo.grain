@@ -3,11 +3,11 @@ package repo
 import (
     "fmt"
     utils "github.com/go-grain/go-utils"
-	  "{{.ProjectName}}/model/{{.Name}}"
-  	"{{.ProjectName}}/repo/data"
-  	service "{{.ProjectName}}/service/{{.Name}}"
+	  "{{.ProjectName}}/internal/model/{{.Name}}"
+  	"{{.ProjectName}}/internal/repo/data"
+  	service "{{.ProjectName}}/internal/service/{{.Name}}"
   	"github.com/go-grain/go-utils/redis"
-  	"{{.ProjectName}}/repo/{{.Name}}/query"
+  	"{{.ProjectName}}/internal/repo/{{.Name}}/query"
   	"gorm.io/gorm"
   	{{if eq .QueryTime "yes"}}
   	"strings"{{end}}
@@ -76,8 +76,8 @@ func (r *{{.StructName}}Repo) Get{{.StructName}}List(req *model.{{.StructName}}Q
    if req.QueryTime != "" {
    			t := strings.Split(req.QueryTime, ",")
    			if len(t) == 2 {
-   				s := utils.StringToDate(t[0], utils.YMD)
-   				e := utils.StringToDate(t[1], utils.YMD)
+   				s := utils.GetStringToDate(t[0], utils.YMD)
+   				e := utils.GetStringToDate(t[1], utils.YMD)
    				q = q.Where(r.query.{{.StructName}}.CreatedAt.Between(s, e))
    			}
 }{{end}}

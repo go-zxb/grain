@@ -53,17 +53,18 @@ type ICasbinRepo interface {
 type CasbinService struct {
 	repo     ICasbinRepo
 	enforcer *casbin.CachedEnforcer
+	conf     *config.Config
 	log      *log.Logger
 }
 
-func NewCasbinService(repo ICasbinRepo, logger *log.Logger, e *casbin.CachedEnforcer) *CasbinService {
-	return &CasbinService{repo: repo, enforcer: e, log: logger}
+func NewCasbinService(repo ICasbinRepo, conf *config.Config, logger *log.Logger, e *casbin.CachedEnforcer) *CasbinService {
+	return &CasbinService{repo: repo, enforcer: e, log: logger, conf: conf}
 }
 
 // InitCasbinRoleRule 初始化角色默认权限规则
-func InitCasbinRoleRule(conf *config.Config) error {
-	defaultAdminRole := conf.System.DefaultAdminRole
-	defaultRole := conf.System.DefaultRole
+func (s *CasbinService) InitCasbinRoleRule() error {
+	defaultAdminRole := s.conf.System.DefaultAdminRole
+	defaultRole := s.conf.System.DefaultRole
 	casbinRule := []*model.CasbinRule{
 
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/casbin/list", V2: "GET"},
@@ -79,6 +80,7 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		{Ptype: "p", V0: defaultRole, V1: "/api/v1/sysUser/info", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/avatar", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/editUserInfo", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/setDefaultRole", V2: "PUT"},
 
 		// 系统角色
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "POST"},
@@ -141,11 +143,7 @@ func InitCasbinRoleRule(conf *config.Config) error {
 		return err
 	}
 
-	err = query.Q.CasbinRule.Create(casbinRule...)
-	if err != nil {
-		return err
-	}
-	return nil
+	return q.Create(casbinRule...)
 }
 
 // NewCasbin 创建一个casbin实例对象

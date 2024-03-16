@@ -2,11 +2,11 @@ package repo
 
 import (
     "fmt"
-	  "{{.ProjectName}}/model/{{.Name}}"
-  	"{{.ProjectName}}/repo/data"
-  	service "{{.ProjectName}}/admin/service/{{.Name}}"
+	  "{{.ProjectName}}/internal/model/{{.Name}}"
+  	"{{.ProjectName}}/internal/repo/data"
+  	service "{{.ProjectName}}/internal/admin/service/{{.Name}}"
   	"github.com/go-grain/go-utils/redis"
-  	"{{.ProjectName}}/repo/{{.Name}}/query"
+  	"{{.ProjectName}}/internal/repo/{{.Name}}/query"
     {{if eq .QueryTime "yes"}}
   	"{{.ProjectName}}/utils"
   	"strings"{{end}}
