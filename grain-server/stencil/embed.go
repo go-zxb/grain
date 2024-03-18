@@ -10,3 +10,6 @@ var MysqlTemplateFS embed.FS
 
 //go:embed mysql/admin/*.grain
 var MysqlAdminTemplateFS embed.FS
+
+//go:embed flutter/*.grain
+var FlutterTemplateFS embed.FS

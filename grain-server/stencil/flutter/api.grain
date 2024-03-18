@@ -1,0 +1,98 @@
+import '../../../data/httpService.dart';
+import './ledgerModel.dart';
+
+class {{.StructName}}ApiUrl {
+  static const String post = "/api/v1/{{.Name}}";
+  static const String put = "/api/v1/{{.Name}}";
+  static const String getList = "/api/v1/{{.Name}}/list";
+  static const String delete{{.StructName}}ById = "/api/v1/{{.Name}}/{{.Name}}ById";
+  static const String delete{{.StructName}}ByIds = "/api/v1/{{.Name}}/{{.Name}}ByIds";
+}
+
+class {{.StructName}}ApiClient {
+   final DioHttp client = DioHttp();
+
+  Future<{{.StructName}}Model> getById(String id) async {
+      try {
+        final response = await client
+            .get({{.StructName}}ApiUrl.post+"/$id");
+        print(response.data);
+        var val = {{.StructName}}Model.fromJson(response.data);
+        return val;
+      } on Exception catch (e) {
+        // 处理异常
+        print('An error occurred: $e');
+        return {{.StructName}}Model(status: false);
+      }
+    }
+
+  Future<{{.StructName}}Model> getList(dynamic data) async {
+    try {
+      final response = await client
+          .get({{.StructName}}ApiUrl.getList, queryParameters: data);
+      print(response.data);
+      var val = {{.StructName}}Model.fromJson(response.data);
+      return val;
+    } on Exception catch (e) {
+      // 处理异常
+      print('An error occurred: $e');
+      return {{.StructName}}Model(status: false);
+    }
+  }
+
+  Future<{{.StructName}}Model> post(dynamic data) async {
+    try {
+      final response =
+          await client.post({{.StructName}}ApiUrl.post, data: data);
+      print(response.data);
+      var val = {{.StructName}}Model.fromJson(response.data);
+      return val;
+    } on Exception catch (e) {
+      // 处理异常
+      print('An error occurred: $e');
+      return {{.StructName}}Model(status: false);
+    }
+  }
+
+  Future<{{.StructName}}Model> put(dynamic data) async {
+    try {
+      final response =
+          await client.put({{.StructName}}ApiUrl.put, data: data);
+      print(response.data);
+      var val = {{.StructName}}Model.fromJson(response.data);
+      return val;
+    } on Exception catch (e) {
+      // 处理异常
+      print('An error occurred: $e');
+      return {{.StructName}}Model(status: false);
+    }
+  }
+
+  Future<{{.StructName}}Model> deleteById(dynamic data) async {
+    try {
+      final response = await client
+          .delete({{.StructName}}ApiUrl.delete{{.StructName}}ById, queryParameters: data);
+      print(response.data);
+      var val = {{.StructName}}Model.fromJson(response.data);
+      return val;
+    } on Exception catch (e) {
+      // 处理异常
+      print('An error occurred: $e');
+      return {{.StructName}}Model(status: false);
+    }
+  }
+
+    Future<{{.StructName}}Model> deleteByIds(dynamic data) async {
+      try {
+        final response = await client
+            .delete({{.StructName}}ApiUrl.delete{{.StructName}}ByIds, queryParameters: data);
+        print(response.data);
+        var val = {{.StructName}}Model.fromJson(response.data);
+        return val;
+      } on Exception catch (e) {
+        // 处理异常
+        print('An error occurred: $e');
+        return {{.StructName}}Model(status: false);
+      }
+    }
+}

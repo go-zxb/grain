@@ -84,6 +84,8 @@
                     <a-radio value="handle">Handle</a-radio>
                     <a-radio value="service">Service</a-radio>
                     <a-radio value="repo">Repo</a-radio>
+                    <a-radio value="flutterModel">flutterModel</a-radio>
+                    <a-radio value="flutterApi">flutterApi</a-radio>
                     <a-radio value="vue">Vue</a-radio>
                     <a-radio value="api">Api</a-radio>
                     <a-radio value="zhCn">i18n-Zh-CN</a-radio>
@@ -227,6 +229,8 @@ const codeData = ref({
     repo: 'repoCode',
     handle: 'handleCode',
     service: 'serviceCode',
+    flutterModel: 'flutterModel',
+    flutterApi: 'flutterApi',
     router: 'routerCode',
     vue: 'vueCode',
     api: 'apiCode',
@@ -256,6 +260,8 @@ const viewCodeDialogClose = () => {
         model: 'modelCode',
         repo: 'repoCode',
         handle: 'handleCode',
+        flutterModel: 'flutterModel',
+        flutterApi: 'flutterApi',
         service: 'serviceCode',
         router: 'routerCode',
         vue: 'vueCode',
@@ -272,6 +278,10 @@ const computedCode = computed(() => {
             return codeData.value.router;
         case 'handle':
             return codeData.value.handle;
+        case 'flutterModel':
+            return codeData.value.flutterModel
+        case 'flutterApi':
+            return codeData.value.flutterApi
         case 'service':
             return codeData.value.service;
         case 'repo':

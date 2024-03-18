@@ -6,14 +6,16 @@ import (
 )
 
 type ViewCode struct {
-	Model   string `json:"model"`
-	Router  string `json:"router"`
-	Handle  string `json:"handle"`
-	Service string `json:"service"`
-	Repo    string `json:"repo"`
-	Vue     string `json:"vue"`
-	APi     string `json:"api"`
-	ZhCN    string `json:"zhCn"`
+	Model        string `json:"model"`
+	Router       string `json:"router"`
+	Handle       string `json:"handle"`
+	Service      string `json:"service"`
+	Repo         string `json:"repo"`
+	Vue          string `json:"vue"`
+	APi          string `json:"api"`
+	ZhCN         string `json:"zhCn"`
+	FlutterModel string `json:"flutterModel"`
+	FlutterAPi   string `json:"flutterApi"`
 }
 
 type Project struct {

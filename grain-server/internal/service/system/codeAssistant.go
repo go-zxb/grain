@@ -278,6 +278,19 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 			viewCode.Repo = utils.ReadFile(m1.Filename)
 		}
 	}
+	fields, _ = s.repo.GetFields(modelData.ID)
+	modelData.Fields = fields
+	s.WebGenerate(*modelData)
+	viewCode.APi = utils.ReadFile(fmt.Sprintf("%s/src/api/business/%s.ts", modelData.WebProjectPath, modelData.Name))
+	viewCode.Vue = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/index.vue", modelData.WebProjectPath, modelData.Name))
+	viewCode.ZhCN = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/locale/zh-CN.ts", modelData.WebProjectPath, modelData.Name))
+
+	fields, _ = s.repo.GetFields(modelData.ID)
+	modelData.Fields = fields
+	s.FlutterGenerate(*modelData)
+	viewCode.FlutterModel = utils.ReadFile(fmt.Sprintf("%s/flutter/models/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
+	viewCode.FlutterAPi = utils.ReadFile(fmt.Sprintf("%s/flutter/api/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
+
 	err = GenBuild(modelData)
 	if err != nil {
 		return nil, err
@@ -287,10 +300,6 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 		return nil, err
 	}
 
-	s.WebGenerate(*modelData)
-	viewCode.APi = utils.ReadFile(fmt.Sprintf("%s/src/api/business/%s.ts", modelData.WebProjectPath, modelData.Name))
-	viewCode.Vue = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/index.vue", modelData.WebProjectPath, modelData.Name))
-	viewCode.ZhCN = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/locale/zh-CN.ts", modelData.WebProjectPath, modelData.Name))
 	//_ = os.RemoveAll(".tmp")
 	return &viewCode, nil
 }
@@ -565,7 +574,7 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 
 func tmplateData(m model.Models) (map[string]*model.CodePath, error) {
 	//把所有相关信息都存放在一个map里面
-	maps := make(map[string]*model.CodePath, 0)
+	maps := make(map[string]*model.CodePath)
 	name := utils.ToLower(m.StructName)
 
 	if m.DatabaseName == mysql {
@@ -627,7 +636,7 @@ func tmplateData(m model.Models) (map[string]*model.CodePath, error) {
 }
 
 func (s *CodeAssistantService) WebGenerate(m model.Models) []string {
-	mm := make(map[string]*model.CodePath, 0)
+	mm := make(map[string]*model.CodePath)
 
 	path := m.WebProjectPath
 	if path[len(path)-1:] == "/" {
@@ -753,6 +762,117 @@ func (s *CodeAssistantService) WebGeneratedCode(m model.Models, web *model.CodeP
 		return err
 	}
 	defer open.Close()
+	//渲染模板文件
+	err = temp.Execute(open, m)
+	if err != nil {
+		xlog.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (s *CodeAssistantService) FlutterGenerate(m model.Models) []string {
+	mm := make(map[string]*model.CodePath)
+
+	path := m.WebProjectPath
+	if path[len(path)-1:] == "/" {
+		m.WebProjectPath = path[:len(path)-1]
+	}
+
+	name := utils.ToLower(m.StructName)
+	mm["model.dart"] = &model.CodePath{
+		FS:           &stencil.FlutterTemplateFS,
+		TemplatePath: "flutter/model.grain",
+		FilePath:     fmt.Sprintf("%s/flutter/models/%s", m.ProjectPath, name),
+		Filename:     fmt.Sprintf("%s/flutter/models/%s/%s.dart", m.ProjectPath, name, m.Name),
+	}
+
+	mm["api.dart"] = &model.CodePath{
+		FS:           &stencil.FlutterTemplateFS,
+		TemplatePath: "flutter/api.grain",
+		FilePath:     fmt.Sprintf("%s/flutter/api/%s", m.ProjectPath, name),
+		Filename:     fmt.Sprintf("%s/flutter/api/%s/%s.dart", m.ProjectPath, name, m.Name),
+	}
+
+	var errStr []string
+	//m.WebFieldToLower()
+	for i, _ := range mm {
+		//生成代码
+		err := s.FlutterGeneratedCode(m, mm[i])
+		if err != nil {
+			errStr = append(errStr, err.Error()+"\n")
+		}
+	}
+	return errStr
+}
+
+func (s *CodeAssistantService) FlutterGeneratedCode(m model.Models, flutter *model.CodePath) (err error) {
+
+	//检查目录是否存在
+	exists := utils.PathIsNotExist(flutter.FilePath)
+	if err != nil {
+		xlog.Error(err)
+		return err
+	}
+
+	if exists {
+		err = os.MkdirAll(flutter.FilePath, os.ModePerm)
+		if err != nil {
+			xlog.Error(err)
+			return err
+		}
+	}
+
+	//读取模板文件
+	b, err := flutter.FS.ReadFile(flutter.TemplatePath)
+	if err != nil {
+		xlog.Error(err)
+		return err
+	}
+	rt := string(b)
+
+	temp, err := template.New(utils.ToLower(m.Type)).Parse(rt)
+	if err != nil {
+		xlog.Info(err, "New模版失败", flutter.TemplatePath)
+		return err
+	}
+
+	//检查文件是否存在
+	exists = utils.FileIsNotExist(flutter.Filename)
+
+	if s.conf.Gin.Model == "debug" {
+		_ = os.Remove(flutter.Filename)
+	} else {
+		if !exists {
+			return errors.New("文件已存在: " + fmt.Sprintf("%s.dart", m.Name))
+		}
+	}
+
+	open, err := os.OpenFile(flutter.Filename, os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		xlog.Info(err)
+		return err
+	}
+	defer open.Close()
+
+	for _, field := range m.Fields {
+		if field.Type == "" {
+			field.Type = "String?"
+		} else {
+			switch field.Type {
+			case "string":
+				field.Type = "String?"
+			case "int", "int64", "float32", "float64":
+				field.Type = "num?"
+			case "bool":
+				field.Type = "bool?"
+			default:
+				field.Type += "?"
+			}
+		}
+
+	}
+
 	//渲染模板文件
 	err = temp.Execute(open, m)
 	if err != nil {

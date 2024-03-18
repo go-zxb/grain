@@ -1,0 +1,57 @@
+import 'dart:convert';
+
+{{.StructName}}Model {{.Name}}FromJson(String str) => {{.StructName}}Model.fromJson(json.decode(str));
+String {{.Name}}ToJson({{.StructName}}Model data) => json.encode(data.toJson());
+
+class {{.StructName}}Model {
+  {{.StructName}}Model({
+    this.data,
+    this.status,
+  });
+
+  {{.StructName}}Model.fromJson(dynamic json) {
+    if (json['data'] != null) {
+      data = [];
+      json['data'].forEach((v) {
+        data?.add({{.StructName}}ModelData.fromJson(v));
+      });
+    }
+    status = json['status'];
+  }
+  List<{{.StructName}}ModelData>? data = [];
+  bool? status;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    if (data != null) {
+      map['data'] = data?.map((v) => v.toJson()).toList();
+    }
+    map['status'] = status;
+    return map;
+  }
+}
+
+
+{{.StructName}}ModelData dataFromJson(String str) => {{.StructName}}ModelData.fromJson(json.decode(str));
+String dataToJson({{.StructName}}ModelData data) => json.encode(data.toJson());
+
+class {{.StructName}}ModelData {
+  {{.StructName}}ModelData({
+   {{range .Fields}} this.{{.Name}},
+   {{end}}
+  });
+
+  {{.StructName}}ModelData.fromJson(dynamic json) {
+    {{range .Fields}} {{.Name}} = json['{{.Name}}'];
+    {{end}}
+  }
+   {{range .Fields}} {{.Type}} {{.Name}};
+   {{end}}
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    {{range .Fields}}  map['{{.Name}}'] = {{.Name}};
+    {{end}}
+    return map;
+  }
+}
