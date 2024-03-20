@@ -74,8 +74,8 @@ const SysManage: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'attachments',
-      name: 'attachments',
+      path: 'sysFile',
+      name: 'sysFile',
       component: () => import('@/views/sysManage/sysFile/index.vue'),
       meta: {
         locale: 'menu.sysFile',

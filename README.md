@@ -1,7 +1,7 @@
-<div style="text-align:center">
-    <img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/grain-logo-v2.png" 
-alt=""  height="200px"/>
-</div>
+
+<p align="center"><a href="https://grain.gitbili.com/" target="_blank">
+<img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/grain-logo-v2.png" height="200px"></a></p>
+
 <div style="text-align:center">
 <img src="https://img.shields.io/badge/Go-v1.20-blue" alt=""/>
 <img src="https://img.shields.io/badge/Gin-v1.9.1-lightBlue" alt=""/>
@@ -37,11 +37,11 @@ Grain是一个基于Gin + Gorm&Gen + Vue + ArcoDesign开发的前后端分离的
 #### 使用介绍
 ##### 后端:
 1. 从github clone项目到本地
-   ```go
+   ```shell
     git clone https://github.com/go-grain/grain.git
     ```
 2. 运行build文件生成repo的一些依赖(比较懒,不想提交到git)
-   ```go
+   ```shell
    #cd 进入项目根目录
    cd grain/grain-server
    #运行build文件
@@ -49,7 +49,7 @@ Grain是一个基于Gin + Gorm&Gen + Vue + ArcoDesign开发的前后端分离的
    ```
 
 3. 运行项目
-   ```go
+   ```shell
    #拉取依赖
    go mod tidy 
    #运行项目
@@ -57,7 +57,7 @@ Grain是一个基于Gin + Gorm&Gen + Vue + ArcoDesign开发的前后端分离的
    ```
 ##### 前端
 1. 进入到前端根目录
-   ```go
+   ```shell
    #假设你现在在grain-server目录下,cd后退接入前端目录
    cd ../grain-arco-web
    #拉取依赖

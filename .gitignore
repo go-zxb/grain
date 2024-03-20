@@ -46,7 +46,6 @@ utils/errgroup
 .idea
 *-lock.yaml
 *-lock.json
-*.lock
 node_modules
 .DS_Store
 dist
