@@ -1,7 +1,8 @@
-<div align=center>
-<img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/grain-logo-v2.png" alt=""/>
+<div style="text-align:center">
+    <img src="http://grain.gitbili.com/uploads/systemFile/2023/8-26/grain-logo-v2.png" 
+alt=""  height="200px"/>
 </div>
-<div align=center>
+<div style="text-align:center">
 <img src="https://img.shields.io/badge/Go-v1.20-blue" alt=""/>
 <img src="https://img.shields.io/badge/Gin-v1.9.1-lightBlue" alt=""/>
 <img src="https://img.shields.io/badge/Gorm-v1.25.2-red" alt=""/>
@@ -14,18 +15,64 @@ Grain是一个基于Gin + Gorm&Gen + Vue + ArcoDesign开发的前后端分离的
 
 #### Grain能做什么:
 - Grain致力于提供最简单的开箱即用的脚手架基础平台,帮助用户快速搭建中后台管理系统
-- Grain使用 JWT 进行身份验证。使用 Casbin 实现基于角色的访问控制，控制资源权限。前端菜单根据角色权限动态显示对应的权限菜单。
-- Grain能够根据输入的模型字段自动生成前端 CRUD 管理页面和后端 CRUD,API 接口
+- Grain使用 JWT 进行身份验证。使用 Casbin 实现基于角色的访问控制，控制资源权限。前端菜单可根据权限动态获取显示对应的菜单。
+- Grain能够根据输入的模型字段自动生成前端 CRUD 管理页面和后端 API 接口
 
 #### Grain基础通用功能：
 - 代码助手:
 - 用户管理:
+- 组织管理:
 - API管理:
 - 菜单管理:
 - 角色管理:
+- 附件管理:
+
+#### 开发环境(必要依赖)
+- Node  v20.1.0
+- Golang v1.20.14
+- Redis v5.0.10
+- MySql v8.0.29
+- MongoDB v4.0.10
 
 #### 使用介绍
-写完后在开始写文档...
+##### 后端:
+1. 从github clone项目到本地
+   ```go
+    git clone https://github.com/go-grain/grain.git
+    ```
+2. 运行build文件生成repo的一些依赖(比较懒,不想提交到git)
+   ```go
+   #cd 进入项目根目录
+   cd grain/grain-server
+   #运行build文件
+   go run ./cmd/gen/build.go
+   ```
+
+3. 运行项目
+   ```go
+   #拉取依赖
+   go mod tidy 
+   #运行项目
+   go run ./cmd/main.go 
+   ```
+##### 前端
+1. 进入到前端根目录
+   ```go
+   #假设你现在在grain-server目录下,cd后退接入前端目录
+   cd ../grain-arco-web
+   #拉取依赖
+   yarn install
+   or
+   npm install
+   #运行
+   yarn run dev
+   or
+   npm run dev
+   ```
+
+### 2.开发教程
+- 更多详细请访问: https://grain.gitbili.com
+
 ##### 工程目录结构
     ├─base          #放一些基础的东西
     ├─cmd           #程序入口
@@ -45,9 +92,8 @@ Grain是一个基于Gin + Gorm&Gen + Vue + ArcoDesign开发的前后端分离的
     ├─stencil       #模版
     └─utils         #工具包
 
-#### 讨论群
-备注:Grain
-<div align=start>
+#### 作者微信
+<div style="text-align:center">
 <img src="http://grain.gitbili.com/uploads/systemFile/2023/7-22/wx.png" width=200" height="200" />
 </div>
 

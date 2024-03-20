@@ -1,6 +1,3 @@
-import '../../../data/httpService.dart';
-import './ledgerModel.dart';
-
 class {{.StructName}}ApiUrl {
   static const String post = "/api/v1/{{.Name}}";
   static const String put = "/api/v1/{{.Name}}";

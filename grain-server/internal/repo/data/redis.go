@@ -191,7 +191,7 @@ func (rs Redis) GetTTL(key string) float64 {
 	return ttlResult.Seconds()
 }
 
-func (rs Redis) Scan(key string) []string {
+func (rs Redis) Scan(key string, count int64) []string {
 	var cursor uint64
 	var keys []string
 	var allKeys []string

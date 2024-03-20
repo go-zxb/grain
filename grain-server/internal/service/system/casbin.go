@@ -67,44 +67,44 @@ func (s *CasbinService) InitCasbinRoleRule() error {
 	defaultRole := s.conf.System.DefaultRole
 	casbinRule := []*model.CasbinRule{
 
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/casbin/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/casbin", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/casbin/list", V2: "GET"},
 
 		// 系统用户
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/create", V2: "POST"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/update", V2: "PUT"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/list", V2: "GET"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/deleteSysUserByIdList", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/info", V2: "GET"},
 		{Ptype: "p", V0: defaultRole, V1: "/api/v1/sysUser/info", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/info", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/update", V2: "PUT"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/avatar", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/create", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/editUserInfo", V2: "PUT"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/setDefaultRole", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysUser/deleteSysUserByIdList", V2: "DELETE"},
 
 		// 系统角色
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "PUT"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysRole/deleteRoleList", V2: "DELETE"},
 
 		// 系统API
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/list", V2: "DELETE"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/apiGroups", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/apiAndPermissions", V2: "GET"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/list", V2: "GET"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysApi/list", V2: "DELETE"},
 
 		//系统菜单
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "POST"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu", V2: "DELETE"},
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/userMenu", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysMenu/deleteSysMenuList", V2: "DELETE"},
 
 		//代码助手
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields", V2: "POST"},
@@ -122,8 +122,15 @@ func (s *CasbinService) InitCasbinRoleRule() error {
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/viewCode", V2: "GET"},
 
 		// 系统日志
-		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysLog/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysLog", V2: "DELETE"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/sysLog/list", V2: "GET"},
+
+		//组织管理
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/organize", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/organize", V2: "POST"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/organize/list", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/organize/listGroup", V2: "GET"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/organize/organizeById", V2: "DELETE"},
 	}
 
 	q := query.Q.CasbinRule

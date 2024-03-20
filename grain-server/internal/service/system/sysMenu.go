@@ -71,7 +71,7 @@ func (s *MenuService) InitMenu() error {
 		Path:     "manage",
 		Name:     "manage",
 		Meta: &model.Meta{
-			I18n:         "menu.admin",
+			I18n:         "menu.sysManage",
 			RequiresAuth: false,
 			Icon:         "icon-command",
 			Order:        2,
@@ -84,13 +84,13 @@ func (s *MenuService) InitMenu() error {
 	Children := []*model.SysMenu{
 		{
 			ParentId: menu.ID,
-			Path:     "operationLog",
-			Name:     "operationLog",
+			Path:     "sysLog",
+			Name:     "sysLog",
 			Meta: &model.Meta{
-				I18n:         "menu.operationLog",
+				I18n:         "menu.sysLog",
 				RequiresAuth: false,
 				Icon:         "",
-				Order:        5,
+				Order:        6,
 				Roles:        []string{"2023"},
 			},
 		},
@@ -102,6 +102,17 @@ func (s *MenuService) InitMenu() error {
 				I18n:         "menu.sysMenu",
 				RequiresAuth: false,
 				Icon:         "",
+				Order:        5,
+				Roles:        []string{"2023"},
+			},
+		},
+		{
+			ParentId: menu.ID,
+			Path:     "sysOrganize",
+			Name:     "sysOrganize",
+			Meta: &model.Meta{
+				I18n:         "menu.organize",
+				RequiresAuth: true,
 				Order:        4,
 				Roles:        []string{"2023"},
 			},
@@ -163,6 +174,7 @@ func (s *MenuService) InitMenu() error {
 	if err = q.Create(menu); err != nil {
 		return err
 	}
+
 	menu = &model.SysMenu{
 		ParentId: menu.ID,
 		Path:     "workplace",
@@ -180,10 +192,10 @@ func (s *MenuService) InitMenu() error {
 
 	menu = &model.SysMenu{
 		ParentId: 0,
-		Path:     "codeFactory",
-		Name:     "codeFactory",
+		Path:     "codeAssistant",
+		Name:     "codeAssistant",
 		Meta: &model.Meta{
-			I18n:         "menu.codeFactory",
+			I18n:         "menu.codeAssistant",
 			RequiresAuth: false,
 			Icon:         "icon-code",
 			Order:        1,
@@ -197,7 +209,7 @@ func (s *MenuService) InitMenu() error {
 		Path:     "generateCode",
 		Name:     "generateCode",
 		Meta: &model.Meta{
-			I18n:         "menu.codeFactory.codeFactory",
+			I18n:         "menu.generateCode",
 			RequiresAuth: true,
 			Order:        0,
 			Roles:        []string{"2023"},
@@ -209,10 +221,10 @@ func (s *MenuService) InitMenu() error {
 
 	menu = &model.SysMenu{
 		ParentId: 0,
-		Path:     "uploads",
-		Name:     "uploads",
+		Path:     "attachments",
+		Name:     "attachments",
 		Meta: &model.Meta{
-			I18n:         "menu.upload",
+			I18n:         "menu.attachments",
 			RequiresAuth: false,
 			Icon:         "icon-upload",
 			Order:        3,
@@ -223,10 +235,10 @@ func (s *MenuService) InitMenu() error {
 	}
 	menu = &model.SysMenu{
 		ParentId: menu.ID,
-		Path:     "upload",
-		Name:     "upload",
+		Path:     "sysFile",
+		Name:     "sysFile",
 		Meta: &model.Meta{
-			I18n:         "menu.upload",
+			I18n:         "menu.sysFile",
 			RequiresAuth: true,
 			Order:        0,
 			Roles:        []string{"2023"},
