@@ -62,12 +62,15 @@
             </a-form>
         </a-modal>
 
-        <a-drawer :width="720" :footer="false" :visible="viewFieldlVisible" @cancel="viewFieldCancel" unmountOnClose>
-            <template #title>
-                字段管理
-            </template>
+        <div v-if="modelType==2">
+            <a-button type="text" @click="backProject()">
+                <template #icon>
+                    <icon-arrow-left />
+                </template>
+                返回
+            </a-button>
             <FieldFile :parentID="parentID" />
-        </a-drawer>
+        </div>
 
         <a-modal
             v-model:visible="viewCodeVisible"
@@ -100,66 +103,74 @@
             <codemirror v-model:value="computedCode" :options="options" />
         </a-modal>
 
-        <a-card>
-
-            <a-row style="margin-bottom: 16px">
-                <a-col :span="12">
-                    <a-space>
-                        <a-button type="primary" @click="createModelButtonClick()">
-                            <template #icon>
-                                <icon-plus />
-                            </template>
-                            {{$t('addModelButton.Title')}}
-                        </a-button>
-                    </a-space>
-                </a-col>
-            </a-row>
-
-            <a-table
-                row-key="id"
-                :loading="loading"
-                :columns="columns"
-                :data="modelDataList"
-                :pagination="pagination"
-                :bordered="{ cell: true }"
-                column-resizable
-                stripe
-                @page-change="onPageChange"
-            >
-                <template #index="{ rowIndex }">
-                    {{rowIndex + 1 + (pagination.page - 1) * pagination.pageSize}}
+        <div v-if="modelType==1">
+            <a-button type="text" @click="emit('backProject', 1)">
+                <template #icon>
+                    <icon-arrow-left />
                 </template>
+                返回
+            </a-button>
+            <a-card>
+                <a-row style="margin-bottom: 16px">
+                    <a-col :span="12">
+                        <a-space>
+                            <a-button type="primary" @click="createModelButtonClick()">
+                                <template #icon>
+                                    <icon-plus />
+                                </template>
+                                {{$t('addModelButton.Title')}}
+                            </a-button>
+                        </a-space>
+                    </a-col>
+                </a-row>
 
-                <template #operations="{ record, rowIndex }">
-                    <a-button type="text" size="small" @click="editModel(record)">
-                        {{$t('modelTable.columns.operations.edit')}}
-                    </a-button>
+                <a-table
+                    row-key="id"
+                    :loading="loading"
+                    :columns="columns"
+                    :data="modelDataList"
+                    :pagination="pagination"
+                    :bordered="{ cell: true }"
+                    column-resizable
+                    stripe
+                    @page-change="onPageChange"
+                >
+                    <template #index="{ rowIndex }">
+                        {{rowIndex + 1 + (pagination.page - 1) * pagination.pageSize}}
+                    </template>
 
-                    <a-button type="text" size="small" @click="viewField(record.id)">
-                        {{$t('modelTable.columns.operations.viewField')}}
-                    </a-button>
-
-                    <a-button
-                        type="text"
-                        size="small"
-                        :loading="ViewCodeLoading"
-                        @click="viewCodeClick(record)"
-                    >
-                        {{ $t('modelTable.columns.operations.viewCode') }}
-                    </a-button>
-
-                    <a-popconfirm
-                        :content="$t('modelTable.columns.operations.delete.prompt')"
-                        type="warning"
-                        @ok="deleteModel(record.id, rowIndex)"
-                    >
-                        <a-button type="text" size="small" status="danger">
-                            {{$t('modelTable.columns.operations.delete')}}
+                    <template #operations="{ record, rowIndex }">
+                        <a-button type="text" size="small" @click="editModel(record)">
+                            {{$t('modelTable.columns.operations.edit')}}
                         </a-button>
-                    </a-popconfirm>
-                </template>
-            </a-table>
-        </a-card>
+
+                        <a-button type="text" size="small" @click="viewField(record.id)">
+                            {{$t('modelTable.columns.operations.viewField')}}
+                        </a-button>
+
+                        <a-button
+                            type="text"
+                            size="small"
+                            :loading="ViewCodeLoading"
+                            @click="viewCodeClick(record)"
+                        >
+                            {{ $t('modelTable.columns.operations.viewCode') }}
+                        </a-button>
+
+                        <a-popconfirm
+                            :content="$t('modelTable.columns.operations.delete.prompt')"
+                            type="warning"
+                            @ok="deleteModel(record.id, rowIndex)"
+                        >
+                            <a-button type="text" size="small" status="danger">
+                                {{$t('modelTable.columns.operations.delete')}}
+                            </a-button>
+                        </a-popconfirm>
+                    </template>
+                </a-table>
+            </a-card>
+        </div>
+
     </div>
 </template>
 
@@ -188,6 +199,7 @@ const props = defineProps({
         type: Number,
         required: true,
     }
+
 })
 
 const generateFormModel = () => {
@@ -211,6 +223,7 @@ const database = ref([
 
 const isEdit = ref(false);
 const parentID = ref(0);
+const modelType = ref(1);
 const viewFieldlVisible = ref(false);
 const dialogFormVisible = ref(false);
 const dialogFormTitle = ref('添加项目模型');
@@ -236,6 +249,8 @@ const codeData = ref({
     api: 'apiCode',
     zhCn: 'zhCnCode',
 });
+
+const emit = defineEmits(['backProject']);
 
 const options = {
     autorefresh: true, // 是否自动刷新
@@ -346,6 +361,7 @@ const deleteModel = async (id: number, index: number) => {
 const viewField = (mid: any) => {
   viewFieldlVisible.value = true;
   parentID.value = mid;
+  modelType.value = 2;
 }
 
 const editModel = (data: any) => {
@@ -388,6 +404,9 @@ const viewFieldCancel = () => {
     viewFieldlVisible.value = false;
 };
 
+const backProject = () => {
+  modelType.value = 1;
+}
 
 
 const addModelConfirm = async () => {

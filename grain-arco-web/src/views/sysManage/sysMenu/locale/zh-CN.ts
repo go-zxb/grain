@@ -13,6 +13,7 @@ export default {
   'addSysMenuButton.Title': '添加菜单',
   'sysMenuTable.columns.index': '序号',
   'sysMenuTable.columns.operations': '操作',
+  'sysMenuTable.columns.operations.create': '创建子菜单',
   'sysMenuTable.columns.operations.edit': '编辑',
   'sysMenuTable.columns.operations.delete': '删除',
   'sysMenuTable.columns.operations.delete.prompt': '确认删除这个菜单吗?',

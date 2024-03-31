@@ -31,6 +31,23 @@
                     />
                 </a-form-item>
 
+                <a-form-item field="mysqlType"
+                             :label="$t('fieldDialogForm.mysqlType')"
+
+                >
+                    <a-select
+                        v-model="fieldForm.mysqlType"
+                        :placeholder="$t('fieldDialogForm.mysqlType.prompt')"
+                    >
+                        <a-option
+                            v-for="option in mysqlType"
+                            :key="option.value"
+                            :value="option.value"
+                        >{{ option.title }}</a-option
+                        >
+                    </a-select>
+                </a-form-item>
+
                 <a-form-item field="jsonTag"
                              :label="$t('fieldDialogForm.jsonTag')"
 
@@ -193,6 +210,7 @@ const generateFormModel = () => {
         id: 0,
         parentId: 0,
         name: '',
+        mysqlType: '',
         mysqlField: '',
         type: '',
         jsonTag: '',
@@ -261,6 +279,14 @@ const requiredValueOption = ref([
     { title: '数字范围', value: 'min=6,max=16' },
 ]);
 
+const mysqlType = ref([
+    { title: 'bigint', value: 'bigint' },
+    { title: 'varchar', value: 'varchar' },
+    { title: 'datetime', value: 'datetime' },
+    { title: 'text', value: 'text' },
+    { title: 'json', value: 'json' },
+]);
+
 const basePagination: Pagination = {
     page: 1,
     pageSize: 20,
@@ -313,6 +339,7 @@ const editField = (data: any) => {
     fieldForm.parentId = data.parentId
     fieldForm.name = data.name
     fieldForm.mysqlField = data.mysqlField
+    fieldForm.mysqlType = data.mysqlType
     fieldForm.type = data.type
     fieldForm.jsonTag = data.jsonTag
     fieldForm.description = data.description
@@ -339,6 +366,7 @@ const clearForm = () => {
     fieldForm.parentId = 0;
     fieldForm.name = '';
     fieldForm.mysqlField = '';
+    fieldForm.mysqlType = '';
     fieldForm.type = '';
     fieldForm.jsonTag = '';
     fieldForm.description = '';

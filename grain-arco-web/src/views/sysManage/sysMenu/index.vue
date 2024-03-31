@@ -66,13 +66,13 @@
             allow-clear
           />
         </a-form-item>
-        <a-form-item field="parentId" :label="$t('sysMenuDialogForm.parentId')">
-          <a-input-number
-            v-model="sysMenuForm.parentId"
-            :placeholder="$t('sysMenuDialogForm.parentId.prompt')"
-            allow-clear
-          />
-        </a-form-item>
+<!--        <a-form-item field="parentId" :label="$t('sysMenuDialogForm.parentId')">-->
+<!--          <a-input-number-->
+<!--            v-model="sysMenuForm.parentId"-->
+<!--            :placeholder="$t('sysMenuDialogForm.parentId.prompt')"-->
+<!--            allow-clear-->
+<!--          />-->
+<!--        </a-form-item>-->
       </a-form>
     </a-modal>
 
@@ -122,6 +122,11 @@
         </template>
 
         <template #operations="{ record, rowIndex }">
+
+          <a-button v-if="record.parentId===0" type="text" size="small" @click="addChildMenu(record)">
+              {{ $t('sysMenuTable.columns.operations.create') }}
+          </a-button>
+
           <a-button type="text" size="small" @click="editSysMenu(record)">
             {{ $t('sysMenuTable.columns.operations.edit') }}
           </a-button>
@@ -203,9 +208,11 @@
         });
 
         list.data.forEach((item)=>{
-            item.children.sort((a: any, b: any) => {
-                return a.meta.order - b.meta.order;
-            });
+            if(item.children!==null){
+                item.children.sort((a: any, b: any) => {
+                    return a.meta.order - b.meta.order;
+                });
+            }
             m.push(item)
         })
 
@@ -215,6 +222,7 @@
       pagination.pageSize = params.pageSize;
     } catch (err) {
       // you can report use errorHandler or other
+        console.log(err)
     } finally {
       loading.value = false;
     }
@@ -230,6 +238,13 @@
     }
   };
 
+  const addChildMenu = (data: any) => {
+      dialogFormTitle.value = '创建子菜单';
+      sysMenuForm.parentId = data.id;
+      dialogFormVisible.value = true;
+      isEdit.value = false;
+  };
+
   const editSysMenu = (data: any) => {
     dialogFormTitle.value = '编辑菜单';
     sysMenuForm.id = data.id;
@@ -239,7 +254,7 @@
     sysMenuForm.meta.roles = data.meta.roles;
     sysMenuForm.meta.icon = data.meta.icon;
     sysMenuForm.meta.order = data.meta.order;
-    sysMenuForm.parentId = data.meta.parentId;
+    sysMenuForm.parentId = data.parentId;
     dialogFormVisible.value = true;
     isEdit.value = true;
   };
@@ -248,9 +263,10 @@
   };
 
   const createSysMenuButtonClick = () => {
-    dialogFormTitle.value = t('addSysMenuButton.Title');
-    dialogFormVisible.value = true;
-    isEdit.value = false;
+      clearForm()
+      dialogFormTitle.value = t('addSysMenuButton.Title');
+      dialogFormVisible.value = true;
+      isEdit.value = false;
   };
 
   const clearForm = () => {
@@ -336,11 +352,11 @@
       dataIndex: 'meta.order',
       slotName: 'order',
     },
-    {
-      title: t('sysMenuTable.columns.parentId'),
-      dataIndex: 'parentId',
-      slotName: 'parentId',
-    },
+    // {
+    //   title: t('sysMenuTable.columns.parentId'),
+    //   dataIndex: 'parentId',
+    //   slotName: 'parentId',
+    // },
 
     {
       title: t('sysMenuTable.columns.operations'),

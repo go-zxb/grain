@@ -53,67 +53,66 @@
             </a-form>
         </a-modal>
 
-        <a-drawer :width="920" :footer="false" :visible="viewModelVisible" @cancel="viewModelCancel" unmountOnClose>
-            <template #title>
-                模块管理
-            </template>
-            <modelFile :parentID="parentID" />
-        </a-drawer>
+        <div v-if="modelType==2">
+            <Breadcrumb :items="['menu.codeAssistant', 'menu.codeAssistant','menu.codeAssistantModel']" />
+            <a-card>
+                <modelFile :parentID="parentID"
+                           @backProject="backProject"/>
+            </a-card>
+        </div>
 
-        <Breadcrumb :items="['menu.codeAssistant', 'menu.codeAssistant']" />
-        <a-card>
+        <div v-if="modelType==1">
+            <Breadcrumb :items="['menu.codeAssistant', 'menu.codeAssistant']" />
+            <a-card>
 
-        <a-divider style="margin-top: 0" />
+                <a-row style="margin-bottom: 16px">
+                    <a-row :span="12">
+                        <a-button type="primary" @click="createCodeAssistantButtonClick()">
+                            <template #icon>
+                                <icon-plus />
+                            </template>
+                            {{$t('addCodeAssistantButton.Title')}}
+                        </a-button>
+                    </a-row>
+                </a-row>
 
-        <a-row style="margin-bottom: 16px">
-            <a-col :span="12">
-                <a-space>
-                    <a-button type="primary" @click="createCodeAssistantButtonClick()">
-                        <template #icon>
-                            <icon-plus />
-                        </template>
-                        {{$t('addCodeAssistantButton.Title')}}
-                    </a-button>
-                </a-space>
-            </a-col>
-        </a-row>
-
-        <a-table
-                row-key="id"
-                :loading="loading"
-                :columns="columns"
-                :data="codeAssistantDataList"
-                :pagination="pagination"
-                :bordered="{ cell: true }"
-                column-resizable
-                stripe
-                @page-change="onPageChange"
-        >
-            <template #index="{ rowIndex }">
-                {{rowIndex + 1 + (pagination.page - 1) * pagination.pageSize}}
-            </template>
-
-            <template #operations="{ record, rowIndex }">
-                <a-button type="text" size="small" @click="editCodeAssistant(record)">
-                    {{$t('codeAssistantTable.columns.operations.edit')}}
-                </a-button>
-
-                <a-button type="text" size="small" @click="viewModel(record.id)">
-                    {{$t('codeAssistantTable.columns.operations.viewModel')}}
-                </a-button>
-
-                <a-popconfirm
-                        :content="$t('codeAssistantTable.columns.operations.delete.prompt')"
-                        type="warning"
-                        @ok="deleteCodeAssistant(record.id, rowIndex)"
+                <a-table
+                    row-key="id"
+                    :loading="loading"
+                    :columns="columns"
+                    :data="codeAssistantDataList"
+                    :pagination="pagination"
+                    :bordered="{ cell: true }"
+                    column-resizable
+                    stripe
+                    @page-change="onPageChange"
                 >
-                    <a-button type="text" size="small" status="danger">
-                        {{$t('codeAssistantTable.columns.operations.delete')}}
-                    </a-button>
-                </a-popconfirm>
-            </template>
-        </a-table>
-        </a-card>
+                    <template #index="{ rowIndex }">
+                        {{rowIndex + 1 + (pagination.page - 1) * pagination.pageSize}}
+                    </template>
+
+                    <template #operations="{ record, rowIndex }">
+                        <a-button type="text" size="small" @click="editCodeAssistant(record)">
+                            {{$t('codeAssistantTable.columns.operations.edit')}}
+                        </a-button>
+
+                        <a-button type="text" size="small" @click="viewModel(record.id)">
+                            {{$t('codeAssistantTable.columns.operations.viewModel')}}
+                        </a-button>
+
+                        <a-popconfirm
+                            :content="$t('codeAssistantTable.columns.operations.delete.prompt')"
+                            type="warning"
+                            @ok="deleteCodeAssistant(record.id, rowIndex)"
+                        >
+                            <a-button type="text" size="small" status="danger">
+                                {{$t('codeAssistantTable.columns.operations.delete')}}
+                            </a-button>
+                        </a-popconfirm>
+                    </template>
+                </a-table>
+            </a-card>
+        </div>
     </div>
 </template>
 
@@ -145,6 +144,7 @@ const generateFormModel = () => {
 
 const isEdit = ref(false);
 const viewModelVisible = ref(false);
+const modelType = ref(1);
 const dialogFormVisible = ref(false);
 const dialogFormTitle = ref('添加代码助手');
 const parentID = ref(0);
@@ -154,7 +154,7 @@ const { t } = useI18n();
 const codeAssistantDataList = ref<CodeAssistants>([]);
 const loading = ref(false);
 const queryForm = ref(generateFormModel());
-
+const emit = defineEmits(['backProject']);
 
 const basePagination: Pagination = {
     page: 1,
@@ -221,6 +221,11 @@ const createCodeAssistantButtonClick = () => {
     dialogFormVisible.value = true;
     isEdit.value = false;
 };
+
+const backProject = () => {
+  modelType.value = 1;
+  emit('backProject', modelType.value);
+}
 const clearForm = () => {
     codeAssistantForm.id = 0;
     codeAssistantForm.projectName = '';
@@ -240,7 +245,8 @@ const viewModelCancel = () => {
 
 const viewModel = (p5ID: any) => {
     viewModelVisible.value = true;
-    parentID.value = p5ID
+    parentID.value = p5ID;
+    modelType.value=2;
 };
 
 const addCodeAssistantConfirm = async () => {

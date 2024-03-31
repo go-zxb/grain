@@ -31,6 +31,8 @@ export default {
   'fieldDialogForm.name.prompt': '请输入字段名称',
   'fieldDialogForm.mysqlField': 'MysqlTag',
   'fieldDialogForm.mysqlField.prompt': '请输入Mysql字段名',
+  'fieldDialogForm.mysqlType': '字段类型',
+  'fieldDialogForm.mysqlType.prompt': '请选择MySQL字段类型',
   'fieldDialogForm.type': '字段类型',
   'fieldDialogForm.type.prompt': '请选择字段类型',
   'fieldDialogForm.jsonTag': 'JsonTag',

@@ -36,6 +36,8 @@ export default {
   'menu.sysManage': '系统管理',
   'menu.attachments': '附件管理',
   'menu.codeAssistant': '代码助手',
+  'menu.codeAssistantField': '数据字段',
+  'menu.codeAssistantModel': '项目模块',
   'menu.arcoWebsite': 'Arco官方文档',
   ...localeMessageBox,
   ...localeSettings,
