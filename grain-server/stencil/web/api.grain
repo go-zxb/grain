@@ -31,31 +31,31 @@ export function Get{{.StructName}}List(data: any) {
           `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
       )
       .join('&');
-    return axios.get<PolicyListRes>(`/api/v1/{{.Name}}/list?${uri}`).then((res) => {
+    return axios.get<PolicyListRes>(`/api/v1/admin/{{.Name}}/list?${uri}`).then((res) => {
         return res.data;
       });
 }
 
 export function Get{{.StructName}}ById(id: number) {
-  return axios.get<{{.StructName}}[]>(`/api/v1/{{.Name}}/${id}`).then((res) => {
+  return axios.get<{{.StructName}}[]>(`/api/v1/admin/{{.Name}}/${id}`).then((res) => {
     return res.data;
   });
 }
 
 export function Add{{.StructName}}(data: any) {
-  return axios.post<Base>(`/api/v1/{{.Name}}`, data).then((res) => {
+  return axios.post<Base>(`/api/v1/admin/{{.Name}}`, data).then((res) => {
     return res.data;
   });
 }
 
 export function Update{{.StructName}}(data: any) {
-  return axios.put<Base>(`/api/v1/{{.Name}}`, data).then((res) => {
+  return axios.put<Base>(`/api/v1/admin/{{.Name}}`, data).then((res) => {
     return res.data;
   });
 }
 
 export function Delete{{.StructName}}(data: number) {
-  return axios.delete<Base>(`/api/v1/{{.Name}}?id=${data}`).then((res) => {
+  return axios.delete<Base>(`/api/v1/admin/{{.Name}}?id=${data}`).then((res) => {
     return res.data;
   });
 }

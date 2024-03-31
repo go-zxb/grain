@@ -141,7 +141,7 @@
     Add{{.StructName}},
     Update{{.StructName}},
     Delete{{.StructName}},
-  } from '@/api/{{.Name}}';
+  } from '@/api/business/{{.Name}}';
   import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
   import { Pagination } from '@/types/global';
   import { computed, reactive, ref } from 'vue';

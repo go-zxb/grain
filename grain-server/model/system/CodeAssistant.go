@@ -90,6 +90,7 @@ type Fields struct {
 	JsonTag         string `json:"jsonTag" gorm:"comment:Json标签tag"`
 	Description     string `json:"description" gorm:"description:描述"`
 	QueryCriteria   string `json:"queryCriteria"  gorm:"comment:查询条件"`
+	MysqlType       string `json:"mysqlType"  gorm:"comment:MySQL字段类型"`
 	MysqlField      string `json:"mysqlField" gorm:"column:sql_field;comment:Mysql字段名"`
 	ValidationRules string `json:"validationRules" gorm:"comment:校验规则"`
 	Required        string `json:"required" gorm:"comment:是否必传参数"`

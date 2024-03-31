@@ -1,10 +1,11 @@
 package handler
 
 import (
-  	"{{.ProjectName}}/internal/model/{{.Name}}"
+  	"{{.ProjectName}}/model/{{.Name}}"
+  	sysModel "{{.ProjectName}}/model/system"
   	"{{.ProjectName}}/internal/service/{{.Name}}"
   	"github.com/go-grain/go-utils/response"
-  	"github.com/go-grain/grain/utils/const"
+  	"{{.ProjectName}}/utils/const"
   	"github.com/gin-gonic/gin"
   	"strconv"
 )
@@ -63,13 +64,20 @@ func (r *{{.StructName}}Handle) Create{{.StructName}}(ctx *gin.Context) {
 // @Router /{{.Name}} [put]
 func (r *{{.StructName}}Handle) Update{{.StructName}}(ctx *gin.Context) {
 	reply := r.res.New()
-	{{.Name}} := model.{{.StructName}}{}
+	{{.Name}} := model.Update{{.StructName}}{}
 	err := ctx.ShouldBindJSON(&{{.Name}})
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage("解析{{.Description}}参数失败").Fail(ctx)
 		return
 	}
-	err = r.sv.Update{{.StructName}}(&{{.Name}},ctx)
+
+	up := model.{{.StructName}}{
+  	    Model:    sysModel.Model{ID: {{.Name}}.ID},
+  	    {{range .Fields}} {{.Name}}: {{ModelNameB}}.{{.Name}},
+        {{end}}
+    	}
+
+	err = r.sv.Update{{.StructName}}(&up,ctx)
 	if err != nil {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return

@@ -3,7 +3,7 @@ package repo
 import (
     "fmt"
     utils "github.com/go-grain/go-utils"
-	  "{{.ProjectName}}/internal/model/{{.Name}}"
+	  "{{.ProjectName}}/model/{{.Name}}"
   	"{{.ProjectName}}/internal/repo/data"
   	service "{{.ProjectName}}/internal/service/{{.Name}}"
   	"github.com/go-grain/go-utils/redis"
@@ -132,7 +132,7 @@ func (r *{{.StructName}}Repo) Get{{.StructName}}List(req *model.{{.StructName}}Q
   		}
   		req.Total = count
 q = q.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize)
-list, err = q.Order(r.query.{{.StructName}}.CreatedAt).Find()
+list, err = q.Order(r.query.{{.StructName}}.ID.Desc()).Find()
 		if err != nil {
 			return nil, err
 		}

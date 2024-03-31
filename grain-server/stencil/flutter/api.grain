@@ -1,9 +1,12 @@
+import '../data/httpService.dart';
+import '../model/{{.Name}}_model.dart';
+
 class {{.StructName}}ApiUrl {
-  static const String post = "/api/v1/{{.Name}}";
-  static const String put = "/api/v1/{{.Name}}";
-  static const String getList = "/api/v1/{{.Name}}/list";
-  static const String delete{{.StructName}}ById = "/api/v1/{{.Name}}/{{.Name}}ById";
-  static const String delete{{.StructName}}ByIds = "/api/v1/{{.Name}}/{{.Name}}ByIds";
+  static const String post = "/{{.Name}}";
+  static const String put = "/{{.Name}}";
+  static const String getList = "/{{.Name}}/list";
+  static const String delete{{.StructName}}ById = "/{{.Name}}/{{.Name}}ById";
+  static const String delete{{.StructName}}ByIds = "/{{.Name}}/{{.Name}}ByIds";
 }
 
 class {{.StructName}}ApiClient {

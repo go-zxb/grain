@@ -4,7 +4,7 @@ import (
 	"errors"
 	"{{.ProjectName}}/log"
 	"{{.ProjectName}}/config"
-	"{{.ProjectName}}/internal/model/{{.Name}}"
+	"{{.ProjectName}}/model/{{.Name}}"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/gin-gonic/gin"
 
@@ -13,6 +13,7 @@ import (
 type I{{.StructName}}Repo interface {
   AdminDelete{{.StructName}}ById({{.Name}}Id uint) error
   AdminDelete{{.StructName}}ByIds({{.Name}}Ids []uint) error
+  AdminCreate{{.StructName}}({{.Name}} *model.{{.StructName}}) error
   AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error
   AdminGet{{.StructName}}ById(id uint) (u *model.{{.StructName}}Res, err error)
   AdminGet{{.StructName}}List(req *model.{{.StructName}}Query) ([]*model.{{.StructName}}, error)
@@ -22,23 +23,43 @@ type {{.StructName}}Service struct {
 	repo I{{.StructName}}Repo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger *log.Logger) *{{.StructName}}Service {
+func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger log.Logger) *{{.StructName}}Service {
 	return &{{.StructName}}Service{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
+}
+
+func (s *{{.StructName}}Service) AdminCreate{{.StructName}}({{.Name}} *model.{{.StructName}},ctx *gin.Context) error {
+	err := s.repo.AdminCreate{{.StructName}}({{.Name}})
+	if err != nil {
+    s.log.Errorw("errMsg", "创建{{.Description}}", "err", err.Error())
+    return err
+  }
+  s.log.Infow("errMsg", "创建{{.Description}}")
+  return nil
+}
+
+func (s *{{.StructName}}Service) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}},ctx *gin.Context) error {
+	err := s.repo.AdminUpdate{{.StructName}}({{.Name}})
+	if err != nil {
+      s.log.Errorw("errMsg", "更新{{.Description}}", "err", err.Error())
+      return err
+    }
+    s.log.Infow("errMsg", "更新{{.Description}}")
+    return nil
 }
 
 func (s *{{.StructName}}Service) AdminGet{{.StructName}}ById({{.Name}}Id uint,ctx *gin.Context) (*model.{{.StructName}}Res, error) {
 	return s.repo.AdminGet{{.StructName}}ById({{.Name}}Id)
 }
 
-func (s *{{.StructName}}Service) AdminGet{{.StructName}}List(req *model.{{.StructName}}Req,ctx *gin.Context) ([]*model.{{.StructName}}, error ) {
+func (s *{{.StructName}}Service) AdminGet{{.StructName}}List(req *model.{{.StructName}}Query,ctx *gin.Context) ([]*model.{{.StructName}}, error ) {
 	list, err := s.repo.AdminGet{{.StructName}}List(req)
 	if err != nil {
   		return nil, err
@@ -49,32 +70,22 @@ func (s *{{.StructName}}Service) AdminGet{{.StructName}}List(req *model.{{.Struc
     return list, err
 }
 
-func (s *{{.StructName}}Service) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}},ctx *gin.Context) error {
-	err := s.repo.AdminUpdate{{.StructName}}({{.Name}})
-	if err != nil {
-      		s.log.Sava(s.log.OperationLog(400, "更新{{.Description}}", {{.Name}}, ctx))
-      		return err
-      	}
-      	s.log.Sava(s.log.OperationLog(200, "更新{{.Description}}", {{.Name}}, ctx))
-    return nil
-}
-
 func (s *{{.StructName}}Service) AdminDelete{{.StructName}}ById({{.Name}}Id uint,ctx *gin.Context) error {
 	err := s.repo.AdminDelete{{.StructName}}ById({{.Name}}Id)
 	if err != nil {
-        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Id, ctx))
-        		return err
-        	}
-        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Id, ctx))
+      s.log.Errorw("errMsg", "删除{{.Description}}", "err", err.Error())
+      return err
+    }
+    s.log.Infow("errMsg", "删除{{.Description}}")
     return nil
 }
 
 func (s *{{.StructName}}Service) AdminDelete{{.StructName}}ByIds({{.Name}}Ids []uint,ctx *gin.Context) error {
 	err :=  s.repo.AdminDelete{{.StructName}}ByIds({{.Name}}Ids)
 	if err != nil {
-        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Ids, ctx))
-        		return err
-        	}
-        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Ids, ctx))
+      s.log.Errorw("errMsg", "批量删除{{.Description}}", "err", err.Error())
+      return err
+    }
+    s.log.Infow("errMsg", "批量删除{{.Description}}")
     return nil
 }

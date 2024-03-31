@@ -47,6 +47,7 @@ func (r *{{.StructName}}Router) InitRouters() {
 	r.private.DELETE("{{.Name}}ByIds", r.api.Delete{{.StructName}}ByIds)
 
 
+	r.privateRoleAuth.POST("", r.adminApi.AdminCreate{{.StructName}})
 	r.privateRoleAuth.PUT("", r.adminApi.AdminUpdate{{.StructName}})
 	r.privateRoleAuth.GET("list", r.adminApi.AdminGet{{.StructName}}List)
 	r.privateRoleAuth.GET("{{.Name}}ById", r.adminApi.AdminGet{{.StructName}}ById)

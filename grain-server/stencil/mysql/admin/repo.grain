@@ -2,7 +2,7 @@ package repo
 
 import (
     "fmt"
-	  "{{.ProjectName}}/internal/model/{{.Name}}"
+	  "{{.ProjectName}}/model/{{.Name}}"
   	"{{.ProjectName}}/internal/repo/data"
   	service "{{.ProjectName}}/internal/admin/service/{{.Name}}"
   	"github.com/go-grain/go-utils/redis"
@@ -28,12 +28,28 @@ func New{{.StructName}}Repo(db *gorm.DB, rdb redis.IRedis) service.I{{.StructNam
 	}
 }
 
+func (r *{{.StructName}}Repo) AdminCreate{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
+		return r.query.{{.StructName}}.Create({{.Name}})
+}
+
+func (r *{{.StructName}}Repo) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
+	if _, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq({{.Name}}.ID)).Updates({{.Name}}); err != nil {
+		return err
+	}
+	New{{.Name}}, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq({{.Name}}.ID)).First()
+	if err != nil {
+		return err
+	}
+	_ = r.rdb.SetObject(fmt.Sprintf("%s:%d", {{.Name}}.TableName(), {{.Name}}.ID), New{{.Name}}, 180)
+	return nil
+}
+
 func (r *{{.StructName}}Repo) AdminGet{{.StructName}}ById({{.Name}}Id uint) ({{.Name}} *model.{{.StructName}}Res,err error) {
   err = r.db.DB.Model(&model.{{.StructName}}{}).Where("id = ?", {{.Name}}Id).First({{.Name}}).Error
   return {{.Name}}, err
 }
 
-func (r *{{.StructName}}Repo) AdminGet{{.StructName}}List(req *model.{{.StructName}}Req) (list []*model.{{.StructName}},err error) {
+func (r *{{.StructName}}Repo) AdminGet{{.StructName}}List(req *model.{{.StructName}}Query) (list []*model.{{.StructName}},err error) {
 	if req.Page <= 0 {
   		req.Page = 1
   	}
@@ -102,23 +118,11 @@ func (r *{{.StructName}}Repo) AdminGet{{.StructName}}List(req *model.{{.StructNa
   		}
   		req.Total = count
 q = q.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize)
-list, err = q.Order(r.query.{{.StructName}}.CreatedAt).Find()
+list, err = q.Order(r.query.{{.StructName}}.ID.Desc()).Find()
 		if err != nil {
 			return nil, err
 		}
 		return list, nil
-}
-
-func (r *{{.StructName}}Repo) AdminUpdate{{.StructName}}({{.Name}} *model.{{.StructName}}) error {
-	if _, err := r.query.{{.StructName}}.Updates({{.Name}}); err != nil {
-		return err
-	}
-	New{{.Name}}, err := r.query.{{.StructName}}.Where(r.query.{{.StructName}}.ID.Eq({{.Name}}.ID)).First()
-	if err != nil {
-		return err
-	}
-	_ = r.rdb.SetObject(fmt.Sprintf("%s:%d", {{.Name}}.TableName(), {{.Name}}.ID), New{{.Name}}, 180)
-	return nil
 }
 
 func (r *{{.StructName}}Repo) AdminDelete{{.StructName}}ById(id uint) error {

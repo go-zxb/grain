@@ -4,7 +4,7 @@ import (
 	"errors"
 	"{{.ProjectName}}/log"
 	"{{.ProjectName}}/config"
-	"{{.ProjectName}}/internal/model/{{.Name}}"
+	"{{.ProjectName}}/model/{{.Name}}"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/gin-gonic/gin"
 
@@ -23,26 +23,26 @@ type {{.StructName}}Service struct {
 	repo I{{.StructName}}Repo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger *log.Logger) *{{.StructName}}Service {
+func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger log.Logger) *{{.StructName}}Service {
 	return &{{.StructName}}Service{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
 func (s *{{.StructName}}Service) Create{{.StructName}}({{.Name}} *model.{{.StructName}},ctx *gin.Context) error {
 	{{.Name}}.UID = ctx.GetString("uid")
 	err := s.repo.Create{{.StructName}}({{.Name}})
-  if err != nil {
-      		s.log.Sava(s.log.OperationLog(400, "创建{{.Description}}", {{.Name}}, ctx))
-      		return err
-      	}
-      	s.log.Sava(s.log.OperationLog(200, "创建{{.Description}}", {{.Name}}, ctx))
+	if err != nil {
+    s.log.Errorw("errMsg", "创建{{.Description}}", "err", err.Error())
+    return err
+  }
+  s.log.Infow("errMsg", "创建{{.Description}}")
   return nil
 }
 
@@ -66,32 +66,32 @@ func (s *{{.StructName}}Service) Update{{.StructName}}({{.Name}} *model.{{.Struc
 	{{.Name}}.UID = ctx.GetString("uid")
 	err := s.repo.Update{{.StructName}}({{.Name}})
 	if err != nil {
-      		s.log.Sava(s.log.OperationLog(400, "更新{{.Description}}", {{.Name}}, ctx))
-      		return err
-      	}
-      	s.log.Sava(s.log.OperationLog(200, "更新{{.Description}}", {{.Name}}, ctx))
-    return nil
+    s.log.Errorw("errMsg", "更新{{.Description}}", "err", err.Error())
+    return err
+  }
+  s.log.Infow("errMsg", "更新{{.Description}}")
+  return nil
 }
 
 func (s *{{.StructName}}Service) Delete{{.StructName}}ById({{.Name}}Id uint,ctx *gin.Context) error {
 	uid := ctx.GetString("uid")
 	err := s.repo.Delete{{.StructName}}ById({{.Name}}Id,uid)
 	if err != nil {
-        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Id, ctx))
-        		return err
-        	}
-        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Id, ctx))
-    return nil
+    s.log.Errorw("errMsg", "删除{{.Description}}", "err", err.Error())
+    return err
+  }
+  s.log.Infow("errMsg", "删除{{.Description}}")
+  return nil
 }
 
 func (s *{{.StructName}}Service) Delete{{.StructName}}ByIds({{.Name}}Ids []uint,ctx *gin.Context) error {
 	uid := ctx.GetString("uid")
 	err :=  s.repo.Delete{{.StructName}}ByIds({{.Name}}Ids,uid)
 	if err != nil {
-        		s.log.Sava(s.log.OperationLog(400, "删除{{.Description}}", {{.Name}}Ids, ctx))
-        		return err
-        	}
-        	s.log.Sava(s.log.OperationLog(200, "删除{{.Description}}", {{.Name}}Ids, ctx))
-    return nil
+    s.log.Errorw("errMsg", "批量删除{{.Description}}", "err", err.Error())
+    return err
+  }
+  s.log.Infow("errMsg", "批量删除{{.Description}}")
+  return nil
 }
 
