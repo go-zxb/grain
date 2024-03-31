@@ -19,7 +19,7 @@ type OrganizeRouter struct {
 	api     *handler.OrganizeHandle
 }
 
-func NewOrganizeRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *OrganizeRouter {
+func NewOrganizeRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *OrganizeRouter {
 	data := repo.NewOrganizeRepo(db, rdb)
 	sv := service.NewOrganizeService(data, rdb, conf, logger)
 	return &OrganizeRouter{

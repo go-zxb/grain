@@ -32,7 +32,7 @@ type MenuRouter struct {
 	api     *handler.MenuHandle
 }
 
-func NewMenuRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *MenuRouter {
+func NewMenuRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *MenuRouter {
 	data := repo.NewMenuRepo(rdb)
 	sv := service.NewMenuService(data, rdb, conf, logger)
 	return &MenuRouter{

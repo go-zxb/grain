@@ -20,7 +20,6 @@ import (
 	"github.com/gin-gonic/gin"
 	utils "github.com/go-grain/go-utils"
 	"github.com/go-grain/go-utils/encrypt"
-	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
@@ -50,16 +49,16 @@ type SysUserService struct {
 	repo    ISysUserRepo
 	rdb     redis.IRedis
 	conf    *config.Config
-	log     *log.Logger
+	log     *log.Helper
 	captcha *CaptchaService
 }
 
-func NewSysUserService(repo ISysUserRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *SysUserService {
+func NewSysUserService(repo ISysUserRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *SysUserService {
 	return &SysUserService{
 		repo:    repo,
 		rdb:     rdb,
 		conf:    conf,
-		log:     logger,
+		log:     log.NewHelper(logger),
 		captcha: NewCaptcha(rdb, conf, logger),
 	}
 }
@@ -93,22 +92,22 @@ func (s *SysUserService) Login(login *model.LoginReq, ctx *gin.Context) (string,
 	ctx.Set("LogType", "login")
 
 	if !encrypt.ComparePasswords(user.Password, login.Password) {
-		s.log.Sava(s.log.OperationLog(400, "用户登录", login, ctx))
+		s.log.Errorw("errMsg", "用户登录", "err", err.Error())
 		return "", errors.New("账号或密码不正确")
 	}
 
 	if user.Status == "no" {
-		s.log.Sava(s.log.OperationLog(400, "用户登录", login, ctx))
+		s.log.Errorw("errMsg", "用户登录")
 		return "", errors.New("账号已被冻结,无法正常登录")
 	}
 
 	jwt := utils.Jwt{}
 	token, err := jwt.GenerateToken(user.UID, user.Role, s.conf.JWT.SecretKey, s.conf.JWT.ExpirationSeconds)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "用户登录", login, ctx))
+		s.log.Errorw("errMsg", "用户登录", "err", err.Error())
 		return "", err
 	}
-	s.log.Sava(s.log.OperationLog(200, "用户登录", login, ctx))
+	s.log.Infow("errMsg", "用户登录")
 	return token, err
 }
 
@@ -150,15 +149,15 @@ func (s *SysUserService) CreateSysUser(sysUser *model.SysUser, ctx *gin.Context)
 	sysUser.UID = utils.UID()
 	sysUser.ID = 0
 	sysUser.Password = encrypt.EncryptPassword(sysUser.Password)
-	err := s.repo.CreateSysUser(sysUser)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建系统用户", sysUser, ctx))
+
+	if err := s.repo.CreateSysUser(sysUser); err != nil {
+		s.log.Errorw("errMsg", "创建系统用户", "err", err.Error())
 		if strings.Contains(err.Error(), " for key") {
 			return errors.New("提交的参数重复")
 		}
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建系统用户", sysUser, ctx))
+	s.log.Infow("errMsg", "创建系统用户")
 	return nil
 }
 
@@ -181,10 +180,10 @@ func (s *SysUserService) UpdateSysUser(sysUser *model.UpdateUserInfo, ctx *gin.C
 	sysUser.UID = ctx.GetString("uid")
 	err := s.repo.UpdateSysUser(sysUser)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新系统用户信息", sysUser, ctx))
+		s.log.Errorw("errMsg", "更新系统用户信息", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新系统用户信息", sysUser, ctx))
+	s.log.Infow("errMsg", "更新系统用户信息")
 	return nil
 }
 
@@ -202,12 +201,12 @@ func (s *SysUserService) ModifyPassword(sysUser *model.ModifyPassword, ctx *gin.
 		Model:    model.Model{ID: user.ID},
 		Password: encrypt.EncryptPassword(sysUser.NewPassword),
 	}
-	err = s.repo.EditSysUser(&newUserInfo)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "修改密码", sysUser, ctx))
+
+	if err = s.repo.EditSysUser(&newUserInfo); err != nil {
+		s.log.Errorw("errMsg", "修改密码", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "修改密码", sysUser, ctx))
+	s.log.Infow("errMsg", "修改密码")
 	return nil
 }
 
@@ -217,22 +216,20 @@ func (s *SysUserService) ConfirmModifyEmail(key string, ctx *gin.Context) error 
 	//aes 解密key
 	encrypt, err := encrypt.AesDecrypt(key, []byte("b06d734d53dc73c7"), []byte("0000000000000000"))
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "确认修改邮箱", key, ctx, err.Error()))
+		s.log.Errorw("errMsg", "确认修改邮箱", "err", err.Error())
 		return err
 	}
 	key = fmt.Sprintf("%s:%s", "confirmEmail", encrypt)
-	err = s.rdb.GetObject(key, &newUserInfo)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "确认修改邮箱", newUserInfo, ctx, err.Error()))
+	if err = s.rdb.GetObject(key, &newUserInfo); err != nil {
+		s.log.Infow("errMsg", "确认修改邮箱", "err", err.Error())
 		return err
 	}
 
-	err = s.repo.EditSysUser(&newUserInfo)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "确认修改邮箱", newUserInfo, ctx))
+	if err = s.repo.EditSysUser(&newUserInfo); err != nil {
+		s.log.Errorw("errMsg", "确认修改邮箱", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "确认修改邮箱", newUserInfo, ctx))
+	s.log.Infow("errMsg", "确认修改邮箱")
 	s.rdb.Del(key)
 	return nil
 }
@@ -263,11 +260,11 @@ func (s *SysUserService) ModifyEmail(email *model.ModifyEmail, ctx *gin.Context)
 
 	err = s.rdb.SetObject(fmt.Sprintf("%s:%s", "confirmEmail", uid), &newUserInfo, 86400)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "提交修改邮箱待确认", email, ctx))
+		s.log.Errorw("errMsg", "提交修改邮箱待确认", "err", err.Error())
 		return err
 	}
 
-	s.log.Sava(s.log.OperationLog(200, "提交修改邮箱待确认", email, ctx))
+	s.log.Infow("errMsg", "提交修改邮箱待确认")
 	s.rdb.Del(rdbKey)
 
 	aesEncrypt, err := encrypt.AesEncrypt([]byte(uid), []byte("b06d734d53dc73c7"), []byte("0000000000000000"))
@@ -315,12 +312,12 @@ func (s *SysUserService) ModifyMobile(mobile *model.ModifyMobile, ctx *gin.Conte
 		Model:  model.Model{ID: userInfo.ID},
 		Mobile: mobile.Mobile,
 	}
-	err = s.repo.EditSysUser(&newUserInfo)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "修改手机号", mobile, ctx))
+
+	if err = s.repo.EditSysUser(&newUserInfo); err != nil {
+		s.log.Errorw("errMsg", "修改手机号", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "修改手机号", mobile, ctx))
+	s.log.Infow("errMsg", "修改手机号")
 	s.rdb.Del(rdbKey)
 	return nil
 }
@@ -346,51 +343,46 @@ func (s *SysUserService) EditUserInfo(sysUser *model.SysUser, ctx *gin.Context) 
 		sysUser.Password = encrypt.EncryptPassword(sysUser.Password)
 	}
 
-	err := s.repo.EditSysUser(sysUser)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新系统用户信息", sysUser, ctx))
+	if err := s.repo.EditSysUser(sysUser); err != nil {
+		s.log.Errorw("errMsg", "更新系统用户信息", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新系统用户信息", sysUser, ctx))
+	s.log.Infow("errMsg", "更新系统用户信息")
 	return nil
 }
 
 func (s *SysUserService) SetDefaultRole(user *model.SysUser, ctx *gin.Context) error {
-	err := s.repo.SetDefaultRole(user)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "设置默认角色", user, ctx))
+	if err := s.repo.SetDefaultRole(user); err != nil {
+		s.log.Errorw("errMsg", "设置默认角色", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "设置默认角色", user, ctx))
+	s.log.Infow("errMsg", "设置默认角色")
 	return nil
 }
 
 func (s *SysUserService) DeleteSysUserById(id uint, ctx *gin.Context) error {
-	err := s.repo.DeleteSysUserById(id)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除用户", xjson.G{"id": id}, ctx))
+	if err := s.repo.DeleteSysUserById(id); err != nil {
+		s.log.Errorw("errMsg", "删除用户", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除用户", xjson.G{"id": id}, ctx))
+	s.log.Infow("errMsg", "删除用户")
 	return nil
 }
 
 func (s *SysUserService) DeleteSysUserByIds(ids []uint, ctx *gin.Context) error {
-	err := s.repo.DeleteSysUserByIds(ids)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除用户", xjson.G{"id": ids}, ctx))
+	if err := s.repo.DeleteSysUserByIds(ids); err != nil {
+		s.log.Errorw("errMsg", "删除用户", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除用户", xjson.G{"id": ids}, ctx))
+	s.log.Infow("errMsg", "删除用户")
 	return nil
 }
 
 func (s *SysUserService) UploadAvatar(avatar *model.Upload, ctx *gin.Context) error {
-	err := s.repo.UploadAvatar(avatar, ctx.GetString("uid"))
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新系统用户头像", avatar, ctx))
+	if err := s.repo.UploadAvatar(avatar, ctx.GetString("uid")); err != nil {
+		s.log.Errorw("errMsg", "更新系统用户头像", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新系统用户头像", avatar, ctx))
+	s.log.Infow("errMsg", "更新系统用户头像")
 	return nil
 }

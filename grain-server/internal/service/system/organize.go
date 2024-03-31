@@ -24,25 +24,24 @@ type OrganizeService struct {
 	repo IOrganizeRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewOrganizeService(repo IOrganizeRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *OrganizeService {
+func NewOrganizeService(repo IOrganizeRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *OrganizeService {
 	return &OrganizeService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
 func (s *OrganizeService) CreateOrganize(organize *model.Organize, ctx *gin.Context) error {
-	err := s.repo.CreateOrganize(organize)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建组织管理", organize, ctx))
+	if err := s.repo.CreateOrganize(organize); err != nil {
+		s.log.Errorw("errMsg", "创建项目", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建组织管理", organize, ctx))
+	s.log.Infow("errMsg", "创建组织管理")
 	return nil
 }
 
@@ -138,31 +137,28 @@ func (s *OrganizeService) GetOrganizeListGroup(req *model.OrganizeQuery, ctx *gi
 }
 
 func (s *OrganizeService) UpdateOrganize(organize *model.Organize, ctx *gin.Context) error {
-	err := s.repo.UpdateOrganize(organize)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新组织管理", organize, ctx))
+	if err := s.repo.UpdateOrganize(organize); err != nil {
+		s.log.Errorw("errMsg", "更新组织管理", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新组织管理", organize, ctx))
+	s.log.Infow("errMsg", "更新组织管理")
 	return nil
 }
 
 func (s *OrganizeService) DeleteOrganizeById(organizeId uint, ctx *gin.Context) error {
-	err := s.repo.DeleteOrganizeById(organizeId)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除组织管理", organizeId, ctx))
+	if err := s.repo.DeleteOrganizeById(organizeId); err != nil {
+		s.log.Errorw("errMsg", "删除组织管理", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除组织管理", organizeId, ctx))
+	s.log.Infow("errMsg", "删除组织管理")
 	return nil
 }
 
 func (s *OrganizeService) DeleteOrganizeByIds(organizeIds []uint, ctx *gin.Context) error {
-	err := s.repo.DeleteOrganizeByIds(organizeIds)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除组织管理", organizeIds, ctx))
+	if err := s.repo.DeleteOrganizeByIds(organizeIds); err != nil {
+		s.log.Errorw("errMsg", "批量删除组织管理", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除组织管理", organizeIds, ctx))
+	s.log.Infow("errMsg", "批量删除组织管理")
 	return nil
 }

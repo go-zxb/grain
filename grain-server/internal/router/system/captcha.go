@@ -30,7 +30,7 @@ type CaptchaRouter struct {
 	private gin.IRoutes
 }
 
-func NewCaptchaRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *CaptchaRouter {
+func NewCaptchaRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger) *CaptchaRouter {
 	sv := service.NewCaptcha(rdb, conf, logger)
 	return &CaptchaRouter{
 		api:    handler.NewCaptchaHandle(sv),

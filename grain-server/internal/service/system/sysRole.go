@@ -17,7 +17,6 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
@@ -39,15 +38,15 @@ type RoleService struct {
 	repo IRoleRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewRoleService(repo IRoleRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *RoleService {
+func NewRoleService(repo IRoleRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *RoleService {
 	return &RoleService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -78,18 +77,19 @@ func (s *RoleService) InitRole() error {
 }
 
 func (s *RoleService) CreateRole(role *model.CreateSysRole, ctx *gin.Context) error {
-	err := s.repo.CreateRole(&model.SysRole{
+	_role := model.SysRole{
 		Role:     role.Role,
 		RoleName: role.RoleName,
-	})
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建角色", role, ctx))
+	}
+
+	if err := s.repo.CreateRole(&_role); err != nil {
+		s.log.Errorw("errMsg", "批量删除菜单", "err", err.Error())
 		if strings.Contains(err.Error(), "duplicated key not allowed") {
 			return errors.New("提交的参数重复")
 		}
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建角色", role, ctx))
+	s.log.Errorw("errMsg", "批量删除菜单")
 	return nil
 }
 
@@ -105,31 +105,28 @@ func (s *RoleService) GetRoleList(req *model.SysRoleQueryPage, ctx *gin.Context)
 }
 
 func (s *RoleService) UpdateRole(role *model.SysRole, ctx *gin.Context) error {
-	err := s.repo.UpdateRole(role)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新角色", role, ctx))
+	if err := s.repo.UpdateRole(role); err != nil {
+		s.log.Errorw("errMsg", "更新角色", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新角色", role, ctx))
+	s.log.Infow("errMsg", "更新角色")
 	return nil
 }
 
 func (s *RoleService) DeleteRoleByIds(roles []uint, ctx *gin.Context) error {
-	err := s.repo.DeleteRoleByIds(roles)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除角色", xjson.G{"id": roles}, ctx))
+	if err := s.repo.DeleteRoleByIds(roles); err != nil {
+		s.log.Errorw("errMsg", "删除角色", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除角色", xjson.G{"id": roles}, ctx))
+	s.log.Infow("errMsg", "删除角色")
 	return nil
 }
 
 func (s *RoleService) DeleteRoleById(roleId uint, ctx *gin.Context) error {
-	err := s.repo.DeleteRoleById(roleId)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除角色", xjson.G{"id": roleId}, ctx))
+	if err := s.repo.DeleteRoleById(roleId); err != nil {
+		s.log.Errorw("errMsg", "删除角色", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除角色", xjson.G{"id": roleId}, ctx))
+	s.log.Infow("errMsg", "删除角色")
 	return nil
 }

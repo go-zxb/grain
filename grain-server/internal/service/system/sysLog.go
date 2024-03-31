@@ -35,15 +35,15 @@ type SysLogService struct {
 	repo ISysLogRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewSysLogService(repo ISysLogRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *SysLogService {
+func NewSysLogService(repo ISysLogRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *SysLogService {
 	return &SysLogService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -64,22 +64,21 @@ func (s *SysLogService) DeleteSysLogById(operationLogId string, ctx *gin.Context
 	if err != nil {
 		return err
 	}
-	err = s.repo.DeleteSysLogById(objectID, uid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除日志", operationLogId, ctx))
+
+	if err = s.repo.DeleteSysLogById(objectID, uid); err != nil {
+		s.log.Errorw("errMsg", "删除日志", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除日志", operationLogId, ctx))
+	s.log.Infow("errMsg", "删除日志")
 	return nil
 }
 
 func (s *SysLogService) DeleteSysLogByIds(operationLogIds []primitive.ObjectID, ctx *gin.Context) error {
 	uid := ctx.GetString("uid")
-	err := s.repo.DeleteSysLogByIds(operationLogIds, uid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "批量删除日志", operationLogIds, ctx))
+	if err := s.repo.DeleteSysLogByIds(operationLogIds, uid); err != nil {
+		s.log.Errorw("errMsg", "批量删除日志", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "批量删除日志", operationLogIds, ctx))
+	s.log.Infow("errMsg", "批量删除日志")
 	return nil
 }

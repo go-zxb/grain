@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
@@ -43,15 +42,15 @@ type ApiService struct {
 	repo IApiRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewApiService(repo IApiRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *ApiService {
+func NewApiService(repo IApiRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *ApiService {
 	return &ApiService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -155,15 +154,15 @@ func (s *ApiService) CreateApi(api *model.SysApi, ctx *gin.Context) error {
 		api.ApiGroup = matches[0][1]
 		api.Description = strings.ReplaceAll(api.Description, fmt.Sprintf("[%s]", api.ApiGroup), "")
 	}
-	err := s.repo.CreateApi(api)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建Api", api, ctx))
+
+	if err := s.repo.CreateApi(api); err != nil {
+		s.log.Errorw("errMsg", "创建Api", "err", err.Error())
 		if strings.Contains(err.Error(), "duplicated key not allowed") {
 			return errors.New("提交的参数重复")
 		}
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建Api", api, ctx))
+	s.log.Errorw("errMsg", "创建Api")
 	return nil
 }
 
@@ -278,20 +277,20 @@ func (s *ApiService) UpdateApi(api *model.SysApi, ctx *gin.Context) error {
 	}
 	err := s.repo.UpdateApi(api)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新Api", api, ctx))
+		s.log.Errorw("errMsg", "更新Api", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新Api", api, ctx))
+	s.log.Infow("errMsg", "更新Api")
 	return nil
 }
 
 func (s *ApiService) DeleteApiById(id uint, ctx *gin.Context) error {
 	err := s.repo.DeleteApiById(id)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除Api", xjson.G{"id": id}, ctx))
+		s.log.Errorw("errMsg", "删除Api", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除Api", xjson.G{"id": id}, ctx))
+	s.log.Infow("errMsg", "删除Api")
 	return nil
 
 }
@@ -299,10 +298,10 @@ func (s *ApiService) DeleteApiById(id uint, ctx *gin.Context) error {
 func (s *ApiService) DeleteApiByIds(ids []uint, ctx *gin.Context) error {
 	err := s.repo.DeleteApiByIds(ids)
 	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除Api", xjson.G{"id": ids}, ctx))
+		s.log.Errorw("errMsg", "批量删除Api", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除Api", xjson.G{"id": ids}, ctx))
+	s.log.Infow("errMsg", "批量删除Api")
 	return nil
 
 }

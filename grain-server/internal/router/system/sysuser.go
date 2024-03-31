@@ -41,7 +41,7 @@ type SysUserRouter struct {
 	privateRoleAuth gin.IRoutes
 }
 
-func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, enforcer *casbin.CachedEnforcer, logger *log.Logger) *SysUserRouter {
+func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, enforcer *casbin.CachedEnforcer, logger log.Logger) *SysUserRouter {
 	data := repo.NewSysUserRepo(rdb)
 	sv := service.NewSysUserService(data, rdb, conf, logger)
 	return &SysUserRouter{

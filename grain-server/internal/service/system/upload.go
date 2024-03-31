@@ -34,26 +34,25 @@ type UploadService struct {
 	repo IUploadRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewUploadService(repo IUploadRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *UploadService {
+func NewUploadService(repo IUploadRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *UploadService {
 	return &UploadService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
 func (s *UploadService) CreateUpload(upload *model.Upload, ctx *gin.Context) error {
 	upload.UID = ctx.GetString("uid")
-	err := s.repo.CreateUpload(upload)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "上传文件", upload, ctx))
+	if err := s.repo.CreateUpload(upload); err != nil {
+		s.log.Errorw("errMsg", "上传文件", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "上传文件", upload, ctx))
+	s.log.Infow("errMsg", "上传文件")
 	return nil
 }
 
@@ -73,22 +72,20 @@ func (s *UploadService) GetUploadList(req *model.UploadReq, ctx *gin.Context) ([
 
 func (s *UploadService) DeleteUploadById(uploadId uint, ctx *gin.Context) error {
 	uid := ctx.GetString("uid")
-	err := s.repo.DeleteUploadById(uploadId, uid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除上传文件", uploadId, ctx))
+	if err := s.repo.DeleteUploadById(uploadId, uid); err != nil {
+		s.log.Errorw("errMsg", "删除上传文件", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除上传文件", uploadId, ctx))
+	s.log.Infow("errMsg", "删除上传文件")
 	return nil
 }
 
 func (s *UploadService) DeleteUploadByIds(uploadIds []uint, ctx *gin.Context) error {
 	uid := ctx.GetString("uid")
-	err := s.repo.DeleteUploadByIds(uploadIds, uid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除上传文件", uploadIds, ctx))
+	if err := s.repo.DeleteUploadByIds(uploadIds, uid); err != nil {
+		s.log.Errorw("errMsg", "删除上传文件", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除上传文件", uploadIds, ctx))
+	s.log.Infow("errMsg", "删除上传文件")
 	return nil
 }

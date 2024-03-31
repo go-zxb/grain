@@ -28,17 +28,28 @@ import (
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
 	"gorm.io/gorm"
+	"os"
 	"time"
 )
 
+var (
+	// Name is the name of the compiled software.
+	Name string
+	// Version is the version of the compiled software.
+	Version string
+	// flagconf is the config flag.
+	flagconf string
+
+	id, _ = os.Hostname()
+)
+
 type Grain struct {
-	db        *gorm.DB
-	ClientLog *log.Logger
-	sysLog    *log.Logger
-	engine    *gin.Engine
-	conf      *config.Config
-	rdb       redis.IRedis
-	enforcer  *casbin.CachedEnforcer
+	db       *gorm.DB
+	sysLog   log.Logger
+	engine   *gin.Engine
+	conf     *config.Config
+	rdb      redis.IRedis
+	enforcer *casbin.CachedEnforcer
 }
 
 func (r *Grain) InitConf() (err error) {
@@ -47,15 +58,18 @@ func (r *Grain) InitConf() (err error) {
 		return
 	}
 
-	mongo := data.MongoDB{}
-	if err = mongo.NewMongoDBRepo(r.conf.DataBase.Mongo.URL,
-		"grain",
-		"sysLog"); err != nil {
-		return
+	os.Mkdir(".tmp/", 0o664)
+	file, err := os.OpenFile(".tmp/grain.log", os.O_CREATE|os.O_RDWR, 0o664)
+	if err != nil {
+		return err
 	}
-
-	r.sysLog, _ = log.NewLog(mongo.Collection)
-	r.ClientLog, _ = log.NewLog(mongo.Database.Collection("clientUserLog"))
+	r.sysLog = log.With(log.NewStdLogger(file),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+	)
 
 	r.db, err = data.InitDB(*r.conf)
 	if err != nil {

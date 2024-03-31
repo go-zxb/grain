@@ -34,7 +34,7 @@ type UploadRouter struct {
 	api             *handler.UploadHandle
 }
 
-func NewUploadRouter(routerGroup *gin.RouterGroup, engine *gin.Engine, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *UploadRouter {
+func NewUploadRouter(routerGroup *gin.RouterGroup, engine *gin.Engine, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *UploadRouter {
 	data := repo.NewUploadRepo(rdb)
 	sv := service.NewUploadService(data, rdb, conf, logger)
 	return &UploadRouter{

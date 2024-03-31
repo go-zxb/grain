@@ -32,7 +32,7 @@ type ApiRouter struct {
 	private gin.IRoutes
 }
 
-func NewApiRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *ApiRouter {
+func NewApiRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *ApiRouter {
 	data := repo.NewApiRepo(rdb)
 	sv := service.NewApiService(data, rdb, conf, logger)
 	return &ApiRouter{

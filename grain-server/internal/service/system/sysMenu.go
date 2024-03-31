@@ -17,7 +17,6 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
@@ -39,15 +38,15 @@ type MenuService struct {
 	repo IMenuRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewMenuService(repo IMenuRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *MenuService {
+func NewMenuService(repo IMenuRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *MenuService {
 	return &MenuService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -251,12 +250,11 @@ func (s *MenuService) InitMenu() error {
 }
 
 func (s *MenuService) CreateMenu(menu *model.SysMenu, ctx *gin.Context) error {
-	err := s.repo.CreateMenu(menu)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建菜单", menu, ctx))
+	if err := s.repo.CreateMenu(menu); err != nil {
+		s.log.Errorw("errMsg", "创建菜单", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建菜单", menu, ctx))
+	s.log.Infow("errMsg", "创建菜单")
 	return nil
 }
 
@@ -334,31 +332,28 @@ func (s *MenuService) UpdateMenu(menu *model.SysMenu, ctx *gin.Context) error {
 		}
 	}
 
-	err := s.repo.UpdateMenu(menu)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新菜单", menu, ctx))
+	if err := s.repo.UpdateMenu(menu); err != nil {
+		s.log.Errorw("errMsg", "更新菜单", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新菜单", menu, ctx))
+	s.log.Infow("errMsg", "更新菜单")
 	return nil
 }
 
 func (s *MenuService) DeleteMenuById(id uint, ctx *gin.Context) error {
-	err := s.repo.DeleteMenuById(id)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除菜单", xjson.G{"id": id}, ctx))
+	if err := s.repo.DeleteMenuById(id); err != nil {
+		s.log.Errorw("errMsg", "删除菜单", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除菜单", xjson.G{"id": id}, ctx))
+	s.log.Infow("errMsg", "删除菜单")
 	return nil
 }
 
 func (s *MenuService) DeleteMenuByIds(ids []uint, ctx *gin.Context) error {
-	err := s.repo.DeleteMenuByIds(ids)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除菜单", xjson.G{"id": ids}, ctx))
+	if err := s.repo.DeleteMenuByIds(ids); err != nil {
+		s.log.Errorw("errMsg", "批量删除菜单", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除菜单", xjson.G{"id": ids}, ctx))
+	s.log.Infow("errMsg", "批量删除菜单")
 	return nil
 }

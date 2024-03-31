@@ -32,7 +32,7 @@ type CasbinRouter struct {
 	private gin.IRoutes
 }
 
-func NewCasbinRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *CasbinRouter {
+func NewCasbinRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *CasbinRouter {
 	data := repo.NewCasbinRepo()
 	sv := service.NewCasbinService(data, conf, logger, enforcer)
 	return &CasbinRouter{

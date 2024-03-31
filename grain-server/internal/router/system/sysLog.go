@@ -31,7 +31,7 @@ type SysLogRouter struct {
 	api             *handler.SysLogHandle
 }
 
-func NewSysLogRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *SysLogRouter {
+func NewSysLogRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *SysLogRouter {
 	mongoDB, err := repo.NewMongoDBRepo(rdb, conf.DataBase.Mongo.URL, "grain", "sysLog")
 	if err != nil {
 		panic(err)

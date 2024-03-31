@@ -32,7 +32,7 @@ type RoleRouter struct {
 	private gin.IRoutes
 }
 
-func NewRoleRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *RoleRouter {
+func NewRoleRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *RoleRouter {
 	data := repo.NewRoleRepo(rdb)
 	sv := service.NewRoleService(data, rdb, conf, logger)
 	return &RoleRouter{

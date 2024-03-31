@@ -33,11 +33,11 @@ import (
 type CaptchaService struct {
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewCaptcha(rdb redis.IRedis, conf *config.Config, log *log.Logger) *CaptchaService {
-	return &CaptchaService{rdb: rdb, conf: conf, log: log}
+func NewCaptcha(rdb redis.IRedis, conf *config.Config, logger log.Logger) *CaptchaService {
+	return &CaptchaService{rdb: rdb, conf: conf, log: log.NewHelper(logger)}
 }
 
 func (s *CaptchaService) SendMobileCaptcha(mobile *model.Mobile, ctx *gin.Context) error {

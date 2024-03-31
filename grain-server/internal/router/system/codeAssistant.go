@@ -33,7 +33,7 @@ type CodeFactoryRouter struct {
 	api     *handler.CodeAssistantHandle
 }
 
-func NewCodeAssistantRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *CodeFactoryRouter {
+func NewCodeAssistantRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *CodeFactoryRouter {
 	data := repo.NewCodeAssistantRepo(db, rdb)
 	sv := service.NewCodeAssistantService(data, rdb, conf, logger)
 	return &CodeFactoryRouter{

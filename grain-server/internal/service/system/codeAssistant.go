@@ -21,7 +21,6 @@ import (
 	"github.com/gin-gonic/gin"
 	utils "github.com/go-grain/go-utils"
 	"github.com/go-grain/go-utils/goutil"
-	xjson "github.com/go-grain/go-utils/json"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/log"
@@ -63,76 +62,70 @@ type CodeAssistantService struct {
 	repo ICodeAssistantRepo
 	rdb  redis.IRedis
 	conf *config.Config
-	log  *log.Logger
+	log  *log.Helper
 }
 
-func NewCodeAssistantService(repo ICodeAssistantRepo, rdb redis.IRedis, conf *config.Config, logger *log.Logger) *CodeAssistantService {
+func NewCodeAssistantService(repo ICodeAssistantRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *CodeAssistantService {
 	return &CodeAssistantService{
 		repo: repo,
 		rdb:  rdb,
 		conf: conf,
-		log:  logger,
+		log:  log.NewHelper(logger),
 	}
 }
 
 func (s *CodeAssistantService) CreateProject(p *model.Project, ctx *gin.Context) error {
 	p.Model = model.Model{}
-	err := s.repo.CreateProject(p)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建项目", p, ctx))
+	if err := s.repo.CreateProject(p); err != nil {
+		s.log.Errorw("errMsg", "创建项目", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建项目", p, ctx))
+	s.log.Infow("创建项目")
 	return nil
 }
 
 func (s *CodeAssistantService) UpdateProject(p *model.Project, ctx *gin.Context) error {
-	err := s.repo.UpdateProject(p)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新项目", p, ctx))
+	if err := s.repo.UpdateProject(p); err != nil {
+		s.log.Errorw("errMsg", "更新项目失败", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新项目", p, ctx))
+	s.log.Infow("更新项目成功")
 	return nil
 }
 
 func (s *CodeAssistantService) CreateModel(m *model.Models, ctx *gin.Context) error {
-	err := s.repo.CreateModel(m)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建模块", m, ctx))
+	if err := s.repo.CreateModel(m); err != nil {
+		s.log.Errorw("errMsg", "创建模块", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建模块", m, ctx))
+	s.log.Infow("创建模块")
 	return nil
 }
 
 func (s *CodeAssistantService) UpdateModel(m *model.Models, ctx *gin.Context) error {
-	err := s.repo.UpdateModel(m)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新模块", m, ctx))
+	if err := s.repo.UpdateModel(m); err != nil {
+		s.log.Errorw("errMsg", "更新模块", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新模块", m, ctx))
+	s.log.Infow("更新模块")
 	return nil
 }
 
 func (s *CodeAssistantService) CreateField(f *model.Fields, ctx *gin.Context) error {
-	err := s.repo.CreateField(f)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "创建字段", f, ctx))
+	if err := s.repo.CreateField(f); err != nil {
+		s.log.Errorw("errMsg", "创建字段", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "创建字段", f, ctx))
+	s.log.Infow("创建字段")
 	return nil
 }
 
 func (s *CodeAssistantService) UpdateField(f *model.Fields, ctx *gin.Context) error {
-	err := s.repo.UpdateField(f)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "更新字段", f, ctx))
+	if err := s.repo.UpdateField(f); err != nil {
+		s.log.Errorw("errMsg", "更新字段", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新字段", f, ctx))
+	s.log.Infow("更新字段")
 	return nil
 }
 
@@ -186,32 +179,29 @@ func (s *CodeAssistantService) GetFieldList(parentId uint, ctx *gin.Context) ([]
 }
 
 func (s *CodeAssistantService) DeleteProjectByIds(pid uint, ctx *gin.Context) error {
-	err := s.repo.DeleteProjectById(pid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除项目", xjson.G{"id": pid}, ctx))
+	if err := s.repo.DeleteProjectById(pid); err != nil {
+		s.log.Errorw("errMsg", "删除项目", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除项目", xjson.G{"id": pid}, ctx))
+	s.log.Infow("errMsg", "删除项目")
 	return nil
 }
 
 func (s *CodeAssistantService) DeleteModelById(mid uint, ctx *gin.Context) error {
-	err := s.repo.DeleteModelById(mid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除模型", xjson.G{"id": mid}, ctx))
+	if err := s.repo.DeleteModelById(mid); err != nil {
+		s.log.Errorw("errMsg", "删除模型", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除模型", xjson.G{"id": mid}, ctx))
+	s.log.Infow("errMsg", "删除模型")
 	return nil
 }
 
 func (s *CodeAssistantService) DeleteFieldById(fid uint, ctx *gin.Context) error {
-	err := s.repo.DeleteFieldById(fid)
-	if err != nil {
-		s.log.Sava(s.log.OperationLog(400, "删除字段", xjson.G{"id": fid}, ctx))
+	if err := s.repo.DeleteFieldById(fid); err != nil {
+		s.log.Errorw("errMsg", "删除字段", "err", err.Error())
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "删除字段", xjson.G{"id": fid}, ctx))
+	s.log.Infow("errMsg", "删除字段")
 	return nil
 }
 

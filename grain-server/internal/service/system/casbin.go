@@ -54,11 +54,11 @@ type CasbinService struct {
 	repo     ICasbinRepo
 	enforcer *casbin.CachedEnforcer
 	conf     *config.Config
-	log      *log.Logger
+	log      *log.Helper
 }
 
-func NewCasbinService(repo ICasbinRepo, conf *config.Config, logger *log.Logger, e *casbin.CachedEnforcer) *CasbinService {
-	return &CasbinService{repo: repo, enforcer: e, log: logger, conf: conf}
+func NewCasbinService(repo ICasbinRepo, conf *config.Config, logger log.Logger, e *casbin.CachedEnforcer) *CasbinService {
+	return &CasbinService{repo: repo, enforcer: e, log: log.NewHelper(logger), conf: conf}
 }
 
 // InitCasbinRoleRule 初始化角色默认权限规则
@@ -220,19 +220,16 @@ func (s *CasbinService) Update(roles *model.CasbinReq, ctx *gin.Context) error {
 	}
 
 	if err := s.repo.Update(c); err != nil {
-		err = s.repo.Update(oldList)
-		if err != nil {
-			s.log.Sava(s.log.OperationLog(400, "更新角色权限失败", roles, ctx, oldList))
+		if err = s.repo.Update(oldList); err != nil {
+			s.log.Errorw("errMsg", "更新角色权限失败", "err", err.Error())
 			return errors.New("更新失败,完犊子了,我一点补救的办法都没有 我能怎么办 你说我能怎么办 ^*^*^")
 		}
-		s.log.Sava(s.log.OperationLog(400, "更新角色权限", roles, ctx))
-
 	}
 
 	if err := s.ReLoadPolicy(); err != nil {
 		return err
 	}
-	s.log.Sava(s.log.OperationLog(200, "更新角色权限", roles, ctx))
+	s.log.Infow("errMsg", "更新角色权限")
 	return nil
 }
 
