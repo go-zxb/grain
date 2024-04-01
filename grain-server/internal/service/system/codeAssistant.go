@@ -234,7 +234,7 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 	modelData.ProjectPath = ".tmp"
 
 	if s.conf.Gin.Model == "debug" {
-		modelData.ProjectName += "/.tmp"
+		//modelData.ProjectName += "/.tmp"
 	}
 
 	modelData.FirstLetter = utils.ToLower(modelData.StructName[0:1])
@@ -508,6 +508,8 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 	}
 	rt := string(b)
 
+	rt = strings.ReplaceAll(rt, "{{ModelNameA}}", m.StructName)
+	rt = strings.ReplaceAll(rt, "{{ModelNameB}}", m.Name)
 	rt = strings.ReplaceAll(rt, "{{a-model}}", m.Name)
 	rt = strings.ReplaceAll(rt, "{{c-First}}", m.FirstLetter)
 	rt = strings.ReplaceAll(rt, "{{s-model}}", utils.ToTitle(m.Name))
@@ -846,21 +848,20 @@ func (s *CodeAssistantService) FlutterGeneratedCode(m model.Models, flutter *mod
 	defer open.Close()
 
 	for _, field := range m.Fields {
-		if field.Type == "" {
+		switch field.Type {
+		case "":
 			field.Type = "String?"
-		} else {
-			switch field.Type {
-			case "string":
-				field.Type = "String?"
-			case "int", "int64", "float32", "float64":
-				field.Type = "num?"
-			case "bool":
-				field.Type = "bool?"
-			default:
-				field.Type += "?"
-			}
+		case "[]byte":
+			field.Type = "dynamic"
+		case "string":
+			field.Type = "String?"
+		case "int", "uint", "int64", "float32", "float64":
+			field.Type = "num?"
+		case "bool":
+			field.Type = "bool?"
+		default:
+			field.Type += "?"
 		}
-
 	}
 
 	//渲染模板文件

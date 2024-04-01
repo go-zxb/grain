@@ -162,7 +162,7 @@ func (s *ApiService) CreateApi(api *model.SysApi, ctx *gin.Context) error {
 		}
 		return err
 	}
-	s.log.Errorw("errMsg", "创建Api")
+	s.log.Infow("errMsg", "创建Api")
 	return nil
 }
 
