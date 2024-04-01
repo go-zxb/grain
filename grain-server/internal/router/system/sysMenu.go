@@ -50,6 +50,8 @@ func (r *MenuRouter) InitRouters() *MenuRouter {
 	r.private.POST("sysMenu", r.api.CreateMenu)
 	r.private.GET("sysMenu/list", r.api.GetMenuList)
 	r.private.GET("sysMenu/userMenu", r.api.GetUserMenu)
+	r.private.GET("sysMenu/menuAndPermission", r.api.GetMenuAndPermission)
+	r.private.POST("sysMenu/menuAndPermission", r.api.SetMenuAndPermission)
 	r.private.DELETE("sysMenu", r.api.DeleteMenuById)
 	r.private.DELETE("sysMenu/deleteMenuByIds", r.api.DeleteMenuByIds)
 	return r

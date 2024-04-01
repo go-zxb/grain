@@ -16,6 +16,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
@@ -26,12 +27,18 @@ import (
 
 type IMenuRepo interface {
 	CreateMenu(menu *model.SysMenu) error
+	CreateUserMenu(menu []*model.SysUserMenu) error
 	GetMenuById(id uint) (*model.SysMenu, error)
 	GetUserMenu(role string, parentId uint) (u []*model.SysMenu, err error)
-	GetMenuList(req *model.SysMenuReq, parentId uint) ([]*model.SysMenu, error)
+	GetMenuList() (list []*model.SysMenu, err error)
+	GetMenuListByParentId(req *model.SysMenuReq, parentId uint) ([]*model.SysMenu, error)
+	GetUserMenuByRoleAndID(role string, pid uint) (list []*model.SysUserMenu, err error)
+	GetUserMenuByRole(role string) (list []*model.SysUserMenu, err error)
 	UpdateMenu(menu *model.SysMenu) error
+	UpdateMenus(menu []*model.SysMenu) error
 	DeleteMenuById(menuId uint) error
 	DeleteMenuByIds(ids []uint) error
+	DeleteUserMenuByRole(role string) error
 }
 
 type MenuService struct {
@@ -90,7 +97,7 @@ func (s *MenuService) InitMenu() error {
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        6,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 		{
@@ -102,7 +109,7 @@ func (s *MenuService) InitMenu() error {
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        5,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 		{
@@ -113,7 +120,7 @@ func (s *MenuService) InitMenu() error {
 				I18n:         "menu.organize",
 				RequiresAuth: true,
 				Order:        4,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 		{
@@ -125,7 +132,7 @@ func (s *MenuService) InitMenu() error {
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        3,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 		{
@@ -137,7 +144,7 @@ func (s *MenuService) InitMenu() error {
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        2,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 		{
@@ -149,7 +156,7 @@ func (s *MenuService) InitMenu() error {
 				RequiresAuth: false,
 				Icon:         "",
 				Order:        1,
-				Roles:        []string{"2023"},
+				Roles:        []string{s.conf.System.DefaultAdminRole},
 			},
 		},
 	}
@@ -182,7 +189,7 @@ func (s *MenuService) InitMenu() error {
 			I18n:         "menu.dashboard.workplace",
 			RequiresAuth: false,
 			Order:        0,
-			Roles:        []string{"2023"},
+			Roles:        []string{s.conf.System.DefaultAdminRole},
 		},
 	}
 	if err = q.Create(menu); err != nil {
@@ -211,7 +218,7 @@ func (s *MenuService) InitMenu() error {
 			I18n:         "menu.generateCode",
 			RequiresAuth: true,
 			Order:        0,
-			Roles:        []string{"2023"},
+			Roles:        []string{s.conf.System.DefaultAdminRole},
 		},
 	}
 	if err = q.Create(menu); err != nil {
@@ -240,10 +247,33 @@ func (s *MenuService) InitMenu() error {
 			I18n:         "menu.sysFile",
 			RequiresAuth: true,
 			Order:        0,
-			Roles:        []string{"2023"},
+			Roles:        []string{s.conf.System.DefaultAdminRole},
 		},
 	}
 	if err = q.Create(menu); err != nil {
+		return err
+	}
+
+	list, err := s.repo.GetMenuList()
+	if err != nil {
+		return err
+	}
+
+	var newList []*model.SysUserMenu
+	for _, menu := range list {
+		t := &model.SysUserMenu{
+			MID:      menu.ID,
+			ParentId: menu.ParentId,
+			Role:     s.conf.System.DefaultAdminRole,
+			CnName:   menu.CnName,
+			Name:     menu.Name,
+			Path:     menu.Path,
+			Meta:     menu.Meta,
+		}
+		newList = append(newList, t)
+	}
+
+	if err := s.repo.CreateUserMenu(newList); err != nil {
 		return err
 	}
 	return nil
@@ -263,42 +293,84 @@ func (s *MenuService) GetUserMenu(role string, ctx *gin.Context) (menu []*model.
 	if err != nil {
 		return nil, err
 	}
-	ParentAll := make(map[uint]*model.SysMenu)
-	authNode := make(map[uint]*model.SysMenu)
-	childNode := make(map[uint]*model.SysMenu)
-	for i, m := range menuAll {
-		if m.ParentId == 0 {
-			ParentAll[m.ID] = menuAll[i]
-		} else {
-			for _, s2 := range m.Meta.Roles {
-				if s2 == role {
-					m.Meta.RequiresAuth = true
-					m.Meta.Roles = []string{role}
-					childNode[m.ID] = m
-				}
-			}
+
+	for _, m := range menuAll {
+		t := &model.SysMenu{
+			Model:    m.Model,
+			ParentId: m.ParentId,
+			CnName:   m.CnName,
+			Name:     m.Name,
+			Path:     m.Path,
+			Meta:     m.Meta,
 		}
-	}
-
-	for key, val := range childNode {
-		_, ok := authNode[val.ParentId]
-		if ok {
-			authNode[val.ParentId].Children = append(authNode[val.ParentId].Children, childNode[key])
-		} else {
-			authNode[val.ParentId] = ParentAll[val.ParentId]
-			authNode[val.ParentId].Children = append(authNode[val.ParentId].Children, childNode[key])
+		list, err := s.repo.GetUserMenuByRoleAndID(role, m.ID)
+		if err != nil || len(list) == 0 {
+			continue
 		}
-
-	}
-
-	for _, m := range authNode {
-		menu = append(menu, m)
+		var m2 []*model.SysMenu
+		for _, userMenu := range list {
+			m2 = append(m2, &model.SysMenu{
+				Model:    userMenu.Model,
+				ParentId: userMenu.ParentId,
+				CnName:   userMenu.CnName,
+				Name:     userMenu.Name,
+				Path:     userMenu.Path,
+				Meta:     userMenu.Meta,
+			})
+		}
+		t.Children = m2
+		menu = append(menu, t)
 	}
 	return menu, err
 }
 
+func (s *MenuService) GetMenuAndPermission(role string, ctx *gin.Context) (menu any, selectKeys []uint, err error) {
+	req := &model.SysMenuReq{}
+	menuAll, err := s.repo.GetMenuListByParentId(req, 0)
+	if err != nil {
+		return nil, nil, err
+	}
+	type Menu struct {
+		Key      uint    `form:"key" json:"key"`
+		Title    string  `form:"title" json:"title"`
+		Children []*Menu `form:"children" json:"children"`
+	}
+	var menuList []*Menu
+	for _, sysMenu := range menuAll {
+		t := Menu{
+			Key:      sysMenu.ID,
+			Title:    sysMenu.CnName,
+			Children: nil,
+		}
+		menuAll2, err := s.repo.GetMenuListByParentId(req, sysMenu.ID)
+		if err != nil {
+			continue
+		}
+
+		for _, m2 := range menuAll2 {
+			t.Children = append(t.Children, &Menu{
+				Key:      m2.ID,
+				Title:    m2.CnName,
+				Children: nil,
+			})
+		}
+		menuList = append(menuList, &t)
+	}
+
+	byRole, err := s.repo.GetUserMenuByRole(role)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	for _, userMenu := range byRole {
+		selectKeys = append(selectKeys, userMenu.MID)
+	}
+
+	return menuList, selectKeys, nil
+}
+
 func (s *MenuService) GetMenuList(req *model.SysMenuReq, ctx *gin.Context) ([]*model.SysMenu, error) {
-	list, err := s.repo.GetMenuList(req, 0)
+	list, err := s.repo.GetMenuListByParentId(req, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -307,11 +379,11 @@ func (s *MenuService) GetMenuList(req *model.SysMenuReq, ctx *gin.Context) ([]*m
 	}
 
 	for i, menu := range list {
-		child, _ := s.repo.GetMenuList(req, menu.ID)
+		child, _ := s.repo.GetMenuListByParentId(req, menu.ID)
 		if len(child) > 0 {
 			list[i].Children = child
 			for j, child_ := range list[i].Children {
-				child_child, _ := s.repo.GetMenuList(req, child_.ID)
+				child_child, _ := s.repo.GetMenuListByParentId(req, child_.ID)
 				if len(child_child) > 0 {
 					list[i].Children[j].Children = child_child
 				}
@@ -319,6 +391,42 @@ func (s *MenuService) GetMenuList(req *model.SysMenuReq, ctx *gin.Context) ([]*m
 		}
 	}
 	return list, err
+}
+
+func (s *MenuService) SetMenuAndPermission(keys []uint, role string) error {
+	fmt.Println(keys)
+	if len(keys) == 0 {
+		return errors.New("参数不能为空")
+	}
+
+	if err := s.repo.DeleteUserMenuByRole(role); err != nil {
+		return err
+	}
+
+	list, err := s.repo.GetMenuList()
+	if err != nil {
+		return err
+	}
+
+	var newList []*model.SysUserMenu
+	for _, key := range keys {
+		//拿出选择的菜单
+		for _, menu := range list {
+			t := &model.SysUserMenu{
+				MID:      menu.ID,
+				ParentId: menu.ParentId,
+				Role:     role,
+				CnName:   menu.CnName,
+				Name:     menu.Name,
+				Path:     menu.Path,
+				Meta:     menu.Meta,
+			}
+			if menu.ID == key {
+				newList = append(newList, t)
+			}
+		}
+	}
+	return s.repo.CreateUserMenu(newList)
 }
 
 func (s *MenuService) UpdateMenu(menu *model.SysMenu, ctx *gin.Context) error {

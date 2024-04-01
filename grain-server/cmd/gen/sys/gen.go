@@ -28,6 +28,7 @@ func Gen() {
 		sysModel.CasbinRule{},
 		sysModel.SysApi{},
 		sysModel.SysMenu{},
+		sysModel.SysUserMenu{},
 		sysModel.Upload{},
 		sysModel.Project{},
 		sysModel.Models{},

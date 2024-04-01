@@ -40,8 +40,21 @@ type SysMenu struct {
 	ParentId uint       ` form:"parentId" json:"parentId" xml:"parentId"  gorm:"comment:父ID"`
 	Path     string     `form:"path" json:"path" xml:"path" gorm:"comment:路径"`
 	Name     string     `form:"name" json:"name" xml:"name" gorm:"comment:名称"`
+	CnName   string     `form:"cnName" json:"cnName" xml:"cnName" gorm:"comment:中文名称"`
 	Meta     *Meta      `form:"meta" json:"meta" xml:"meta"  gorm:"type:json;comment:"`
 	Children []*SysMenu `form:"children" json:"children" xml:"children" gorm:"-"`
+}
+
+type SysUserMenu struct {
+	Model
+	MID      uint           `form:"-" json:"-"`
+	ParentId uint           ` form:"parentId" json:"parentId" xml:"parentId"  gorm:"comment:父ID"`
+	Path     string         `form:"path" json:"path" xml:"path" gorm:"comment:路径"`
+	Name     string         `form:"name" json:"name" xml:"name" gorm:"comment:名称"`
+	CnName   string         `form:"cnName" json:"cnName" xml:"cnName" gorm:"comment:中文名称"`
+	Role     string         `form:"role" json:"role"`
+	Meta     *Meta          `form:"meta" json:"meta" xml:"meta"  gorm:"type:json;comment:"`
+	Children []*SysUserMenu `form:"children" json:"children" xml:"children" gorm:"-"`
 }
 
 func (SysMenu) TableName() string {

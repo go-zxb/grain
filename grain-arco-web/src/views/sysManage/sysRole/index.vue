@@ -43,10 +43,29 @@
       <a-tree
         v-model:checked-keys="checkedKeys"
         :checkable="true"
+        :default-expand-all="false"
         :check-strictly="checkStrictly"
         :data="treeData"
       />
     </a-drawer>
+
+      <a-drawer
+              :width="720"
+              :visible="drawerMenuVisible"
+              unmount-on-close
+              @ok="setMenuPermissionsSubmit"
+              @cancel="setMenuPermissionsCancel"
+      >
+          <template #title> {{ '设置菜单权限' }} </template>
+          <a-tree
+                  v-model:checked-keys="checkedMenuKeys"
+                  :checkable="true"
+                  :default-expand-all="false"
+                  :check-strictly="checkMenuStrictly"
+                  :data="treeMenuData"
+          />
+      </a-drawer>
+
     <Breadcrumb :items="['menu.sysManage', 'menu.sysRole']" />
     <a-card>
       <a-row>
@@ -136,9 +155,13 @@
             {{ $t('roleTable.columns.operations.edit') }}
           </a-button>
 
-          <a-button type="text" size="small" @click="setAuth(record)">
-            {{ $t('roleTable.columns.operations.setAuth') }}
-          </a-button>
+            <a-button type="text" size="small" @click="setMenu(record)">
+                {{ '设置菜单权限' }}
+            </a-button>
+
+            <a-button type="text" size="small" @click="setAuth(record)">
+                {{ '设置Api权限' }}
+            </a-button>
 
           <a-popconfirm
             :content="$t('roleTable.columns.operations.delete.prompt')"
@@ -172,6 +195,7 @@
   } from '@/api/sysManage/sysRole';
   import { ApiAuthGroup } from '@/types/role';
   import { SysApi, GetApiAndPermissions } from '@/api/sysManage/sysApi';
+  import {GetMenuAndPermission, SetMenuAndPermission} from "@/api/sysManage/sysMenu";
 
   const generateFormModel = () => {
     return {
@@ -182,6 +206,11 @@
   };
 
   const isEdit = ref(false);
+  const drawerMenuVisible = ref(false);
+  const checkedMenuKeys = ref<number[]>([]);
+  const checkMenuStrictly = ref(false);
+  const treeMenuData = ref<ApiAuthGroup[]>([]);
+
   const drawerVisible = ref(false);
   const dialogFormVisible = ref(false);
   const dialogFormTitle = ref('添加角色');
@@ -335,6 +364,33 @@
       Message.warning(res.message ?? '请求错误');
     }
   };
+
+
+
+  const setMenuPermissionsSubmit = async () => {
+      const res = await SetMenuAndPermission({"keys":checkedMenuKeys.value,"role":role.value});
+      if (res.success) {
+          Message.success(res.message ?? 'ok');
+      }else {
+          Message.warning(res.message ?? '请求错误');
+      }
+      drawerMenuVisible.value = false
+  }
+
+  const setMenu = async (data: any) => {
+      role.value = data.role;
+      const res = await GetMenuAndPermission(data.role);
+      if (res.success) {
+          console.log(res.data)
+          treeMenuData.value = res.data
+          checkedMenuKeys.value = res.data2
+      }
+      drawerMenuVisible.value = true
+  }
+
+  const setMenuPermissionsCancel = () => {
+      drawerMenuVisible.value = false
+  }
 
   getRoles();
 

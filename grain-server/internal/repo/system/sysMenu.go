@@ -45,13 +45,20 @@ func (r *MenuRepo) GetMenuById(parentId uint) (menu *model.SysMenu, err error) {
 }
 
 func (r *MenuRepo) GetUserMenu(role string, parentId uint) (list []*model.SysMenu, err error) {
-	if list, err = r.query.SysMenu.Find(); err != nil {
+	if list, err = r.query.SysMenu.Where(r.query.SysMenu.ParentId.Eq(0)).Find(); err != nil {
 		return nil, err
 	}
 	return
 }
 
-func (r *MenuRepo) GetMenuList(req *model.SysMenuReq, parentId uint) (list []*model.SysMenu, err error) {
+func (r *MenuRepo) GetMenuList() (list []*model.SysMenu, err error) {
+	if list, err = r.query.SysMenu.Where(r.query.SysMenu.ParentId.Neq(0)).Find(); err != nil {
+		return nil, err
+	}
+	return
+}
+
+func (r *MenuRepo) GetMenuListByParentId(req *model.SysMenuReq, parentId uint) (list []*model.SysMenu, err error) {
 	count, err := r.query.SysMenu.Count()
 	if err != nil {
 		return nil, err
@@ -62,6 +69,13 @@ func (r *MenuRepo) GetMenuList(req *model.SysMenuReq, parentId uint) (list []*mo
 	}
 
 	return
+}
+
+func (r *MenuRepo) UpdateMenus(menu []*model.SysMenu) error {
+	if _, err := r.query.SysMenu.Updates(&menu); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *MenuRepo) UpdateMenu(menu *model.SysMenu) error {
@@ -83,4 +97,29 @@ func (r *MenuRepo) DeleteMenuByIds(ids []uint) error {
 		return err
 	}
 	return nil
+}
+
+func (r *MenuRepo) GetUserMenuByRole(role string) (list []*model.SysUserMenu, err error) {
+	if list, err = r.query.SysUserMenu.Where(r.query.SysUserMenu.Role.Eq(role)).Find(); err != nil {
+		return
+	}
+	return
+}
+
+func (r *MenuRepo) GetUserMenuByRoleAndID(role string, pid uint) (list []*model.SysUserMenu, err error) {
+	if list, err = r.query.SysUserMenu.Where(r.query.SysUserMenu.Role.Eq(role)).Where(r.query.SysUserMenu.ParentId.Eq(pid)).Find(); err != nil {
+		return
+	}
+	return
+}
+
+func (r *MenuRepo) DeleteUserMenuByRole(role string) error {
+	if _, err := r.query.SysUserMenu.Where(r.query.SysUserMenu.Role.Eq(role)).Unscoped().Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *MenuRepo) CreateUserMenu(menu []*model.SysUserMenu) error {
+	return r.query.SysUserMenu.Create(menu...)
 }

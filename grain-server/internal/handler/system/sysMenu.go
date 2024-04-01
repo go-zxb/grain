@@ -15,6 +15,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
@@ -87,6 +88,61 @@ func (r *MenuHandle) GetUserMenu(ctx *gin.Context) {
 		return
 	}
 	res.WithMessage("成功").WithData(menuInfo).Success(ctx)
+}
+
+// GetMenuAndPermission
+// @Security ApiKeyAuth
+// @Summary 设置菜单权限
+// @Description 设置菜单权限
+// @Tags 动态菜单
+// @Accept json
+// @Produce json
+// @Success 200 {object} model.SysMenu "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /sysMenu/userMenu [get]
+func (r *MenuHandle) GetMenuAndPermission(ctx *gin.Context) {
+	res := r.res.New()
+	role := ctx.Query("role")
+	menuInfo, selectKeys, err := r.sv.GetMenuAndPermission(role, ctx)
+	if err != nil {
+		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	res.WithMessage("成功").WithData(menuInfo).WithData2(selectKeys).Success(ctx)
+}
+
+// SetMenuAndPermission
+// @Security ApiKeyAuth
+// @Summary 设置菜单权限
+// @Description 设置菜单权限
+// @Tags 动态菜单
+// @Accept json
+// @Produce json
+// @Success 200 {object} model.SysMenu "成功"
+// @Failure 400 {object} model.ErrorRes "格式错误"
+// @Failure 401 {object} model.ErrorRes "未经授权"
+// @Failure 404 {object} model.ErrorRes "资源不存在"
+// @Router /sysMenu/userMenu [get]
+func (r *MenuHandle) SetMenuAndPermission(ctx *gin.Context) {
+	reply := r.res.New()
+	type Menu struct {
+		Role string `form:"role" json:"role"`
+		Keys []uint `form:"keys" json:"keys"`
+	}
+	Keys := Menu{}
+	if err := ctx.ShouldBindJSON(&Keys); err != nil {
+		reply.WithCode(500).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	fmt.Println(Keys)
+	err := r.sv.SetMenuAndPermission(Keys.Keys, Keys.Role)
+	if err != nil {
+		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
+		return
+	}
+	reply.WithMessage("成功").Success(ctx)
 }
 
 // GetMenuList

@@ -69,6 +69,7 @@ func (db *DB) autoMigrate() error {
 		sysModel.SysUser{},
 		sysModel.SysApi{},
 		sysModel.SysMenu{},
+		sysModel.SysUserMenu{},
 		sysModel.Upload{},
 		sysModel.Project{},
 		sysModel.Models{},

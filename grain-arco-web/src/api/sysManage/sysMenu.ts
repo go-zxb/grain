@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Base } from '@/api/base';
-
 export interface SysMenu {
   id: number;
   ParentId: number;
@@ -66,6 +65,20 @@ export function UpdateSysMenu(data: any) {
 
 export function DeleteSysMenu(data: number) {
   return axios.delete<Base>(`/api/v1/sysMenu?id=${data}`).then((res) => {
+    return res.data;
+  });
+}
+
+export function GetMenuAndPermission(role: any) {
+  return axios
+      .get(`/api/v1/sysMenu/menuAndPermission?role=${role}`)
+      .then((res) => {
+        return res.data;
+      });
+}
+
+export function SetMenuAndPermission(data: any) {
+  return axios.post<Base>(`/api/v1/sysMenu/menuAndPermission`, data).then((res) => {
     return res.data;
   });
 }

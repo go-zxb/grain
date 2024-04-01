@@ -36,12 +36,23 @@
             allow-clear
           />
         </a-form-item>
-        <a-form-item field="i18n" :label="$t('sysMenuDialogForm.i18n')">
-          <a-input
-            v-model="sysMenuForm.meta.i18n"
-            :placeholder="$t('sysMenuDialogForm.i18n.prompt')"
-            allow-clear
-          />
+          <a-form-item
+                  field="cnName"
+                  label="中文名称"
+                  :rules="[
+            { required: true, message: '中文名称' }]">
+              <a-input
+                      v-model="sysMenuForm.cnName"
+                      placeholder="请输入中文名称"
+                      allow-clear/>
+          </a-form-item>
+
+          <a-form-item field="i18n" label="i18n">
+              <a-input
+                      v-model="sysMenuForm.meta.i18n"
+                      placeholder="i18n"
+                      allow-clear
+              />
         </a-form-item>
         <a-form-item field="roles" :label="$t('sysMenuDialogForm.roles')">
           <a-cascader
@@ -168,6 +179,7 @@
       parentId: 0,
       path: '',
       name: '',
+      cnName: '',
       meta: {
         i18n: '',
         roles: [],
@@ -250,6 +262,7 @@
     sysMenuForm.id = data.id;
     sysMenuForm.path = data.path;
     sysMenuForm.name = data.name;
+    sysMenuForm.cnName = data.cnName;
     sysMenuForm.meta.i18n = data.meta.i18n;
     sysMenuForm.meta.roles = data.meta.roles;
     sysMenuForm.meta.icon = data.meta.icon;
@@ -273,6 +286,7 @@
     sysMenuForm.id = 0;
     sysMenuForm.path = '';
     sysMenuForm.name = '';
+    sysMenuForm.cnName = '';
     sysMenuForm.meta.i18n = '';
     sysMenuForm.meta.roles = [];
     sysMenuForm.meta.icon = '';
