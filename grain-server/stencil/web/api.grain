@@ -55,7 +55,7 @@ export function Update{{.StructName}}(data: any) {
 }
 
 export function Delete{{.StructName}}(data: number) {
-  return axios.delete<Base>(`/api/v1/admin/{{.Name}}?id=${data}`).then((res) => {
+  return axios.delete<Base>(`/api/v1/admin/{{.Name}}/{{.Name}}ById?id=${data}`).then((res) => {
     return res.data;
   });
 }

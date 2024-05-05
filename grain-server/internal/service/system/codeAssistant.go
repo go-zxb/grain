@@ -570,11 +570,17 @@ func tmplateData(m model.Models) (map[string]*model.CodePath, error) {
 	name := utils.ToLower(m.StructName)
 
 	if m.DatabaseName == mysql {
+		maps["apim"] = &model.CodePath{
+			FS:           &stencil.MysqlTemplateFS,
+			TemplatePath: "mysql/apim.grain",
+			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "temp", name),
+			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.txt", m.ProjectPath, "temp", name, name),
+		}
 		maps["model"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,
 			TemplatePath: "mysql/model.grain",
-			FilePath:     fmt.Sprintf("%s/internal/%s/%s", m.ProjectPath, "model", name),
-			Filename:     fmt.Sprintf("%s/internal/%s/%s/%s.go", m.ProjectPath, "model", name, name),
+			FilePath:     fmt.Sprintf("%s/%s/%s", m.ProjectPath, "model", name),
+			Filename:     fmt.Sprintf("%s/%s/%s/%s.go", m.ProjectPath, "model", name, name),
 		}
 		maps["router"] = &model.CodePath{
 			FS:           &stencil.MysqlTemplateFS,

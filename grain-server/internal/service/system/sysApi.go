@@ -96,9 +96,12 @@ func (s *ApiService) InitApi() error {
 		{Path: "/api/v1/sysMenu/userMenu", Description: "获取动态菜单", ApiGroup: "系统用户", Method: "GET"},
 
 		// 代码助手
-		{Path: "/api/v1/codeAssistant/projects", Description: "添加或更新项目信息", ApiGroup: "代码助手", Method: "POST"},
-		{Path: "/api/v1/codeAssistant/models", Description: "添加或更新模型信息", ApiGroup: "代码助手", Method: "POST"},
-		{Path: "/api/v1/codeAssistant/fields", Description: "添加或更新字段信息", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/projects", Description: "添加新项目", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/projects", Description: "更新项目信息", ApiGroup: "代码助手", Method: "PUT"},
+		{Path: "/api/v1/codeAssistant/models", Description: "添加模型", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/models", Description: "更新模型信息", ApiGroup: "代码助手", Method: "PUT"},
+		{Path: "/api/v1/codeAssistant/fields", Description: "添加字段", ApiGroup: "代码助手", Method: "POST"},
+		{Path: "/api/v1/codeAssistant/fields", Description: "更新字段信息", ApiGroup: "代码助手", Method: "PUT"},
 		{Path: "/api/v1/codeAssistant/projects", Description: "删除项目", ApiGroup: "代码助手", Method: "DELETE"},
 		{Path: "/api/v1/codeAssistant/models", Description: "删除模型", ApiGroup: "代码助手", Method: "DELETE"},
 		{Path: "/api/v1/codeAssistant/fields", Description: "删除字段", ApiGroup: "代码助手", Method: "DELETE"},
@@ -118,6 +121,12 @@ func (s *ApiService) InitApi() error {
 		{Path: "/api/v1/organize/listGroup", Description: "根据条件获取组织分组列表", ApiGroup: "组织管理", Method: "GET"},
 		{Path: "/api/v1/organize/organizeById", Description: "删除组织列表", ApiGroup: "组织管理", Method: "DELETE"},
 		{Path: "/api/v1/organize/organizeByIds", Description: "批量删除组织列表", ApiGroup: "组织管理", Method: "DELETE"},
+
+		//附件管理
+		{Path: "/api/v1/upload", Description: "编辑文件", ApiGroup: "附件管理", Method: "PUT"},
+		{Path: "/api/v1/upload", Description: "创建文件", ApiGroup: "附件管理", Method: "POST"},
+		{Path: "/api/v1/upload/list", Description: "获取文件列表", ApiGroup: "附件管理", Method: "GET"},
+		{Path: "/api/v1/sysRole/deleteUploadByIds", Description: "批量删除文件", ApiGroup: "附件管理", Method: "DELETE"},
 	}
 	q := query.Q.SysApi
 

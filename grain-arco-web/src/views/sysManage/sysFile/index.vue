@@ -104,6 +104,13 @@
           {{ rowIndex + 1 + (pagination.page - 1) * pagination.pageSize }}
         </template>
 
+          <template #fileUrl="{ record }">
+              <a-image
+                      width="50"
+                      :src="record.fileUrl"
+              />
+          </template>
+
         <template #operations="{ record, rowIndex }">
           <a-popconfirm
             :content="$t('uploadTable.columns.operations.down.des')"
@@ -114,6 +121,10 @@
               {{ $t('uploadTable.columns.operations.down') }}
             </a-button>
           </a-popconfirm>
+
+            <a-button type="text" size="small" @click="copyTextToClipboard(record.fileUrl)">
+                {{ "复制URL" }}
+            </a-button>
 
           <a-popconfirm
             :content="$t('uploadTable.columns.operations.delete.des')"
@@ -146,6 +157,7 @@
       UploadReqData,
   } from '@/api/sysManage/sysFile';
   import { RequestOption } from '@arco-design/web-vue/es/upload/interfaces';
+  import {copyTextToClipboard} from "@/utils/sys";
 
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   type Column = TableColumnData & { checked?: true };
@@ -181,17 +193,20 @@
       title: t('uploadTable.columns.index'),
       dataIndex: 'index',
       slotName: 'index',
+      width:80,
     },
-    {
-      title: t('uploadTable.columns.fileName'),
-      dataIndex: 'fileName',
-      slotName: 'fileName',
-    },
+
     {
       title: t('uploadTable.columns.fileUrl'),
       dataIndex: 'fileUrl',
       slotName: 'fileUrl',
     },
+      {
+          title: t('uploadTable.columns.fileName'),
+          dataIndex: 'fileName',
+          slotName: 'fileName',
+      },
+
     {
       title: t('uploadTable.columns.fileType'),
       dataIndex: 'fileType',

@@ -9,7 +9,7 @@ export default mergeConfig(
   {
     mode: 'production',
     plugins: [
-      configCompressPlugin('gzip'),
+      // configCompressPlugin('gzip'),
       configVisualizerPlugin(),
       configArcoResolverPlugin(),
       configImageminPlugin(),

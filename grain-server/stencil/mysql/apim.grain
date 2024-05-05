@@ -1,0 +1,6 @@
+//{{.Nickname}}-后台管理接口
+{Path: "/api/v1/admin/{{.Name}}", Description: "编辑{{.Nickname}}", ApiGroup: "{{.Nickname}}管理", Method: "PUT"},
+{Path: "/api/v1/admin/{{.Name}}", Description: "创建{{.Nickname}}", ApiGroup: "{{.Nickname}}管理", Method: "POST"},
+{Path: "/api/v1/admin/{{.Name}}/list", Description: "获取{{.Nickname}}列表", ApiGroup: "{{.Nickname}}管理", Method: "GET"},
+{Path: "/api/v1/admin/{{.Name}}/{{.Name}}ById", Description: "删除{{.Nickname}}列表", ApiGroup: "{{.Nickname}}管理", Method: "DELETE"},
+{Path: "/api/v1/admin/{{.Name}}/{{.Name}}ByIds", Description: "批量删除{{.Nickname}}列表", ApiGroup: "{{.Nickname}}管理", Method: "DELETE"},

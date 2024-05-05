@@ -115,6 +115,10 @@ func (s *CasbinService) InitCasbinRoleRule() error {
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields/list", V2: "GET"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects/list", V2: "GET"},
 
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/models", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields", V2: "PUT"},
+		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects", V2: "PUT"},
+
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/models", V2: "DELETE"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/fields", V2: "DELETE"},
 		{Ptype: "p", V0: defaultAdminRole, V1: "/api/v1/codeAssistant/projects", V2: "DELETE"},
