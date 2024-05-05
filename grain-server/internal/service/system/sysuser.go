@@ -92,7 +92,7 @@ func (s *SysUserService) Login(login *model.LoginReq, ctx *gin.Context) (string,
 	ctx.Set("LogType", "login")
 
 	if !encrypt.ComparePasswords(user.Password, login.Password) {
-		s.log.Errorw("errMsg", "用户登录", "err", err.Error())
+		s.log.Errorw("errMsg", "用户登录", "err")
 		return "", errors.New("账号或密码不正确")
 	}
 
