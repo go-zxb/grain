@@ -43,6 +43,10 @@ var (
 	id, _ = os.Hostname()
 )
 
+type IInit interface {
+	init(grain *Grain) error
+}
+
 type Grain struct {
 	db       *gorm.DB
 	sysLog   log.Logger
@@ -52,18 +56,21 @@ type Grain struct {
 	enforcer *casbin.CachedEnforcer
 }
 
-func (r *Grain) InitConf() (err error) {
-	r.conf, err = config.InitConfig()
+type InitConf struct{}
+
+func (InitConf) init(grain *Grain) (err error) {
+	grain.conf, err = config.InitConfig()
 	if err != nil {
 		return
 	}
 
 	os.Mkdir(".tmp/", 0o664)
-	file, err := os.OpenFile(".tmp/grain.log", os.O_CREATE|os.O_RDWR, 0o664)
+	file, err := os.OpenFile(".tmp/grain.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o664)
 	if err != nil {
 		return err
 	}
-	r.sysLog = log.With(log.NewStdLogger(file),
+
+	grain.sysLog = log.With(log.NewStdLogger(file),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,
@@ -71,78 +78,97 @@ func (r *Grain) InitConf() (err error) {
 		"service.version", Version,
 	)
 
-	r.db, err = data.InitDB(*r.conf)
+	grain.db, err = data.InitDB(*grain.conf)
 	if err != nil {
 		return
 	}
 
-	r.rdb, err = data.InitRedis()
+	grain.rdb, err = data.InitRedis()
 	if err != nil {
 		return
 	}
 
-	r.enforcer = service.NewCasbin(r.db)
+	grain.enforcer = service.NewCasbin(grain.db)
 
 	return
 }
 
-func (r *Grain) InitRouter() {
-	r.engine = gin.Default()
-	gin.SetMode(r.conf.Gin.Model)
-	r.engine.Use(middleware.Cors())
+type InitRouter struct{}
 
-	routerGroup := r.engine.Group("api/v1")
-	r.engine.NoRoute(func(ctx *gin.Context) {
+func (InitRouter) init(grain *Grain) (err error) {
+	grain.engine = gin.Default()
+	gin.SetMode(grain.conf.Gin.Model)
+	grain.engine.Use(middleware.Cors())
+
+	routerGroup := grain.engine.Group("api/v1")
+	grain.engine.NoRoute(func(ctx *gin.Context) {
 		reply := response.Response{}
 		reply.WithCode(404).WithMessage("请求路径不正确").Fail(ctx)
 	})
 
 	sysRouter.InitRouterSwag(routerGroup)
-	sysRouter.NewCaptchaRouter(routerGroup, r.rdb, r.conf, r.sysLog).InitRouters()
-	sysRouter.NewSysLogRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewApiRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitApi()
-	sysRouter.NewOrganizeRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewMenuRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitMenu()
-	sysRouter.NewRoleRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitRole()
-	sysRouter.NewUploadRouter(routerGroup, r.engine, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewCasbinRouter(routerGroup, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters().InitCasbin()
-	sysRouter.NewCodeAssistantRouter(routerGroup, r.db, r.rdb, r.conf, r.sysLog, r.enforcer).InitRouters()
-	sysRouter.NewSysUserRouter(r.engine, routerGroup, r.rdb, r.conf, r.enforcer, r.sysLog).InitRouters().InitUser()
+	sysRouter.NewCaptchaRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog).InitRouters()
+	sysRouter.NewSysLogRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters()
+	sysRouter.NewApiRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters().InitApi()
+	sysRouter.NewOrganizeRouter(routerGroup, grain.db, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters()
+	sysRouter.NewMenuRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters().InitMenu()
+	sysRouter.NewRoleRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters().InitRole()
+	sysRouter.NewUploadRouter(routerGroup, grain.engine, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters()
+	sysRouter.NewCasbinRouter(routerGroup, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters().InitCasbin()
+	sysRouter.NewCodeAssistantRouter(routerGroup, grain.db, grain.rdb, grain.conf, grain.sysLog, grain.enforcer).InitRouters()
+	sysRouter.NewSysUserRouter(grain.engine, routerGroup, grain.rdb, grain.conf, grain.enforcer, grain.sysLog).InitRouters().InitUser()
+	return nil
 }
 
-func (r *Grain) RunGin() {
-	if err := r.engine.Run(r.conf.Gin.Host); err != nil {
-		panic(err)
-	}
-}
+type RunGin struct{}
 
-func (r *Grain) InitGenQuery() {
-	query.SetDefault(r.db)
-}
-
-func (r *Grain) LoadPolicy() {
-	if err := r.enforcer.LoadPolicy(); err != nil {
-		panic(err)
-	}
-}
-
-func Run() {
-	grain := Grain{}
-
-	if err := grain.InitConf(); err != nil {
-		panic(err)
-	}
-
-	grain.InitGenQuery()
-
-	grain.InitRouter()
-
-	grain.LoadPolicy()
-
+func (RunGin) init(grain *Grain) (err error) {
 	go func() {
 		time.Sleep(time.Second * 1)
 		fmt.Println("swag文档地址:http://127.0.0.1:8080/api/v1/swagger/index.html")
 	}()
+	if err := grain.engine.Run(grain.conf.Gin.Host); err != nil {
+		return err
+	}
+	return nil
+}
 
-	grain.RunGin()
+type InitGenQuery struct{}
+
+func (InitGenQuery) init(grain *Grain) (err error) {
+	query.SetDefault(grain.db)
+	return nil
+}
+
+type LoadPolicy struct{}
+
+func (LoadPolicy) init(grain *Grain) (err error) {
+	if err := grain.enforcer.LoadPolicy(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (Grain) Do(grain *Grain, init []IInit) {
+	for _, iInit := range init {
+		err := iInit.init(grain)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+func Run() {
+
+	grain := Grain{}
+	init := []IInit{
+		&InitConf{},
+		&InitGenQuery{},
+		&LoadPolicy{},
+		&InitRouter{},
+		&RunGin{},
+	}
+
+	grain.Do(&grain, init)
+
 }
