@@ -17,11 +17,12 @@ package upload
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
 	model "github.com/go-grain/grain/model/system"
+	filex "github.com/go-grain/grain/pkg/path"
+	randx "github.com/go-grain/grain/pkg/rand"
+	stringsx "github.com/go-grain/grain/pkg/strings"
 	"io"
 	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -43,13 +44,13 @@ func UploadFile(ctx *gin.Context, classify string) (*model.Upload, error) {
 	path := fmt.Sprintf("uploads/%s/%d/%d-%d/", classify, y, m, d)
 	filename := ""
 
-	e := utils.Ext(file.Filename)
+	e := stringsx.Ext(file.Filename)
 	if e == "" {
-		filename = path + utils.RandomCharset(5)
+		filename = path + randx.RandomCharset(5)
 	}
-	filename = path + utils.RandomCharset(5) + "." + e
+	filename = path + randx.RandomCharset(5) + "." + e
 
-	exist := utils.PathIsNotExist(path)
+	exist := filex.PathIsNotExist(path)
 	if exist {
 		err = os.MkdirAll(path, os.ModePerm)
 		if err != nil {
@@ -58,10 +59,10 @@ func UploadFile(ctx *gin.Context, classify string) (*model.Upload, error) {
 	}
 
 	// 检测重名
-	if !utils.FileIsNotExist(filename) {
+	if !filex.FileIsNotExist(filename) {
 		for { //慢慢找一个和本地文件名不重复的随机字符串做文件名
-			filename = path + utils.RandomCharset(5) + "." + e
-			if !utils.FileIsNotExist(filename) {
+			filename = path + randx.RandomCharset(5) + "." + e
+			if !filex.FileIsNotExist(filename) {
 				continue
 			} else {
 				break
@@ -80,14 +81,14 @@ func UploadFile(ctx *gin.Context, classify string) (*model.Upload, error) {
 		return nil, err
 	}
 
-	ext := filepath.Ext(file.Filename)
+	ext := stringsx.Ext(file.Filename)
 	fileType := ""
 	switch ext {
 	case ".jpg", ".jpeg", ".png":
 		fileType = "图片 "
 	case ".zip", ".gz", "7z":
 		fileType = "压缩包"
-	case ".mp4", ".mov", "flv", "mp3":
+	case ".mp4", ".mov", ".mkv", "flv", "mp3":
 		fileType = "音视频"
 	case ".go":
 		fileType = "Go文件"

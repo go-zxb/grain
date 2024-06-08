@@ -18,11 +18,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type IMenuRepo interface {
@@ -43,12 +43,12 @@ type IMenuRepo interface {
 
 type MenuService struct {
 	repo IMenuRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewMenuService(repo IMenuRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *MenuService {
+func NewMenuService(repo IMenuRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *MenuService {
 	return &MenuService{
 		repo: repo,
 		rdb:  rdb,

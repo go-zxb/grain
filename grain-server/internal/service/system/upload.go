@@ -17,10 +17,10 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/log"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type IUploadRepo interface {
@@ -32,12 +32,12 @@ type IUploadRepo interface {
 
 type UploadService struct {
 	repo IUploadRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewUploadService(repo IUploadRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *UploadService {
+func NewUploadService(repo IUploadRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *UploadService {
 	return &UploadService{
 		repo: repo,
 		rdb:  rdb,

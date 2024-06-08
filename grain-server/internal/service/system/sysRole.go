@@ -17,11 +17,11 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"github.com/go-grain/grain/utils/const"
 	"strings"
 )
@@ -36,12 +36,12 @@ type IRoleRepo interface {
 
 type RoleService struct {
 	repo IRoleRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewRoleService(repo IRoleRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *RoleService {
+func NewRoleService(repo IRoleRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *RoleService {
 	return &RoleService{
 		repo: repo,
 		rdb:  rdb,

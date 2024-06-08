@@ -18,25 +18,26 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	gEmail "github.com/go-grain/go-utils/email"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/convert"
+	emailx "github.com/go-grain/grain/pkg/email"
+	randx "github.com/go-grain/grain/pkg/rand"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/jordan-wright/email"
 	"strings"
 )
 
 type CaptchaService struct {
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewCaptcha(rdb redis.IRedis, conf *config.Config, logger log.Logger) *CaptchaService {
+func NewCaptcha(rdb redisx.IRedis, conf *config.Config, logger log.Logger) *CaptchaService {
 	return &CaptchaService{rdb: rdb, conf: conf, log: log.NewHelper(logger)}
 }
 
@@ -51,7 +52,7 @@ func (s *CaptchaService) SendMobileCaptcha(mobile *model.Mobile, ctx *gin.Contex
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
+	captcha := randx.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.ClientIP(), captcha), captcha, 300)
 	if err != nil {
@@ -77,7 +78,7 @@ func (s *CaptchaService) SendUserEmailCaptcha(ctx *gin.Context) error {
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
+	captcha := randx.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.GetString("uid"), captcha), captcha, 300)
 	if err != nil {
@@ -105,7 +106,7 @@ func (s *CaptchaService) SendUserMobileCaptcha(ctx *gin.Context) error {
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
+	captcha := randx.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.GetString("uid"), captcha), captcha, 300)
 	if err != nil {
@@ -129,7 +130,7 @@ func (s *CaptchaService) SendEmailCaptcha(req *model.Email, ctx *gin.Context) er
 		return errors.New("频繁请求")
 	}
 
-	captcha := utils.RandomInt64(config.GetConfig().System.CaptchaLength)
+	captcha := randx.RandomInt64(config.GetConfig().System.CaptchaLength)
 
 	err = s.rdb.SetInt(fmt.Sprintf("captcha:%s:%d", ctx.ClientIP(), captcha), captcha, 300)
 	if err != nil {
@@ -154,7 +155,7 @@ func (s *CaptchaService) Send(xemail string, captcha int64, ctx *gin.Context) er
 	//设置文件发送的内容
 	e.HTML = []byte(fmt.Sprintf("<html><body><h4>你的验证码是: <br>%d</h4></body></html>", captcha))
 
-	emailServer, err := gEmail.NewMailServer(s.conf.SysEmail.EmailUsername, s.conf.SysEmail.EmailPassword, s.conf.SysEmail.EmailHost, s.conf.SysEmail.EmailHost, utils.Int2String(s.conf.SysEmail.EmailPort))
+	emailServer, err := emailx.NewMailServer(s.conf.SysEmail.EmailUsername, s.conf.SysEmail.EmailPassword, s.conf.SysEmail.EmailHost, s.conf.SysEmail.EmailHost, convert.Int2String(s.conf.SysEmail.EmailPort))
 	if err != nil {
 		xlog.Error("初始化Email服务失败", emailServer)
 		return errors.New("获取验证码失败 请检查邮箱服务配置")
@@ -196,7 +197,7 @@ func (s *CaptchaService) CustomEmail(req *model.Email, subject, HTML string) err
 	//设置文件发送的内容
 	e.HTML = []byte(HTML)
 
-	emailServer, err := gEmail.NewMailServer(s.conf.SysEmail.EmailUsername, s.conf.SysEmail.EmailPassword, s.conf.SysEmail.EmailHost, s.conf.SysEmail.EmailHost, utils.Int2String(s.conf.SysEmail.EmailPort))
+	emailServer, err := emailx.NewMailServer(s.conf.SysEmail.EmailUsername, s.conf.SysEmail.EmailPassword, s.conf.SysEmail.EmailHost, s.conf.SysEmail.EmailHost, convert.Int2String(s.conf.SysEmail.EmailPort))
 	if err != nil {
 		xlog.Error("初始化Email服务失败", emailServer)
 		return errors.New("请检查邮箱服务配置")

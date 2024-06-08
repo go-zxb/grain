@@ -15,18 +15,18 @@
 package repo
 
 import (
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type MenuRepo struct {
-	rdb   redis.IRedis
+	rdb   redisx.IRedis
 	query *query.Query
 }
 
-func NewMenuRepo(rdb redis.IRedis) service.IMenuRepo {
+func NewMenuRepo(rdb redisx.IRedis) service.IMenuRepo {
 	return &MenuRepo{
 		rdb:   rdb,
 		query: query.Q,

@@ -17,13 +17,13 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type UploadRouter struct {
@@ -34,7 +34,7 @@ type UploadRouter struct {
 	api             *handler.UploadHandle
 }
 
-func NewUploadRouter(routerGroup *gin.RouterGroup, engine *gin.Engine, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *UploadRouter {
+func NewUploadRouter(routerGroup *gin.RouterGroup, engine *gin.Engine, rdb redisx.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *UploadRouter {
 	data := repo.NewUploadRepo(rdb)
 	sv := service.NewUploadService(data, rdb, conf, logger)
 	return &UploadRouter{

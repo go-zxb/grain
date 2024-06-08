@@ -3,10 +3,10 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/log"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -22,12 +22,12 @@ type IOrganizeRepo interface {
 
 type OrganizeService struct {
 	repo IOrganizeRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewOrganizeService(repo IOrganizeRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *OrganizeService {
+func NewOrganizeService(repo IOrganizeRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *OrganizeService {
 	return &OrganizeService{
 		repo: repo,
 		rdb:  rdb,

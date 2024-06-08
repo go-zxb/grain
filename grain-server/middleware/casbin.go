@@ -17,7 +17,7 @@ package middleware
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/response"
+	"github.com/go-grain/grain/pkg/response"
 	"net/http"
 )
 

@@ -16,10 +16,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/convert"
+	"github.com/go-grain/grain/pkg/response"
 	"github.com/go-grain/grain/utils/const"
 )
 
@@ -132,7 +132,7 @@ func (r *RoleHandle) UpdateRole(ctx *gin.Context) {
 // @Router /sysRole [delete]
 func (r *RoleHandle) DeleteRoleById(ctx *gin.Context) {
 	reply := r.res.New()
-	role := utils.String2Int(ctx.Query("id"))
+	role := convert.String2Int(ctx.Query("id"))
 	if role == 0 {
 		reply.WithCode(consts.ReqFail).WithMessage("ID不能为空").Fail(ctx)
 		return

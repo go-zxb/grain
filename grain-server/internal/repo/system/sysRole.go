@@ -16,18 +16,18 @@ package repo
 
 import (
 	"fmt"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type RoleRepo struct {
-	rdb   redis.IRedis
+	rdb   redisx.IRedis
 	query *query.Query
 }
 
-func NewRoleRepo(rdb redis.IRedis) service.IRoleRepo {
+func NewRoleRepo(rdb redisx.IRedis) service.IRoleRepo {
 	return &RoleRepo{
 		rdb:   rdb,
 		query: query.Q,

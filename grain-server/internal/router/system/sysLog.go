@@ -17,13 +17,13 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type SysLogRouter struct {
@@ -31,7 +31,7 @@ type SysLogRouter struct {
 	api             *handler.SysLogHandle
 }
 
-func NewSysLogRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *SysLogRouter {
+func NewSysLogRouter(routerGroup *gin.RouterGroup, rdb redisx.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *SysLogRouter {
 	mongoDB, err := repo.NewMongoDBRepo(rdb, conf.DataBase.Mongo.URL, "grain", "sysLog")
 	if err != nil {
 		panic(err)

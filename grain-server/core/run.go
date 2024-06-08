@@ -18,8 +18,6 @@ import (
 	"fmt"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
-	"github.com/go-grain/go-utils/response"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/data"
 	"github.com/go-grain/grain/internal/repo/system/query"
@@ -27,6 +25,8 @@ import (
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	"github.com/go-grain/grain/pkg/response"
 	"gorm.io/gorm"
 	"os"
 	"time"
@@ -52,7 +52,7 @@ type Grain struct {
 	sysLog   log.Logger
 	engine   *gin.Engine
 	conf     *config.Config
-	rdb      redis.IRedis
+	rdb      redisx.IRedis
 	enforcer *casbin.CachedEnforcer
 }
 

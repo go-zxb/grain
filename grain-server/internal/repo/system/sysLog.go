@@ -17,11 +17,11 @@ package repo
 import (
 	"context"
 	"fmt"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/data"
 	service "github.com/go-grain/grain/internal/service/system"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	timex "github.com/go-grain/grain/pkg/time"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"strings"
@@ -32,10 +32,10 @@ import (
 
 type MongoDBRepo struct {
 	data.MongoDB
-	rdb redis.IRedis
+	rdb redisx.IRedis
 }
 
-func NewMongoDBRepo(rdb redis.IRedis, mongoUrl, dbName, collectionName string) (service.ISysLogRepo, error) {
+func NewMongoDBRepo(rdb redisx.IRedis, mongoUrl, dbName, collectionName string) (service.ISysLogRepo, error) {
 	mongoDB := MongoDBRepo{rdb: rdb}
 	return &mongoDB, mongoDB.NewMongoDBRepo(mongoUrl, dbName, collectionName)
 }
@@ -80,8 +80,8 @@ func (r *MongoDBRepo) GetSysLogList(req *model.SysLogReq) ([]*model.SysLog, erro
 		t := strings.Split(req.QueryTime, ",")
 		if len(t) == 2 {
 			filter["created_at"] = bson.M{
-				"$gte": utils.GetStringToDate(t[0], utils.YMD), // 开始时间
-				"$lte": utils.GetStringToDate(t[1], utils.YMD), // 结束时间
+				"$gte": timex.GetStringToDate(t[0], timex.YMD), // 开始时间
+				"$lte": timex.GetStringToDate(t[1], timex.YMD), // 结束时间
 			}
 		}
 	}

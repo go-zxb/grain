@@ -15,19 +15,19 @@
 package repo
 
 import (
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type ApiRepo struct {
-	rdb    redis.IRedis
+	rdb    redisx.IRedis
 	casbin service.ICasbinRepo
 	query  *query.Query
 }
 
-func NewApiRepo(rdb redis.IRedis) service.IApiRepo {
+func NewApiRepo(rdb redisx.IRedis) service.IApiRepo {
 	return &ApiRepo{
 		rdb:    rdb,
 		casbin: NewCasbinRepo(),

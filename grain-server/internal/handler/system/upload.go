@@ -16,11 +16,11 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	xjson "github.com/go-grain/go-utils/json"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	_ "github.com/go-grain/grain/model/system"
 	model "github.com/go-grain/grain/model/system"
+	jsonx "github.com/go-grain/grain/pkg/encoding/json"
+	"github.com/go-grain/grain/pkg/response"
 	consts "github.com/go-grain/grain/utils/const"
 	"github.com/go-grain/grain/utils/upload"
 	"strconv"
@@ -64,7 +64,7 @@ func (r *UploadHandle) UploadFile(ctx *gin.Context) {
 		reply.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	reply.WithMessage("上传文件成功").WithData(xjson.G{"fileUrl": file.FileUrl}).Success(ctx)
+	reply.WithMessage("上传文件成功").WithData(jsonx.G{"fileUrl": file.FileUrl}).Success(ctx)
 }
 
 // GetUploadList

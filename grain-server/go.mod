@@ -9,7 +9,6 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.25.0
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-grain/go-utils v1.0.1
 	github.com/go-pay/gopay v1.5.95
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/redis/go-redis/v9 v9.5.2

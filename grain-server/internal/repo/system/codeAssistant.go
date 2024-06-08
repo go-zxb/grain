@@ -15,22 +15,22 @@
 package repo
 
 import (
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/data"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"gorm.io/gorm"
 )
 
 type CodeAssistantRepo struct {
 	db      *data.DB
-	rdb     redis.IRedis
+	rdb     redisx.IRedis
 	ApiRepo service.IApiRepo
 	query   *query.Query
 }
 
-func NewCodeAssistantRepo(db *gorm.DB, rdb redis.IRedis) service.ICodeAssistantRepo {
+func NewCodeAssistantRepo(db *gorm.DB, rdb redisx.IRedis) service.ICodeAssistantRepo {
 	return &CodeAssistantRepo{
 		db:      &data.DB{DB: db},
 		rdb:     rdb,

@@ -2,7 +2,7 @@ package model
 
 import (
 	"embed"
-	utils "github.com/go-grain/go-utils"
+	stringsx "github.com/go-grain/grain/pkg/strings"
 )
 
 type ViewCode struct {
@@ -118,9 +118,9 @@ type WebStruct struct {
 
 func (m *Models) GoFieldTo() {
 	//处理字段
-	m.Name = utils.ToLower(m.StructName)
-	m.ToLowerStructName = utils.ToLower(m.StructName)
-	m.StructName = utils.ToTitle(m.StructName)
+	m.Name = stringsx.ToLower(m.StructName)
+	m.ToLowerStructName = stringsx.ToLower(m.StructName)
+	m.StructName = stringsx.ToTitle(m.StructName)
 	for _, f := range m.Fields {
 
 		if f.Type == "" {
@@ -131,10 +131,10 @@ func (m *Models) GoFieldTo() {
 			f.JsonTag = f.Name
 		}
 
-		f.Type = utils.ToLower(f.Type)
-		f.Name = utils.ToTitle(f.Name)
-		f.NameLower = utils.ToLower(f.Name)
-		f.JsonTag = utils.ToLower(f.JsonTag)
+		f.Type = stringsx.ToLower(f.Type)
+		f.Name = stringsx.ToTitle(f.Name)
+		f.NameLower = stringsx.ToLower(f.Name)
+		f.JsonTag = stringsx.ToLower(f.JsonTag)
 
 	}
 }
@@ -150,9 +150,9 @@ func (m *Models) WebFieldToLower() {
 			f.Type = "string"
 		}
 
-		f.NameLower = utils.ToLower(f.Name)
-		f.Name = utils.ToLower(f.Name)
-		f.Type = utils.ToLower(f.Type)
+		f.NameLower = stringsx.ToLower(f.Name)
+		f.Name = stringsx.ToLower(f.Name)
+		f.Type = stringsx.ToLower(f.Type)
 
 	}
 }

@@ -20,7 +20,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
-	xjson "github.com/go-grain/go-utils/json"
+	"github.com/go-grain/grain/pkg/encoding/json"
 	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
 	"gorm.io/gorm/logger"
@@ -181,7 +181,7 @@ func InitConfig() (*Config, error) {
 
 	//为了push到github不暴露邮箱配置信息,放在别的地方解析过来,作为菜鸟的我,只能使用这种简单粗暴的方式实现了
 	if v.Gin.Model == "debug" {
-		_ = xjson.Unmarshal([]byte(emailData), &v.SysEmail)
+		_ = jsonx.Unmarshal([]byte(emailData), &v.SysEmail)
 	}
 
 	xViper = conf

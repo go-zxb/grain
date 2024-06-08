@@ -17,22 +17,23 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/redis"
-	"github.com/go-grain/go-utils/response"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	model "github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/encrypt"
+	jwtx "github.com/go-grain/grain/pkg/jwt"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	"github.com/go-grain/grain/pkg/response"
 	"github.com/go-grain/grain/utils/const"
 	"net/http"
 	"time"
 )
 
-func JwtAuth(rdb redis.IRedis) gin.HandlerFunc {
+func JwtAuth(rdb redisx.IRedis) gin.HandlerFunc {
 	conf := config.GetConfig()
 	return func(ctx *gin.Context) {
 		reply := response.Response{}
-		jwt := utils.Jwt{}
+		jwt := jwtx.Jwt{}
 		tokenString := ctx.GetHeader("G-Token")
 		tokenClaims, err := jwt.ParseToken(tokenString, conf.JWT.SecretKey)
 		if err != nil {
@@ -41,7 +42,7 @@ func JwtAuth(rdb redis.IRedis) gin.HandlerFunc {
 			return
 		}
 
-		black, _ := rdb.GetInt(fmt.Sprintf("%s%s", consts.TokenBlack, utils.MD5(tokenString)))
+		black, _ := rdb.GetInt(fmt.Sprintf("%s%s", consts.TokenBlack, encrypt.MD5(tokenString)))
 		switch black {
 		case 120:
 			reply.WithCode(http.StatusUnauthorized).WithMessage("账号进入黑名单列表,无法在继续为您服务").Fail(ctx)
@@ -74,12 +75,12 @@ func JwtAuth(rdb redis.IRedis) gin.HandlerFunc {
 		ctx.Set("expTokenAt", expired)
 		ctx.Set("uid", tokenClaims.Uid)
 		ctx.Set("role", tokenClaims.Role)
-		ctx.Set("token", utils.MD5(tokenString))
+		ctx.Set("token", encrypt.MD5(tokenString))
 		ctx.Next()
 	}
 }
 
-func SwitchRole(rdb redis.IRedis) gin.HandlerFunc {
+func SwitchRole(rdb redisx.IRedis) gin.HandlerFunc {
 	conf := config.GetConfig()
 	return func(ctx *gin.Context) {
 		reply := response.Response{}
@@ -101,7 +102,7 @@ func SwitchRole(rdb redis.IRedis) gin.HandlerFunc {
 		}
 		for _, s := range *sysUser.Roles {
 			if s == role {
-				jwt := utils.Jwt{}
+				jwt := jwtx.Jwt{}
 				token, _ := jwt.GenerateToken(ctx.GetString("uid"), role, conf.JWT.SecretKey, conf.JWT.ExpirationSeconds)
 				reply.WithMessage("切换角色成功").WithData(gin.H{"token": token}).Success(ctx)
 				ctx.Abort()

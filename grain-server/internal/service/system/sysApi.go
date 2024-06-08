@@ -18,11 +18,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"gorm.io/gorm"
 	"regexp"
 	"strings"
@@ -40,12 +40,12 @@ type IApiRepo interface {
 
 type ApiService struct {
 	repo IApiRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewApiService(repo IApiRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *ApiService {
+func NewApiService(repo IApiRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *ApiService {
 	return &ApiService{
 		repo: repo,
 		rdb:  rdb,

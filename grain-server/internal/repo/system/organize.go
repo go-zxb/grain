@@ -2,22 +2,22 @@ package repo
 
 import (
 	"fmt"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/data"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	stringsx "github.com/go-grain/grain/pkg/strings"
 	"gorm.io/gorm"
 )
 
 type OrganizeRepo struct {
 	db    *data.DB
-	rdb   redis.IRedis
+	rdb   redisx.IRedis
 	query *query.Query
 }
 
-func NewOrganizeRepo(db *gorm.DB, rdb redis.IRedis) service.IOrganizeRepo {
+func NewOrganizeRepo(db *gorm.DB, rdb redisx.IRedis) service.IOrganizeRepo {
 	//为了偷懒自动生成代码后直接在这里AutoMigrate,你可以放到data里面去统一管理
 	_ = db.AutoMigrate(model.Organize{})
 	//SetDefault 你也可以放到core>start文件里面去统一初始化
@@ -52,7 +52,7 @@ func (r *OrganizeRepo) GetOrganizeById(id uint) (organize *model.Organize, err e
 		if err != nil {
 			return nil, err
 		}
-		r.rdb.SetObject(utils.ToString(id), organize, 180)
+		r.rdb.SetObject(stringsx.ToString(id), organize, 180)
 	}
 	return
 }

@@ -17,18 +17,18 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type SysUserRouter struct {
 	// redis 实例对象
-	rdb redis.IRedis
+	rdb redisx.IRedis
 	// api handle
 	api *handler.SysUserHandle
 	// gin engine 干干净净的 engine
@@ -41,7 +41,7 @@ type SysUserRouter struct {
 	privateRoleAuth gin.IRoutes
 }
 
-func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, enforcer *casbin.CachedEnforcer, logger log.Logger) *SysUserRouter {
+func NewSysUserRouter(engine *gin.Engine, routerGroup *gin.RouterGroup, rdb redisx.IRedis, conf *config.Config, enforcer *casbin.CachedEnforcer, logger log.Logger) *SysUserRouter {
 	data := repo.NewSysUserRepo(rdb)
 	sv := service.NewSysUserService(data, rdb, conf, logger)
 	return &SysUserRouter{

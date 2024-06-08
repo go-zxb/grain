@@ -19,12 +19,13 @@ import (
 	"fmt"
 	"github.com/Xuanwo/gg"
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/goutil"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/log"
 	model "github.com/go-grain/grain/model/system"
+	fmtx "github.com/go-grain/grain/pkg/fmt"
+	filex "github.com/go-grain/grain/pkg/path"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	stringsx "github.com/go-grain/grain/pkg/strings"
 	"github.com/go-grain/grain/stencil"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"go/ast"
@@ -60,12 +61,12 @@ type ICodeAssistantRepo interface {
 
 type CodeAssistantService struct {
 	repo ICodeAssistantRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewCodeAssistantService(repo ICodeAssistantRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *CodeAssistantService {
+func NewCodeAssistantService(repo ICodeAssistantRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *CodeAssistantService {
 	return &CodeAssistantService{
 		repo: repo,
 		rdb:  rdb,
@@ -237,7 +238,7 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 		//modelData.ProjectName += "/.tmp"
 	}
 
-	modelData.FirstLetter = utils.ToLower(modelData.StructName[0:1])
+	modelData.FirstLetter = stringsx.ToLower(modelData.StructName[0:1])
 	if modelData.QueryTime == "yes" {
 		//处理是否支持前端按时间范围搜索数据
 		modelData.IsQueryCriteria = true
@@ -257,29 +258,29 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 
 		switch i {
 		case "model":
-			viewCode.Model = utils.ReadFile(m1.Filename)
+			viewCode.Model = filex.ReadFile(m1.Filename)
 		case "router":
-			viewCode.Router = utils.ReadFile(m1.Filename)
+			viewCode.Router = filex.ReadFile(m1.Filename)
 		case "handler":
-			viewCode.Handle = utils.ReadFile(m1.Filename)
+			viewCode.Handle = filex.ReadFile(m1.Filename)
 		case "service":
-			viewCode.Service = utils.ReadFile(m1.Filename)
+			viewCode.Service = filex.ReadFile(m1.Filename)
 		case "repo":
-			viewCode.Repo = utils.ReadFile(m1.Filename)
+			viewCode.Repo = filex.ReadFile(m1.Filename)
 		}
 	}
 	fields, _ = s.repo.GetFields(modelData.ID)
 	modelData.Fields = fields
 	s.WebGenerate(*modelData)
-	viewCode.APi = utils.ReadFile(fmt.Sprintf("%s/src/api/business/%s.ts", modelData.WebProjectPath, modelData.Name))
-	viewCode.Vue = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/index.vue", modelData.WebProjectPath, modelData.Name))
-	viewCode.ZhCN = utils.ReadFile(fmt.Sprintf("%s/src/views/business/%s/locale/zh-CN.ts", modelData.WebProjectPath, modelData.Name))
+	viewCode.APi = filex.ReadFile(fmt.Sprintf("%s/src/api/business/%s.ts", modelData.WebProjectPath, modelData.Name))
+	viewCode.Vue = filex.ReadFile(fmt.Sprintf("%s/src/views/business/%s/index.vue", modelData.WebProjectPath, modelData.Name))
+	viewCode.ZhCN = filex.ReadFile(fmt.Sprintf("%s/src/views/business/%s/locale/zh-CN.ts", modelData.WebProjectPath, modelData.Name))
 
 	fields, _ = s.repo.GetFields(modelData.ID)
 	modelData.Fields = fields
 	s.FlutterGenerate(*modelData)
-	viewCode.FlutterModel = utils.ReadFile(fmt.Sprintf("%s/flutter/models/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
-	viewCode.FlutterAPi = utils.ReadFile(fmt.Sprintf("%s/flutter/api/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
+	viewCode.FlutterModel = filex.ReadFile(fmt.Sprintf("%s/flutter/models/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
+	viewCode.FlutterAPi = filex.ReadFile(fmt.Sprintf("%s/flutter/api/%s/%s.dart", modelData.WebProjectPath, modelData.Name, modelData.Name))
 
 	err = GenBuild(modelData)
 	if err != nil {
@@ -290,7 +291,7 @@ func (s *CodeAssistantService) ViewCode(mId uint, ctx *gin.Context) (*model.View
 		return nil, err
 	}
 
-	//_ = os.RemoveAll(".tmp")
+	//_ = path.RemoveAll(".tmp")
 	return &viewCode, nil
 }
 
@@ -337,7 +338,7 @@ func (s *CodeAssistantService) GenerateCode(mid uint, forceBuild uint, ctx *gin.
 		modelData.ProjectName += "/.tmp"
 	}
 
-	modelData.FirstLetter = utils.ToLower(modelData.StructName[0:1])
+	modelData.FirstLetter = stringsx.ToLower(modelData.StructName[0:1])
 	if modelData.QueryTime == "yes" {
 		//处理是否支持前端按时间范围搜索数据
 		modelData.IsQueryCriteria = true
@@ -387,17 +388,17 @@ g.Execute()`
 	f.NewImport().
 		AddPath(fmt.Sprintf("%s/model/%s", model.ProjectName, model.Name)).
 		AddPath("gorm.io/gen")
-	f.NewFunction(fmt.Sprintf("%sGenBuildQuery", utils.ToTitle(model.StructName))).AddBody(
+	f.NewFunction(fmt.Sprintf("%sGenBuildQuery", stringsx.ToTitle(model.StructName))).AddBody(
 		gg.String(code),
 	)
 
 	filename := fmt.Sprintf("%s/cmd/gen/%s/%s.go", model.ProjectPath, model.Name, model.Name)
 	filepath := fmt.Sprintf("%s/cmd/gen/%s", model.ProjectPath, model.Name)
-	if !utils.FileIsNotExist(filename) {
+	if !filex.FileIsNotExist(filename) {
 		_ = os.Remove(filename)
 	}
 
-	if utils.PathIsNotExist(filepath) {
+	if filex.PathIsNotExist(filepath) {
 		err := os.MkdirAll(filepath, os.ModePerm)
 		if err != nil {
 			return err
@@ -415,7 +416,7 @@ g.Execute()`
 	if err != nil {
 		return err
 	}
-	err = goutil.FmtCode(filename)
+	err = fmtx.FmtCode(filename)
 	if err != nil {
 		return err
 	}
@@ -480,7 +481,7 @@ func InjectGenBuild(model *model.Models) error {
 		return err
 	}
 
-	if err = goutil.FmtCode(filename); err != nil {
+	if err = fmtx.FmtCode(filename); err != nil {
 		return err
 	}
 	return nil
@@ -489,7 +490,7 @@ func InjectGenBuild(model *model.Models) error {
 func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (err error) {
 	dir := p.FilePath
 	//检查目录是否存在
-	exists := utils.PathIsNotExist(dir)
+	exists := filex.PathIsNotExist(dir)
 
 	if exists {
 		err = os.MkdirAll(dir, os.ModePerm)
@@ -512,7 +513,7 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 	rt = strings.ReplaceAll(rt, "{{ModelNameB}}", m.Name)
 	rt = strings.ReplaceAll(rt, "{{a-model}}", m.Name)
 	rt = strings.ReplaceAll(rt, "{{c-First}}", m.FirstLetter)
-	rt = strings.ReplaceAll(rt, "{{s-model}}", utils.ToTitle(m.Name))
+	rt = strings.ReplaceAll(rt, "{{s-model}}", stringsx.ToTitle(m.Name))
 
 	if p.Type == "query" {
 		for _, field := range m.Fields {
@@ -522,13 +523,13 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 			case "time.Time":
 				field.Type = "time"
 			}
-			field.Type = utils.ToTitle(field.Type)
+			field.Type = stringsx.ToTitle(field.Type)
 		}
 	} else {
 		m.GoFieldTo()
 	}
 
-	temp, err := template.New(utils.ToLower(p.Type)).Parse(rt)
+	temp, err := template.New(stringsx.ToLower(p.Type)).Parse(rt)
 	if err != nil {
 		xlog.Error(err)
 		return err
@@ -536,7 +537,7 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 
 	filename := p.Filename
 	//检查文件是否存在
-	exists = utils.FileIsNotExist(filename)
+	exists = filex.FileIsNotExist(filename)
 
 	if s.conf.Gin.Model == "debug" {
 		_ = os.Remove(filename)
@@ -560,14 +561,14 @@ func (s *CodeAssistantService) generateCode(m model.Models, p model.CodePath) (e
 		return err
 	}
 	//格式化代码
-	_ = utils.FormatGoCode(filename)
+	_ = fmtx.FormatGoCode(filename)
 	return nil
 }
 
 func tmplateData(m model.Models) (map[string]*model.CodePath, error) {
 	//把所有相关信息都存放在一个map里面
 	maps := make(map[string]*model.CodePath)
-	name := utils.ToLower(m.StructName)
+	name := stringsx.ToLower(m.StructName)
 
 	if m.DatabaseName == mysql {
 		maps["apim"] = &model.CodePath{
@@ -641,7 +642,7 @@ func (s *CodeAssistantService) WebGenerate(m model.Models) []string {
 		m.WebProjectPath = path[:len(path)-1]
 	}
 
-	name := utils.ToLower(m.StructName)
+	name := stringsx.ToLower(m.StructName)
 	mm["web_index.vue"] = &model.CodePath{
 		FS:           &stencil.WebTemplateFS,
 		TemplatePath: "web/vue.grain",
@@ -710,7 +711,7 @@ func (s *CodeAssistantService) WebGenerate(m model.Models) []string {
 
 func (s *CodeAssistantService) WebGeneratedCode(m model.Models, web *model.CodePath) (err error) {
 	//检查目录是否存在
-	exists := utils.PathIsNotExist(web.FilePath)
+	exists := filex.PathIsNotExist(web.FilePath)
 	if err != nil {
 		xlog.Error(err)
 		return err
@@ -736,14 +737,14 @@ func (s *CodeAssistantService) WebGeneratedCode(m model.Models, web *model.CodeP
 	rt = strings.ReplaceAll(rt, "{{ModelNameA}}", m.StructName)
 	rt = strings.ReplaceAll(rt, "{{ModelNameB}}", m.Name)
 
-	temp, err := template.New(utils.ToLower(m.Type)).Parse(rt)
+	temp, err := template.New(stringsx.ToLower(m.Type)).Parse(rt)
 	if err != nil {
 		xlog.Info(err, "New模版失败", web.TemplatePath)
 		return err
 	}
 
 	//检查文件是否存在
-	exists = utils.FileIsNotExist(web.Filename)
+	exists = filex.FileIsNotExist(web.Filename)
 
 	if s.conf.Gin.Model == "debug" {
 		_ = os.Remove(web.Filename)
@@ -777,7 +778,7 @@ func (s *CodeAssistantService) FlutterGenerate(m model.Models) []string {
 		m.WebProjectPath = path[:len(path)-1]
 	}
 
-	name := utils.ToLower(m.StructName)
+	name := stringsx.ToLower(m.StructName)
 	mm["model.dart"] = &model.CodePath{
 		FS:           &stencil.FlutterTemplateFS,
 		TemplatePath: "flutter/model.grain",
@@ -807,7 +808,7 @@ func (s *CodeAssistantService) FlutterGenerate(m model.Models) []string {
 func (s *CodeAssistantService) FlutterGeneratedCode(m model.Models, flutter *model.CodePath) (err error) {
 
 	//检查目录是否存在
-	exists := utils.PathIsNotExist(flutter.FilePath)
+	exists := filex.PathIsNotExist(flutter.FilePath)
 	if err != nil {
 		xlog.Error(err)
 		return err
@@ -829,14 +830,14 @@ func (s *CodeAssistantService) FlutterGeneratedCode(m model.Models, flutter *mod
 	}
 	rt := string(b)
 
-	temp, err := template.New(utils.ToLower(m.Type)).Parse(rt)
+	temp, err := template.New(stringsx.ToLower(m.Type)).Parse(rt)
 	if err != nil {
 		xlog.Info(err, "New模版失败", flutter.TemplatePath)
 		return err
 	}
 
 	//检查文件是否存在
-	exists = utils.FileIsNotExist(flutter.Filename)
+	exists = filex.FileIsNotExist(flutter.Filename)
 
 	if s.conf.Gin.Model == "debug" {
 		_ = os.Remove(flutter.Filename)

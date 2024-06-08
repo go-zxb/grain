@@ -16,20 +16,20 @@ package repo
 
 import (
 	"fmt"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	timex "github.com/go-grain/grain/pkg/time"
 	"strings"
 )
 
 type UploadRepo struct {
-	rdb   redis.IRedis
+	rdb   redisx.IRedis
 	query *query.Query
 }
 
-func NewUploadRepo(rdb redis.IRedis) service.IUploadRepo {
+func NewUploadRepo(rdb redisx.IRedis) service.IUploadRepo {
 	return &UploadRepo{
 		rdb:   rdb,
 		query: query.Q,
@@ -54,8 +54,8 @@ func (r *UploadRepo) GetUploadList(req *model.UploadReq) (list []*model.Upload, 
 	if req.QueryTime != "" {
 		t := strings.Split(req.QueryTime, ",")
 		if len(t) == 2 {
-			s := utils.GetStringToDate(t[0], utils.YMD)
-			e := utils.GetStringToDate(t[1], utils.YMD)
+			s := timex.GetStringToDate(t[0], timex.YMD)
+			e := timex.GetStringToDate(t[1], timex.YMD)
 			q.Where(r.query.Upload.CreatedAt.Between(s, e))
 		}
 	}

@@ -17,10 +17,10 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/log"
 	model "github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -33,12 +33,12 @@ type ISysLogRepo interface {
 
 type SysLogService struct {
 	repo ISysLogRepo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func NewSysLogService(repo ISysLogRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *SysLogService {
+func NewSysLogService(repo ISysLogRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *SysLogService {
 	return &SysLogService{
 		repo: repo,
 		rdb:  rdb,

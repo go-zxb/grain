@@ -16,10 +16,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	model "github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/convert"
+	"github.com/go-grain/grain/pkg/response"
 	"github.com/go-grain/grain/utils/const"
 )
 
@@ -182,7 +182,7 @@ func (r *ApiHandle) UpdateApi(ctx *gin.Context) {
 // @Router /sysApi [delete]
 func (r *ApiHandle) DeleteApiById(ctx *gin.Context) {
 	reply := r.res.New()
-	id := utils.String2Int(ctx.Query("id"))
+	id := convert.String2Int(ctx.Query("id"))
 	if id == 0 {
 		reply.WithCode(consts.InvalidParameter).WithMessage("参数不能为空").Fail(ctx)
 		return

@@ -17,13 +17,13 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +33,7 @@ type CodeFactoryRouter struct {
 	api     *handler.CodeAssistantHandle
 }
 
-func NewCodeAssistantRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *CodeFactoryRouter {
+func NewCodeAssistantRouter(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redisx.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *CodeFactoryRouter {
 	data := repo.NewCodeAssistantRepo(db, rdb)
 	sv := service.NewCodeAssistantService(data, rdb, conf, logger)
 	return &CodeFactoryRouter{

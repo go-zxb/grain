@@ -16,10 +16,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/convert"
+	"github.com/go-grain/grain/pkg/response"
 	consts "github.com/go-grain/grain/utils/const"
 	"strconv"
 )
@@ -219,7 +219,7 @@ func (r *CodeAssistantHandle) UpdateField(ctx *gin.Context) {
 func (r *CodeAssistantHandle) ViewCode(ctx *gin.Context) {
 	res := r.res.New()
 	mid := ctx.Query("mid")
-	data, err := r.sv.ViewCode(uint(utils.String2Int(mid)), ctx)
+	data, err := r.sv.ViewCode(uint(convert.String2Int(mid)), ctx)
 	if err != nil {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)
 		return
@@ -243,8 +243,8 @@ func (r *CodeAssistantHandle) ViewCode(ctx *gin.Context) {
 // @Router /generateCode [post]
 func (r *CodeAssistantHandle) GenerateCode(ctx *gin.Context) {
 	res := r.res.New()
-	mid := utils.String2Int(ctx.Query("mid"))
-	forceBuild := utils.String2Int(ctx.Query("fb"))
+	mid := convert.String2Int(ctx.Query("mid"))
+	forceBuild := convert.String2Int(ctx.Query("fb"))
 	err := r.sv.GenerateCode(uint(mid), uint(forceBuild), ctx)
 	if err != nil {
 		res.WithCode(consts.ReqFail).WithMessage(err.Error()).Fail(ctx)

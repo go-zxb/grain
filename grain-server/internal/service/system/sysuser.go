@@ -18,13 +18,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	utils "github.com/go-grain/go-utils"
-	"github.com/go-grain/go-utils/encrypt"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/encrypt"
+	jwtx "github.com/go-grain/grain/pkg/jwt"
+	redisx "github.com/go-grain/grain/pkg/redis"
+	uuidx "github.com/go-grain/grain/pkg/uuid"
 	"github.com/go-grain/grain/utils/const"
 	"net/url"
 	"strings"
@@ -47,13 +48,13 @@ type ISysUserRepo interface {
 
 type SysUserService struct {
 	repo    ISysUserRepo
-	rdb     redis.IRedis
+	rdb     redisx.IRedis
 	conf    *config.Config
 	log     *log.Helper
 	captcha *CaptchaService
 }
 
-func NewSysUserService(repo ISysUserRepo, rdb redis.IRedis, conf *config.Config, logger log.Logger) *SysUserService {
+func NewSysUserService(repo ISysUserRepo, rdb redisx.IRedis, conf *config.Config, logger log.Logger) *SysUserService {
 	return &SysUserService{
 		repo:    repo,
 		rdb:     rdb,
@@ -67,8 +68,8 @@ func (s *SysUserService) InitSysUser() error {
 	defaultAdminRole := s.conf.System.DefaultAdminRole
 	defaultRole := s.conf.System.DefaultRole
 	sysUser := []*model.SysUser{
-		{UID: utils.UID(), Nickname: "张漳", Username: "admin", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultAdminRole, defaultRole}, Role: defaultAdminRole, Status: "yes"},
-		{UID: utils.UID(), Nickname: "张漳", Username: "grain", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultRole}, Role: defaultRole, Status: "yes"},
+		{UID: uuidx.UID(), Nickname: "张漳", Username: "admin", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultAdminRole, defaultRole}, Role: defaultAdminRole, Status: "yes"},
+		{UID: uuidx.UID(), Nickname: "张漳", Username: "grain", Password: encrypt.EncryptPassword("public"), Roles: &model.Roles{defaultRole}, Role: defaultRole, Status: "yes"},
 	}
 	q := query.Q.SysUser
 	count, err := q.Count()
@@ -101,7 +102,7 @@ func (s *SysUserService) Login(login *model.LoginReq, ctx *gin.Context) (string,
 		return "", errors.New("账号已被冻结,无法正常登录")
 	}
 
-	jwt := utils.Jwt{}
+	jwt := jwtx.Jwt{}
 	token, err := jwt.GenerateToken(user.UID, user.Role, s.conf.JWT.SecretKey, s.conf.JWT.ExpirationSeconds)
 	if err != nil {
 		s.log.Errorw("errMsg", "用户登录", "err", err.Error())
@@ -146,7 +147,7 @@ func (s *SysUserService) LogOut(ctx *gin.Context) error {
 }
 
 func (s *SysUserService) CreateSysUser(sysUser *model.SysUser, ctx *gin.Context) error {
-	sysUser.UID = utils.UID()
+	sysUser.UID = uuidx.UID()
 	sysUser.ID = 0
 	sysUser.Password = encrypt.EncryptPassword(sysUser.Password)
 

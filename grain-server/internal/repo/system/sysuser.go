@@ -15,18 +15,18 @@
 package repo
 
 import (
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/internal/repo/system/query"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type SysUserRepo struct {
-	rdb   redis.IRedis
+	rdb   redisx.IRedis
 	query *query.Query
 }
 
-func NewSysUserRepo(rdb redis.IRedis) service.ISysUserRepo {
+func NewSysUserRepo(rdb redisx.IRedis) service.ISysUserRepo {
 	return &SysUserRepo{
 		rdb:   rdb,
 		query: query.Q,

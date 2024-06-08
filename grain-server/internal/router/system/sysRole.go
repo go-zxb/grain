@@ -17,13 +17,13 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type RoleRouter struct {
@@ -32,7 +32,7 @@ type RoleRouter struct {
 	private gin.IRoutes
 }
 
-func NewRoleRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *RoleRouter {
+func NewRoleRouter(routerGroup *gin.RouterGroup, rdb redisx.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *RoleRouter {
 	data := repo.NewRoleRepo(rdb)
 	sv := service.NewRoleService(data, rdb, conf, logger)
 	return &RoleRouter{

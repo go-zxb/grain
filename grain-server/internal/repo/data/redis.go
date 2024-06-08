@@ -18,9 +18,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	xjson "github.com/go-grain/go-utils/json"
-	gRedis "github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
+	jsonx "github.com/go-grain/grain/pkg/encoding/json"
+	redisx "github.com/go-grain/grain/pkg/redis"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/redis/go-redis/v9"
 	"strconv"
@@ -34,7 +34,7 @@ type Redis struct {
 	ctx    context.Context
 }
 
-func InitRedis() (client gRedis.IRedis, err error) {
+func InitRedis() (client redisx.IRedis, err error) {
 	conf := config.GetConfig().DataBase.Redis
 	rdbClient := redis.NewClient(&redis.Options{
 		Addr:         conf.Addr,
@@ -157,11 +157,11 @@ func (rs Redis) GetObject(key string, v interface{}) error {
 		//}
 		return err
 	}
-	return xjson.Unmarshal([]byte(result), v)
+	return jsonx.Unmarshal([]byte(result), v)
 }
 
 func (rs Redis) SetObject(key string, value any, expiration time.Duration) error {
-	data := xjson.Marshal(value)
+	data := jsonx.Marshal(value)
 	if data == nil {
 		return errors.New("SetObject Fail")
 	}
@@ -225,7 +225,7 @@ func (rs Redis) SetNX(key string, value interface{}, expiration time.Duration) e
 }
 
 func (rs Redis) ZAdd(key string, data interface{}) error {
-	marshal := xjson.Marshal(data)
+	marshal := jsonx.Marshal(data)
 	if marshal == nil {
 		return errors.New("ZAdd操作失败")
 	}
@@ -290,7 +290,7 @@ func (rs Redis) Exists(key string) (bool, error) {
 }
 
 func (rs Redis) Enqueue(key string, item interface{}) error {
-	data := xjson.Marshal(item)
+	data := jsonx.Marshal(item)
 	return rs.Client.LPush(rs.ctx, key, data).Err()
 }
 
@@ -303,7 +303,7 @@ func (rs Redis) Dequeue(key string, item interface{}) error {
 		return errors.New("invalid result length")
 	}
 	data := result[1]
-	return xjson.Unmarshal([]byte(data), item)
+	return jsonx.Unmarshal([]byte(data), item)
 }
 
 // Peek returns the first item from the queue without removing it.
@@ -313,7 +313,7 @@ func (rs Redis) Peek(key string, item interface{}) error {
 		return errors.New("queue is empty")
 	}
 
-	return xjson.Unmarshal([]byte(result), item)
+	return jsonx.Unmarshal([]byte(result), item)
 }
 
 // Length returns the number of items in the queue.
@@ -328,7 +328,7 @@ func (rs Redis) Clear(key string) error {
 
 // EnqueueWithTTL adds an item to the end of the queue with a TTL (time-to-live) value.
 func (rs Redis) EnqueueWithTTL(key string, item interface{}, ttl time.Duration) error {
-	data := xjson.Marshal(item)
+	data := jsonx.Marshal(item)
 	_, err := rs.Client.Pipelined(rs.ctx, func(pipe redis.Pipeliner) error {
 		pipe.LPush(rs.ctx, key, data)
 		pipe.Expire(rs.ctx, key, ttl*time.Second)

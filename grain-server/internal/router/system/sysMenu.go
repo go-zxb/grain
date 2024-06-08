@@ -17,13 +17,13 @@ package router
 import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/redis"
 	"github.com/go-grain/grain/config"
 	handler "github.com/go-grain/grain/internal/handler/system"
 	repo "github.com/go-grain/grain/internal/repo/system"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/log"
 	"github.com/go-grain/grain/middleware"
+	redisx "github.com/go-grain/grain/pkg/redis"
 )
 
 type MenuRouter struct {
@@ -32,7 +32,7 @@ type MenuRouter struct {
 	api     *handler.MenuHandle
 }
 
-func NewMenuRouter(routerGroup *gin.RouterGroup, rdb redis.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *MenuRouter {
+func NewMenuRouter(routerGroup *gin.RouterGroup, rdb redisx.IRedis, conf *config.Config, logger log.Logger, enforcer *casbin.CachedEnforcer) *MenuRouter {
 	data := repo.NewMenuRepo(rdb)
 	sv := service.NewMenuService(data, rdb, conf, logger)
 	return &MenuRouter{

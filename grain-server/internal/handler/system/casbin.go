@@ -16,9 +16,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	"github.com/go-grain/grain/pkg/response"
 	"github.com/go-grain/grain/utils/const"
 )
 

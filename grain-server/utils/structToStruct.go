@@ -15,15 +15,15 @@
 package utils
 
 import (
-	xjson "github.com/go-grain/go-utils/json"
+	jsonx "github.com/go-grain/grain/pkg/encoding/json"
 )
 
 // StructToStruct
 // 简单粗暴的实现一个结构体数据转到另一个结构体,不知道会不会有啥Bug
 // 序列化s1到数组字节类型,在放序列化到s2
 func StructToStruct(s1 any, s2 any) error {
-	bytes := xjson.Marshal(&s1)
-	err := xjson.Unmarshal(bytes, &s2)
+	bytes := jsonx.Marshal(&s1)
+	err := jsonx.Unmarshal(bytes, &s2)
 	if err != nil {
 		return err
 	}

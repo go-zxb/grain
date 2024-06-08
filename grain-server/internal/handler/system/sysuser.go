@@ -16,10 +16,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	xjson "github.com/go-grain/go-utils/json"
-	"github.com/go-grain/go-utils/response"
 	service "github.com/go-grain/grain/internal/service/system"
 	"github.com/go-grain/grain/model/system"
+	jsonx "github.com/go-grain/grain/pkg/encoding/json"
+	"github.com/go-grain/grain/pkg/response"
 	"github.com/go-grain/grain/utils"
 	"github.com/go-grain/grain/utils/const"
 	"github.com/go-grain/grain/utils/upload"
@@ -457,7 +457,7 @@ func (r *SysUserHandle) UploadAvatar(ctx *gin.Context) {
 		reply.WithCode(consts.UploadAvatarFail).WithMessage(err.Error()).Fail(ctx)
 		return
 	}
-	reply.WithMessage("上传文件成功").WithData(xjson.G{"fileUrl": file.FileUrl}).Success(ctx)
+	reply.WithMessage("上传文件成功").WithData(jsonx.G{"fileUrl": file.FileUrl}).Success(ctx)
 }
 
 // SwitchRole 切换角色
