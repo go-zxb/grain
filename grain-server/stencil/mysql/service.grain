@@ -5,7 +5,7 @@ import (
 	"{{.ProjectName}}/log"
 	"{{.ProjectName}}/config"
 	"{{.ProjectName}}/model/{{.Name}}"
-	"github.com/go-grain/go-utils/redis"
+	"{{.ProjectName}}/pkg/redis"
 	"github.com/gin-gonic/gin"
 
 )
@@ -21,12 +21,12 @@ type I{{.StructName}}Repo interface {
 
 type {{.StructName}}Service struct {
 	repo I{{.StructName}}Repo
-	rdb  redis.IRedis
+	rdb  redisx.IRedis
 	conf *config.Config
 	log  *log.Helper
 }
 
-func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redis.IRedis, conf *config.Config,logger log.Logger) *{{.StructName}}Service {
+func New{{.StructName}}Service(repo I{{.StructName}}Repo, rdb redisx.IRedis, conf *config.Config,logger log.Logger) *{{.StructName}}Service {
 	return &{{.StructName}}Service{
 		repo: repo,
 		rdb:  rdb,

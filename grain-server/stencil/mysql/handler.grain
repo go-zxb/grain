@@ -4,7 +4,7 @@ import (
   	"{{.ProjectName}}/model/{{.Name}}"
   	sysModel "{{.ProjectName}}/model/system"
   	"{{.ProjectName}}/internal/service/{{.Name}}"
-  	"github.com/go-grain/go-utils/response"
+  	"{{.ProjectName}}/pkg/response"
   	"{{.ProjectName}}/utils/const"
   	"github.com/gin-gonic/gin"
   	"strconv"

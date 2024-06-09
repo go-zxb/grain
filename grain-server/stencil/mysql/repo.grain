@@ -2,11 +2,10 @@ package repo
 
 import (
     "fmt"
-    utils "github.com/go-grain/go-utils"
 	  "{{.ProjectName}}/model/{{.Name}}"
   	"{{.ProjectName}}/internal/repo/data"
   	service "{{.ProjectName}}/internal/service/{{.Name}}"
-  	"github.com/go-grain/go-utils/redis"
+  	"{{.ProjectName}}/pkg/redis"
   	"{{.ProjectName}}/internal/repo/{{.Name}}/query"
   	"gorm.io/gorm"
   	{{if eq .QueryTime "yes"}}
@@ -17,11 +16,11 @@ import (
 
 type {{.StructName}}Repo struct {
 	db  *data.DB
-	rdb redis.IRedis
+	rdb redisx.IRedis
 	query *query.Query
 }
 
-func New{{.StructName}}Repo(db *gorm.DB, rdb redis.IRedis) service.I{{.StructName}}Repo {
+func New{{.StructName}}Repo(db *gorm.DB, rdb redisx.IRedis) service.I{{.StructName}}Repo {
 	//为了偷懒自动生成代码后直接在这里AutoMigrate,你可以放到data里面去统一管理
 	_ = db.AutoMigrate(model.{{.StructName}}{})
 	//SetDefault 你也可以放到core>start文件里面去统一初始化

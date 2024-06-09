@@ -1,19 +1,19 @@
 package router
 
 import (
-	 adminHandle "{{.ProjectName}}/internal/admin/handler/{{.Name}}"
-	 adminRope "{{.ProjectName}}/internal/admin/repo/{{.Name}}"
-	 adminService "{{.ProjectName}}/internal/admin/service/{{.Name}}"
-	"{{.ProjectName}}/config"
-	"{{.ProjectName}}/internal/handler/{{.Name}}"
-	"{{.ProjectName}}/log"
-	"{{.ProjectName}}/middleware"
-	"{{.ProjectName}}/internal/repo/{{.Name}}"
-	"github.com/go-grain/go-utils/redis"
-	"{{.ProjectName}}/internal/service/{{.Name}}"
-	"github.com/casbin/casbin/v2"
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"{{.ProjectName}}/log"
+	"{{.ProjectName}}/config"
+	"github.com/gin-gonic/gin"
+	"{{.ProjectName}}/pkg/redis"
+	"{{.ProjectName}}/middleware"
+	"github.com/casbin/casbin/v2"
+	"{{.ProjectName}}/internal/repo/{{.Name}}"
+	"{{.ProjectName}}/internal/handler/{{.Name}}"
+	"{{.ProjectName}}/internal/service/{{.Name}}"
+	adminHandle "{{.ProjectName}}/internal/admin/handler/{{.Name}}"
+  adminRope "{{.ProjectName}}/internal/admin/repo/{{.Name}}"
+  adminService "{{.ProjectName}}/internal/admin/service/{{.Name}}"
 )
 
 type {{.StructName}}Router struct {
@@ -24,7 +24,7 @@ type {{.StructName}}Router struct {
 	adminApi        *adminHandle.{{.StructName}}Handle
 }
 
-func New{{.StructName}}Router(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redis.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *{{.StructName}}Router {
+func New{{.StructName}}Router(routerGroup *gin.RouterGroup, db *gorm.DB, rdb redisx.IRedis, conf *config.Config, logger *log.Logger, enforcer *casbin.CachedEnforcer) *{{.StructName}}Router {
 	data := repo.New{{.StructName}}Repo(db, rdb)
 	adminData := adminRope.New{{.StructName}}Repo(db, rdb)
 	sv := service.New{{.StructName}}Service(data, rdb, conf, logger)

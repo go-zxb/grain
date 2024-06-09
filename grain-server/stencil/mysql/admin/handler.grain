@@ -2,7 +2,7 @@ package handler
 
 import (
 	  "{{.ProjectName}}/utils/const"
-	  "github.com/go-grain/go-utils/response"
+	  "{{.ProjectName}}/pkg/response"
   	"{{.ProjectName}}/internal/admin/service/{{.Name}}"
   	sysModel "{{.ProjectName}}/model/system"
   	"{{.ProjectName}}/model/{{.Name}}"

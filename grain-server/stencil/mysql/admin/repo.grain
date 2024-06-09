@@ -5,7 +5,7 @@ import (
 	  "{{.ProjectName}}/model/{{.Name}}"
   	"{{.ProjectName}}/internal/repo/data"
   	service "{{.ProjectName}}/internal/admin/service/{{.Name}}"
-  	"github.com/go-grain/go-utils/redis"
+  	"{{.ProjectName}}/pkg/redis"
   	"{{.ProjectName}}/internal/repo/{{.Name}}/query"
     {{if eq .QueryTime "yes"}}
   	"{{.ProjectName}}/utils"
@@ -16,11 +16,11 @@ import (
 
 type {{.StructName}}Repo struct {
 	db  *data.DB
-	rdb redis.IRedis
+	rdb redisx.IRedis
 	query *query.Query
 }
 
-func New{{.StructName}}Repo(db *gorm.DB, rdb redis.IRedis) service.I{{.StructName}}Repo {
+func New{{.StructName}}Repo(db *gorm.DB, rdb redisx.IRedis) service.I{{.StructName}}Repo {
 	return &{{.StructName}}Repo{
 		db:  &data.DB{DB: db},
 		rdb: rdb,
