@@ -92,6 +92,8 @@ func (s *ApiService) InitApi() error {
 		{Path: "/api/v1/sysMenu", Description: "创建菜单", ApiGroup: "系统菜单", Method: "POST"},
 		{Path: "/api/v1/sysMenu", Description: "删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
 		{Path: "/api/v1/sysMenu/list", Description: "获取菜单列表", ApiGroup: "系统菜单", Method: "GET"},
+		{Path: "/api/v1/sysMenu/menuAndPermission", Description: "获取已授权的菜单列表", ApiGroup: "系统菜单", Method: "GET"},
+		{Path: "/api/v1/sysMenu/menuAndPermission", Description: "删除已授权的菜单", ApiGroup: "系统菜单", Method: "POST"},
 		{Path: "/api/v1/sysMenu/deleteSysMenuByIds", Description: "批量删除菜单", ApiGroup: "系统菜单", Method: "DELETE"},
 		{Path: "/api/v1/sysMenu/userMenu", Description: "获取动态菜单", ApiGroup: "系统用户", Method: "GET"},
 
