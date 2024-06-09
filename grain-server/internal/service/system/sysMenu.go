@@ -76,6 +76,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: 0,
 		Path:     "manage",
 		Name:     "manage",
+		CnName:   "菜单管理",
 		Meta: &model.Meta{
 			I18n:         "menu.sysManage",
 			RequiresAuth: false,
@@ -92,6 +93,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysLog",
 			Name:     "sysLog",
+			CnName:   "系统日志",
 			Meta: &model.Meta{
 				I18n:         "menu.sysLog",
 				RequiresAuth: false,
@@ -104,6 +106,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysMenu",
 			Name:     "sysMenu",
+			CnName:   "系统菜单",
 			Meta: &model.Meta{
 				I18n:         "menu.sysMenu",
 				RequiresAuth: false,
@@ -116,6 +119,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysOrganize",
 			Name:     "sysOrganize",
+			CnName:   "组织管理",
 			Meta: &model.Meta{
 				I18n:         "menu.organize",
 				RequiresAuth: true,
@@ -127,6 +131,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysUser",
 			Name:     "sysUser",
+			CnName:   "系统用户",
 			Meta: &model.Meta{
 				I18n:         "menu.sysUser",
 				RequiresAuth: false,
@@ -139,6 +144,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysApi",
 			Name:     "sysApi",
+			CnName:   "系统Api",
 			Meta: &model.Meta{
 				I18n:         "menu.sysApi",
 				RequiresAuth: false,
@@ -151,6 +157,7 @@ func (s *MenuService) InitMenu() error {
 			ParentId: menu.ID,
 			Path:     "sysRole",
 			Name:     "sysRole",
+			CnName:   "用户角色",
 			Meta: &model.Meta{
 				I18n:         "menu.sysRole",
 				RequiresAuth: false,
@@ -169,6 +176,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: 0,
 		Path:     "dashboard",
 		Name:     "dashboard",
+		CnName:   "仪表盘",
 		Meta: &model.Meta{
 			I18n:         "menu.dashboard",
 			RequiresAuth: false,
@@ -185,6 +193,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: menu.ID,
 		Path:     "workplace",
 		Name:     "Workplace",
+		CnName:   "工作台",
 		Meta: &model.Meta{
 			I18n:         "menu.dashboard.workplace",
 			RequiresAuth: false,
@@ -200,6 +209,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: 0,
 		Path:     "codeAssistant",
 		Name:     "codeAssistant",
+		CnName:   "代码助手",
 		Meta: &model.Meta{
 			I18n:         "menu.codeAssistant",
 			RequiresAuth: false,
@@ -214,6 +224,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: menu.ID,
 		Path:     "generateCode",
 		Name:     "generateCode",
+		CnName:   "代码生成器",
 		Meta: &model.Meta{
 			I18n:         "menu.generateCode",
 			RequiresAuth: true,
@@ -229,6 +240,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: 0,
 		Path:     "attachments",
 		Name:     "attachments",
+		CnName:   "附件管理",
 		Meta: &model.Meta{
 			I18n:         "menu.attachments",
 			RequiresAuth: false,
@@ -243,6 +255,7 @@ func (s *MenuService) InitMenu() error {
 		ParentId: menu.ID,
 		Path:     "sysFile",
 		Name:     "sysFile",
+		CnName:   "系统附件",
 		Meta: &model.Meta{
 			I18n:         "menu.sysFile",
 			RequiresAuth: true,
