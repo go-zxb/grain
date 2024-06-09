@@ -56,6 +56,7 @@ const (
 
 var (
 	TokenBlack = "tokenBlack:"
+	UserInfo   = "userInfo:"
 )
 
 var Language = 0

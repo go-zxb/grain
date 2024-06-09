@@ -24,7 +24,7 @@ import (
 	jwtx "github.com/go-grain/grain/pkg/jwt"
 	redisx "github.com/go-grain/grain/pkg/redis"
 	"github.com/go-grain/grain/pkg/response"
-	"github.com/go-grain/grain/utils/const"
+	consts "github.com/go-grain/grain/utils/const"
 	"net/http"
 	"time"
 )
@@ -59,9 +59,9 @@ func JwtAuth(rdb redisx.IRedis) gin.HandlerFunc {
 		}
 		//获取用户信息
 		sysUser := &model.SysUser{}
-		if err = rdb.GetObject(tokenClaims.Uid, sysUser); err != nil {
+		if err = rdb.GetObject(consts.UserInfo+tokenClaims.Uid, sysUser); err != nil {
 			sysUser, err = query.Q.SysUser.Where(query.SysUser.UID.Eq(tokenClaims.Uid)).First()
-			_ = rdb.SetObject(tokenClaims.Uid, sysUser, 180)
+			_ = rdb.SetObject(consts.UserInfo+tokenClaims.Uid, sysUser, 180)
 		}
 
 		//把用户相关信息都塞到ctx去,方便下游使用
